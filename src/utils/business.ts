@@ -1,20 +1,20 @@
-export const businessName = 'Douglas Newby & Associates'
-export const personName = 'Douglas Newby'
+export const businessName = 'Founder Notes'
+export const personName = 'Founder Notes'
 
 export const phone = {
-  display: '214.522.1000',
-  formatted: '(214) 522-1000',
-  href: 'tel:214.522.1000',
+  display: '555.123.4567',
+  formatted: '(555) 123-4567',
+  href: 'tel:555.123.4567',
 }
 
 export const postalAddress = {
-  streetAddress: '4514 Cole Avenue Suite 600',
-  addressLocality: 'Dallas',
-  addressRegion: 'TX',
-  postalCode: '75205',
+  streetAddress: '',
+  addressLocality: 'San Francisco',
+  addressRegion: 'CA',
+  postalCode: '',
   addressCountry: 'US',
 }
 
-export const businessAddressLine = `${businessName} | ${postalAddress.streetAddress}, ${postalAddress.addressLocality}, ${postalAddress.addressRegion} ${postalAddress.postalCode}`
+export const businessAddressLine = `${businessName} — Essays on building companies that matter.`
 
-export const copyrightYears = '1994–2026'
+export const copyrightYears = '2020–2026'

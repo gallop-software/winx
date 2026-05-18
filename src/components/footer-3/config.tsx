@@ -1,8 +1,8 @@
 import emailIcon from '@iconify/icons-mdi/email-outline'
 import facebookIcon from '@iconify/icons-mdi/facebook'
 import instagramIcon from '@iconify/icons-mdi/instagram'
-import phoneIcon from '@iconify/icons-mdi/phone'
-import youtubeIcon from '@iconify/icons-mdi/youtube'
+import linkedinIcon from '@iconify/icons-mdi/linkedin'
+import twitterIcon from '@iconify/icons-mdi/twitter'
 
 export interface SocialLink {
   name: string
@@ -16,61 +16,58 @@ export interface TrademarkLink {
 }
 
 export const phone = {
-  display: '214.522.1000',
-  href: 'tel:214.522.1000',
+  display: '555.123.4567',
+  href: 'tel:555.123.4567',
 }
 
 export const socialLinks: SocialLink[] = [
-  { name: 'Facebook', href: 'https://www.facebook.com/douglasnewby', icon: facebookIcon },
-  { name: 'Instagram', href: 'https://www.instagram.com/douglasnewby/', icon: instagramIcon },
-  { name: 'YouTube', href: 'https://www.youtube.com/c/ArchitecturallySignificantHomes', icon: youtubeIcon },
-  { name: 'Phone', href: phone.href, icon: phoneIcon },
-  { name: 'Email', href: 'mailto:dnewby@dougnewby.com', icon: emailIcon },
+  { name: 'Twitter', href: '/winx', icon: twitterIcon },
+  { name: 'LinkedIn', href: '/winx', icon: linkedinIcon },
+  { name: 'Instagram', href: '/winx', icon: instagramIcon },
+  { name: 'Facebook', href: '/winx', icon: facebookIcon },
+  { name: 'Email', href: 'mailto:me@your-company.com', icon: emailIcon },
 ]
 
-export const realtorHeading = 'Realtor Douglas Newby'
+export const editorHeading = 'About the editor'
 
-export const realtorBio =
-  'Douglas Newby understands the economic and aesthetic impact of homes and neighborhoods that make us happy better than anyone in the county. I hope you enjoy my thoughts on architecture, home, desirable sites, neighborhoods, and the evolution of cities. Ultimately what is most important is a home that make you happy. If you have an interest in buying or selling a home or questions about the evolution of Dallas, call me at'
+export const editorBio =
+  'Founder Notes is written and edited independently — one carefully written essay each week on product, fundraising, hiring, and the day-to-day work of building an early-stage company. No sponsored posts, no paid placements, no hot takes. Just the work.'
 
-export const realtorImage = {
-  src: '/megan-and-bryan-fears-with-doug-750x750.jpg',
-  alt: 'Megan and Bryan Fears with Douglas Newby',
+export const editorImage = {
+  src: '/pexels-maide-arslan-128712163-31750448.jpg',
+  alt: 'Founder Notes editor',
 }
 
 export const subscribeHeading =
-  'Dallas Broker for Architecturally Significant Homes'
+  'One founder essay. Every Sunday.'
 
 export const subscribeIntro = (
   <>
-    Douglas Newby created the concept of architecturally significant homes and
-    has registered trademark <em>Architecturally Significant&reg;</em> and{' '}
-    <em>Architecturally Significant Homes&reg;</em>.
+    Join thousands of operators reading <em>Founder Notes</em> each week. No
+    threads, no upsells, no sponsored takes — just one carefully written piece
+    on building, hiring, raising, or leading.
   </>
 )
 
 export const subscribeSubheading =
-  'Follow or Subscribe for Insights from Dallas Real Estate Broker Douglas Newby'
+  'Subscribe for the weekly read'
 
 export const subscribeDescription =
-  'Douglas Newby provides insights and interprets neighborhoods, real estate, architecture, and the market, when other agents provide ubiquitous statistics.'
+  'Long-form thinking on the decisions that actually shape a company — from the first hire to the Series A and everything that breaks along the way.'
 
 export const subscribeAction = '/api/subscribe/'
 
 export const trademarkLinks: TrademarkLink[] = [
-  { label: 'Architecturally Significant Homes', href: 'https://dougnewby.com' },
-  { label: 'Significant Homes', href: 'https://dougnewby.com' },
-  {
-    label: 'Architecturally Significant',
-    href: 'https://dougnewby.com/architecture/architecturally-significant-homes/',
-  },
+  { label: 'Essays', href: '/essays' },
+  { label: 'Newsletter', href: '/#newsletter' },
+  { label: 'About', href: '/about' },
 ]
 
 export const businessAddress =
-  'Douglas Newby & Associates | 4514 Cole Avenue Suite 600, Dallas, TX 75205'
+  'Founder Notes — Essays on building companies that matter.'
 
-export const copyrightYears = '1994–2026'
-export const copyrightName = 'Douglas Newby'
+export const copyrightYears = '2020–2026'
+export const copyrightName = 'Founder Notes'
 
 export const webmaster = {
   label: 'webplant.media',

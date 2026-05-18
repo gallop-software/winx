@@ -1,14 +1,44 @@
 [
   {
-    "url": "/all-articles#heading",
-    "title": "Uncategorized",
-    "content": "Hello world!",
-    "pageTitle": "All Observations & Essays on Architecturally Significant Homes, Neighborhoods, and the Evolution of Cities"
+    "url": "/about#an-independent-publication-for-people-building-companies",
+    "title": "An independent publication for people building companies.",
+    "content": "One carefully written essay each week on product strategy, fundraising, hiring, and the day-to-day work of building an early-stage startup. No threads, no upsells, no sponsored takes.",
+    "pageTitle": "About Founder Notes"
   },
   {
-    "url": "/#hello-world",
-    "title": "Hello world!",
-    "content": "Welcome to WordPress. This is your first post. Edit or delete it, then start writing!0"
+    "url": "/about#why-this-exists",
+    "title": "Why this exists",
+    "content": "Most startup writing is either too abstract to be useful or too tactical to be true. Founder Notes sits in the middle — long enough to think clearly, specific enough to act on, and written from the perspective of someone who has actually shipped product, raised capital, hired wrong, and figured out what to do next. The goal isn’t to sell a framework or a course. The goal is to help founders think more clearly about the decisions in front of them.",
+    "pageTitle": "About Founder Notes"
+  },
+  {
+    "url": "/about#what-youll-find-here",
+    "title": "What you’ll find here",
+    "content": "Long-form essays on product strategy, fundraising, hiring, go-to-market, leadership, and the quieter parts of company building that rarely make it onto a conference stage. One piece a week, delivered every Sunday — and a growing archive you can read in any order.",
+    "pageTitle": "About Founder Notes"
+  },
+  {
+    "url": "/about#who-its-for",
+    "title": "Who it’s for",
+    "content": "If you’re building something — pre-seed, post-PMF, or somewhere in the messy middle — this publication is for you. It is also written for the people who back, advise, and work alongside founders.",
+    "pageTitle": "About Founder Notes"
+  },
+  {
+    "url": "/about#how-its-funded",
+    "title": "How it’s funded",
+    "content": "Founder Notes is reader-supported. No sponsored posts, no paid placements, no display ads. Just the work.",
+    "pageTitle": "About Founder Notes"
+  },
+  {
+    "url": "/essays#heading",
+    "title": "Hiring & Team",
+    "content": "The first ten hires decide everything. Most founders get them wrong.",
+    "pageTitle": "All Essays & Notes on Building Companies, Product Strategy, Fundraising, Hiring, and the Work of Being a Founder"
+  },
+  {
+    "url": "/#the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
+    "title": "The first ten hires decide everything. Most founders get them wrong.",
+    "content": "Your first ten hires don’t just build the product — they set the ceiling on every hire that follows. Here’s how to think about them before you start writing job descriptions.0"
   },
   {
     "url": "/search#search-results-for",
@@ -16,15 +46,33 @@
     "content": "Loading"
   },
   {
-    "url": "/2026/05/hello-world#categories",
-    "title": "Categories",
-    "content": "Filed Under: Uncategorized",
-    "pageTitle": "Hello world!"
+    "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong#what-the-first-ten-actually-do",
+    "title": "What the first ten actually do",
+    "content": "By the time you’re at thirty people, you cannot personally interview every candidate. You cannot personally onboard every hire. You cannot personally model what “good” looks like in every function. Your first ten people start doing all of that for you — long before anyone uses the word “manager.” This is why hiring on raw competence alone falls apart. A staff engineer who’s brilliant but treats junior teammates with quiet contempt will, by month six, have shaped how three other engineers behave. A first salesperson who closes deals by overpromising will, by month nine, have trained the next two hires to overpromise. You’re not just hiring a person. You’re hiring a propagation pattern.",
+    "pageTitle": "The first ten hires decide everything. Most founders get them wrong."
   },
   {
-    "url": "/category/uncategorized#hello-world",
-    "title": "Hello world!",
-    "content": "Welcome to WordPress. This is your first post. Edit or delete it, then start writing!",
-    "pageTitle": "Uncategorized"
+    "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong#what-i-look-for-now",
+    "title": "What I look for now",
+    "content": "After getting this wrong twice, I narrowed my filter to three things, in this order: Do they make the people around them better? Not in a vague “good culture fit” sense. Concretely: in the interview process, did the people who debriefed with them leave the room sharper than they entered it? Did they ask questions that exposed real thinking? This is testable. Most founders don’t test for it.Can they hold ambiguity without flinching? Early-stage work is a string of half-defined problems with no obvious owner. Hires who need a clean spec will spend their first six months in quiet frustration. Hires who can sit in the mess and start narrowing it become force multipliers immediately.Will they tell me I’m wrong? Not theoretically — actually. The first ten hires are the people who shape what the founder believes about the company. If they default to deference, the founder’s blind spots become the company’s blind spots. I’d rather hire someone slightly less talented who will push back than someone brilliant who won’t.",
+    "pageTitle": "The first ten hires decide everything. Most founders get them wrong."
+  },
+  {
+    "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong#the-mistake-i-keep-seeing",
+    "title": "The mistake I keep seeing",
+    "content": "Founders hire for the company they have, not the company they’re about to be. You don’t need a “Director of” anything at ten people. You need ten people who can each do the work of three, who raise the bar for whoever comes next, and who you’d trust to interview your eleventh hire without you in the room. If you can’t say yes to that last test for someone on your team today, you already know what to do. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "The first ten hires decide everything. Most founders get them wrong."
+  },
+  {
+    "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong#categories",
+    "title": "Categories",
+    "content": "Filed Under: Hiring & Team",
+    "pageTitle": "The first ten hires decide everything. Most founders get them wrong."
+  },
+  {
+    "url": "/category/hiring-and-team#the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
+    "title": "The first ten hires decide everything. Most founders get them wrong.",
+    "content": "Your first ten hires don’t just build the product — they set the ceiling on every hire that follows. Here’s how to think about them before you start writing job descriptions.",
+    "pageTitle": "Hiring & Team"
   }
 ]

@@ -31,11 +31,16 @@ export const metadata: Metadata = {
   },
   title: {
     default:
-      'Douglas Newby | Insights on Architecturally Significant Homes, Neighborhoods, and the Evolution of Cities',
-    template: '%s | Douglas Newby',
+      'Founder Notes | Essays on Building Companies That Matter',
+    template: '%s | Founder Notes',
+  },
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
   openGraph: {
-    siteName: 'Douglas Newby',
+    siteName: 'Founder Notes',
     locale: 'en_US',
     type: 'website',
   },

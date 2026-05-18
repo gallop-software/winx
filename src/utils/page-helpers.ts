@@ -96,8 +96,8 @@ export function generatePageMetadata(
       url:
         metadata?.openGraph?.url ||
         `${baseURL}${slug ? `/${slug.join('/')}` : ''}`,
-      siteName: metadata?.openGraph?.siteName || 'Douglas Newby',
-      title: metadata?.openGraph?.title || metadata?.title || 'Page',
+      siteName: metadata?.openGraph?.siteName || '',
+      title: metadata?.openGraph?.title || metadata?.title || '',
       description:
         metadata?.openGraph?.description ||
         metadata?.description ||

@@ -1,11 +1,18 @@
 {
   "categories": [
     {
+      "id": 2,
+      "name": "Hiring & Team",
+      "slug": "hiring-and-team",
+      "description": "",
+      "count": 1
+    },
+    {
       "id": 1,
       "name": "Uncategorized",
       "slug": "uncategorized",
       "description": "",
-      "count": 1
+      "count": 0
     }
   ],
   "tags": [],

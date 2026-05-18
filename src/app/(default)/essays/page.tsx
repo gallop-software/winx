@@ -1,48 +1,33 @@
 import { PageWrapper } from '@/components/page-wrapper'
 import { generatePageMetadata, type PageMetadata } from '@/utils/page-helpers'
-import { baseURL, defaultDescription } from '@/app/metadata'
+import { baseURL } from '@/app/metadata'
 import { buildPageSchema } from '@/utils/structured-data'
 
-import LogoCard from './_blocks/logo-card'
+import Hero from './_blocks/hero'
 import Archive from './_blocks/archive'
 
-const title =
-  'Founder Notes | Essays on Product, Fundraising & Building a Startup'
-const description = defaultDescription
+const title = 'All Essays | Founder Notes'
+const description =
+  'Browse the full archive of Founder Notes — essays on product strategy, fundraising, hiring, and the work of building an early-stage company.'
 
 const metadata: PageMetadata = {
   title,
   description,
-  keywords: [
-    'startup founders',
-    'founder essays',
-    'product strategy',
-    'fundraising',
-    'hiring',
-    'go-to-market',
-    'leadership',
-    'startup operations',
-    'product-market fit',
-    'company building',
-    'early-stage startup',
-    'founder newsletter',
-  ],
-  publishDate: '2024-01-01T00:00:00Z',
-  modifiedDate: '2025-12-22T00:00:00Z',
+  slug: 'essays',
   alternates: {
-    canonical: '/',
+    canonical: '/essays',
   },
   authors: [{ name: 'Founder Notes' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: `${baseURL}/`,
+    url: `${baseURL}/essays`,
     siteName: 'Founder Notes',
     title,
     description,
     image: {
       url: '/banner.jpg',
-      alt: 'Founder Notes — Essays on Building Companies That Matter',
+      alt: 'Founder Notes — All Essays',
     },
   },
   twitter: {
@@ -51,13 +36,14 @@ const metadata: PageMetadata = {
     description,
     image: '/banner.jpg',
   },
-  category: 'Startups',
-  applicationName: 'Founder Notes',
   structuredData: buildPageSchema({
-    url: `${baseURL}/`,
+    url: `${baseURL}/essays`,
     title,
     description,
-    breadcrumbs: [{ name: 'Home', href: '/' }],
+    breadcrumbs: [
+      { name: 'Home', href: '/' },
+      { name: 'All Essays', href: '/essays' },
+    ],
   }),
 }
 
@@ -65,7 +51,7 @@ export const generateMetadata = () => generatePageMetadata(metadata)
 export default function Page() {
   return (
     <PageWrapper metadata={metadata}>
-      <LogoCard />
+      <Hero />
       <Archive />
     </PageWrapper>
   )

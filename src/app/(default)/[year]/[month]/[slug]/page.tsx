@@ -24,7 +24,7 @@ interface PageProps {
 }
 
 async function fetchPost(slug: string, year: string, month: string) {
-  const wpJson = process.env.WORDPRESS_API_URL
+  const wpJson = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined)
   if (!wpJson) return null
 
   const linkUrl = `${wpJson}/wp/v2/posts?slug=${encodeURIComponent(slug)}&_fields=link`
@@ -240,10 +240,7 @@ export default async function PostPage({ params }: PageProps) {
                 databaseId: postId,
                 slug,
                 postType: 'post',
-                wpUrl: (process.env.WORDPRESS_API_URL || '').replace(
-                  /\/wp-json\/?$/,
-                  ''
-                ),
+                wpUrl: process.env.NEXT_PUBLIC_WORDPRESS_URL || '',
               }}
             />
           )}

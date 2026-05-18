@@ -12,23 +12,23 @@ export default function Expertise() {
           textAlign="text-center"
           margin="mb-10"
         >
-          Douglas Newby Expertise
+          About the publication
         </Heading>
         <Paragraph textAlign="text-left">
-          A life long curiosity and interest in art, culture and economics, and
-          how they impact homes, neighborhoods and cities shape the prescient
-          understanding Douglas Newby has for evolving real estate markets. His
-          uncanny ability to see which homes and neighborhoods thrive and which
-          will lag and when has been immensely beneficial to his clients and to
-          the city. Ultimately, what is most important is homes that make us
-          happy.
+          Founder Notes exists because most startup writing is either too
+          abstract to be useful or too tactical to be true. The essays here sit
+          in the middle — grounded in operating reality, paced like a Sunday
+          read, and written for the people doing the actual work of building
+          companies. Each week, one carefully written piece on product,
+          fundraising, hiring, go-to-market, or the quieter parts of leadership
+          that rarely make it onto a conference stage.
         </Paragraph>
         <div className="mt-10">
           <Button
             href="#favorite-articles"
             className="w-full"
           >
-            Featured Douglas Newby Blog Articles
+            Featured founder essays
           </Button>
         </div>
       </div>

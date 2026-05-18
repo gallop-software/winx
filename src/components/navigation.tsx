@@ -63,10 +63,10 @@ export function Navigation() {
     { label: 'Home', href: '/', icon: homeIcon },
     {
       label: 'About',
-      href: 'https://dougnewby.com/about/',
+      href: '/about',
       icon: informationCircleIcon,
     },
-    { label: 'All Articles', href: '/all-articles', icon: newspaperIcon },
+    { label: 'Essays', href: '/essays', icon: newspaperIcon },
   ]
   const buttonClass =
     'flex items-center justify-center xl:justify-start gap-4 rounded-md p-2 w-fit xl:w-full text-contrast hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium cursor-pointer'
@@ -87,12 +87,12 @@ export function Navigation() {
       href="/"
       onClick={handleHomeClick}
       className="inline-block md:mb-8"
-      aria-label="Douglas Newby"
+      aria-label="Founder Notes"
     >
-      <div className="w-12 h-12 shrink-0 rounded-full overflow-hidden">
+      <div className="w-12 h-12 shrink-0 overflow-hidden">
         <Image
-          src="/dougpicture-198.jpg"
-          alt="Douglas Newby"
+          src="/favicon.png"
+          alt="Founder Notes"
           size="small"
           rounded="rounded-none"
           className="w-full h-full object-cover"

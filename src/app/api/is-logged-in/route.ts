@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
-const WP_JSON = process.env.WORDPRESS_API_URL || ''
+const WP_JSON = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined) || ''
 
 export async function POST(req: Request) {
   if (!WP_JSON) {
     return NextResponse.json(
-      { error: 'WORDPRESS_API_URL not configured' },
+      { error: 'NEXT_PUBLIC_WORDPRESS_URL not configured' },
       { status: 500 }
     )
   }

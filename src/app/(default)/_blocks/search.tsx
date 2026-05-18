@@ -14,7 +14,7 @@ export default function Search() {
         textAlign="text-center"
         margin="mb-12"
       >
-        Search Douglas Newby Blog Articles
+        Search the archive
       </Heading>
       <BlogSearch categories={categories} />
     </Section>

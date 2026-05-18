@@ -1,21 +1,23 @@
 [
   {
-    "id": 1,
-    "slug": "hello-world",
-    "url": "/2026/05/hello-world",
+    "id": 7,
+    "slug": "the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
+    "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
     "metadata": {
-      "title": "Hello world!",
-      "description": "Welcome to WordPress. This is your first post. Edit or delete it, then start writing!",
-      "date": "2026-05-18T18:22:36",
+      "title": "The first ten hires decide everything. Most founders get them wrong.",
+      "description": "Your first ten hires don’t just build the product — they set the ceiling on every hire that follows. Here’s how to think about them before you start writing job\ndescriptions.",
+      "date": "2026-05-18T21:44:50",
       "categories": [
-        "Uncategorized"
+        "Hiring & Team"
       ],
       "categorySlugs": [
-        "uncategorized"
+        "hiring-and-team"
       ],
       "tags": [],
       "tagSlugs": [],
-      "featuredImage": "",
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/pexels-thirdman-5257578-scaled.jpg",
+      "featuredImageWidth": 2560,
+      "featuredImageHeight": 1707,
       "author": "Winx",
       "authorSlug": "winx"
     }

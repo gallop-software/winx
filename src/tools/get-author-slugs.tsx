@@ -4,7 +4,7 @@ type AuthorSlugItem = {
 }
 
 export async function getAuthorSlugs(): Promise<{ authorSlugs: AuthorSlugItem[] }> {
-  const wpJson = process.env.WORDPRESS_API_URL
+  const wpJson = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined)
   if (!wpJson) return { authorSlugs: [] }
 
   const authorSlugs: AuthorSlugItem[] = []

@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing slug' }, { status: 400 })
   }
 
-  const wpJson = process.env.WORDPRESS_API_URL
+  const wpJson = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined)
   if (!wpJson) {
     return NextResponse.json({ error: 'WordPress API not configured' }, { status: 500 })
   }

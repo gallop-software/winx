@@ -5,7 +5,7 @@ type PostSlugItem = {
 }
 
 export async function getPostSlugs(): Promise<{ postSlugs: PostSlugItem[] }> {
-  const wpJson = process.env.WORDPRESS_API_URL
+  const wpJson = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined)
   if (!wpJson) return { postSlugs: [] }
 
   const postSlugs: PostSlugItem[] = []

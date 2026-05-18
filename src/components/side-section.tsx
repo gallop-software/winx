@@ -17,10 +17,9 @@ import LoginDialog from '@/components/login'
 import magnifyingGlassIcon from '@iconify/icons-heroicons/magnifying-glass-solid'
 import {
   socialLinks,
-  phone,
-  realtorHeading,
-  realtorBio,
-  realtorImage,
+  editorHeading,
+  editorBio,
+  editorImage,
   subscribeHeading,
   subscribeIntro,
   subscribeSubheading,
@@ -67,54 +66,47 @@ function IntroBlock({ isHome }: { isHome: boolean }) {
   return (
     <div className="border border-contrast-light/20 rounded-md p-4">
       <Heading as={bump('h2', isHome)} styleAs="h1" margin="mb-4">
-        Douglas Newby insights on Architecturally Significant Homes,
-        Neighborhoods, and the Evolution of Cities
+        Founder Notes — Essays on Product, Fundraising, Hiring, and Building a
+        Startup
       </Heading>
       <Heading as="h2" styleAs="h2" margin="mb-0">
-        Impact on Homes That Make Us Happy
+        For people doing the actual work of building companies.
       </Heading>
       <Paragraph margin="mt-4 mb-8">
-        Douglas Newby is a national award-winning realtor who identifies
-        architectural significance, value, and homes that make people happy.
-        Insights offered in these articles include the nuance and evolution of
-        neighborhoods, cities and Dallas. If you are interested in purchasing
-        an Architecturally Significant Home, go to{' '}
+        Founder Notes is an independent publication for early-stage founders
+        and operators. Long-form thinking on product strategy, fundraising,
+        hiring, and the quieter parts of leadership — written from inside the
+        work, not above it. One carefully edited essay, every Sunday.{' '}
         <Link
-          href="https://dougnewby.com/"
+          href="/essays"
           className="text-accent underline"
-          target="_blank"
-          rel="noopener noreferrer"
         >
-          Douglas Newby &amp; Associates real estate site DougNewby.com
+          Browse the full archive
         </Link>
         .
       </Paragraph>
-      <Button href="https://dougnewby.com/">Architecturally Significant Homes</Button>
+      <Button href="/essays">Read the latest essays</Button>
     </div>
   )
 }
 
-function RealtorBlock() {
+function EditorBlock() {
   return (
     <div className="border border-contrast-light/20 rounded-md p-4">
       <Heading as="h4" styleAs="h2" margin="mb-0">
-        {realtorHeading}
+        {editorHeading}
       </Heading>
       <div className="mt-4">
         <Image
-          src={realtorImage.src}
-          alt={realtorImage.alt}
+          src={editorImage.src}
+          alt={editorImage.alt}
           size="medium"
           rounded="rounded-sm"
-          className="w-full h-auto"
+          className="w-full max-h-80 object-cover object-top"
         />
       </div>
       <Paragraph margin="mt-4">
-        {realtorBio}{' '}
-        <Link href={phone.href} className="underline hover:text-contrast-light">
-          {phone.display}
-        </Link>
-        .
+        {editorBio}
       </Paragraph>
       <SocialLinksRow />
     </div>
@@ -167,16 +159,15 @@ function ExpertiseBlock() {
   return (
     <div className="border border-contrast-light/20 rounded-md p-4">
       <Heading as="h2" styleAs="h2" margin="mb-0">
-        Douglas Newby Expertise
+        About the publication
       </Heading>
       <Paragraph margin="mt-4">
-        A life long curiosity and interest in art, culture and economics, and
-        how they impact homes, neighborhoods and cities shape the prescient
-        understanding Douglas Newby has for evolving real estate markets. His
-        uncanny ability to see which homes and neighborhoods thrive and which
-        will lag and when has been immensely beneficial to his clients and to
-        the city. Ultimately, what is most important is homes that make us
-        happy.
+        Founder Notes is written for the people doing the actual work of
+        building companies. It&rsquo;s edited like a magazine, paced like a
+        Sunday read, and grounded in the day-to-day reality of operating an
+        early-stage startup — product, fundraising, hiring, go-to-market, and
+        the quieter parts of leadership that rarely make it onto a conference
+        stage.
       </Paragraph>
     </div>
   )
@@ -208,7 +199,7 @@ export function SideSection({
         {!hideSearch && (
           <>
             <Heading as="h4" className="sr-only">
-              Search Douglas Newby Blog Articles
+              Search Founder Notes
             </Heading>
             <button
               type="button"
@@ -226,7 +217,7 @@ export function SideSection({
           />
         )}
         <IntroBlock isHome={isHome} />
-        <RealtorBlock />
+        <EditorBlock />
         <ExpertiseBlock />
         <SubscribeBlock />
         <div className="border border-contrast-light/20 rounded-md p-4 text-left">

@@ -1,13 +1,23 @@
 {
-  "name": "douglasnewby.com",
+  "name": "winx",
   "version": "1.0.0",
   "private": true,
-  "description": "Douglas Newby's blog featuring insights on architecturally significant homes, neighborhoods, and the evolution of cities — with a focus on Dallas and the homes that make us happy.",
-  "homepage": "https://douglasnewby.com",
+  "description": "Founder Notes — an independent publication for startup founders, with essays on product strategy, fundraising, hiring, and the day-to-day work of building an early-stage company.",
+  "homepage": "https://winx.gallop.software",
   "author": {
-    "name": "Douglas Newby",
-    "url": "https://dougnewby.com"
+    "name": "Gallop",
+    "url": "https://gallop.software"
   },
+  "contributors": [
+    {
+      "name": "Chris Baldelomar",
+      "url": "https://github.com/webplantmedia"
+    },
+    {
+      "name": "Niel Wostan",
+      "url": "https://github.com/NielWostan"
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "dev": "next dev",

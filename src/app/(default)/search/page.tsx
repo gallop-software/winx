@@ -5,12 +5,12 @@ import { type PageMetadata } from '@/utils/page-helpers'
 import { SearchResultsClient } from '@/components/search-results-client'
 
 export const generateMetadata = (): Metadata => ({
-  title: 'Search Douglas Newby Blog Articles',
+  title: 'Search Founder Notes',
   robots: { index: false, follow: true },
 })
 
 const pageMetadata: PageMetadata = {
-  title: 'Search Douglas Newby Blog Articles',
+  title: 'Search Founder Notes',
   slug: 'search',
 }
 

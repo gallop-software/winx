@@ -195,9 +195,9 @@ async function main() {
   const dataDir = path.dirname(OUTPUT_FILE)
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true })
 
-  const wpJson = process.env.WORDPRESS_API_URL
+  const wpJson = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined)
   if (!wpJson) {
-    console.warn('⚠️  WORDPRESS_API_URL not set; writing empty data files')
+    console.warn('⚠️  NEXT_PUBLIC_WORDPRESS_URL not set; writing empty data files')
     fs.writeFileSync(OUTPUT_FILE, '[]', 'utf8')
     fs.writeFileSync(
       TAX_FILE,

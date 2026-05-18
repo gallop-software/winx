@@ -86,11 +86,6 @@ html::-webkit-scrollbar {
   --color-accent5-dark: #cccccc;
   --color-accent5-contrast: #1a1a1a;
 
-  --color-accent6: #000000;
-  --color-accent6-light: #333333;
-  --color-accent6-dark: #000000;
-  --color-accent6-contrast: #ffffff;
-
   --color-caption: #4b5563;
 }
 

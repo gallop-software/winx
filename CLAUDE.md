@@ -157,7 +157,7 @@ All colors use semantic tokens defined in `src/styles/tailwind.css` `@theme`:
 - **Surface**: `body`, `body-light`, `body-dark`, `body2`
 - **Text**: `contrast`, `contrast-light`, `contrast-dark`
 - **Overlay** (fixed — don't flip in dark mode): `overlay`, `overlay-text`
-- **Accents**: `accent`, `accent-light`, `accent-dark`, `accent-contrast`, `accent2`, `accent2-light`, `accent2-dark`, `accent2-contrast`, `accent3`, `accent3-light`, `accent3-dark`, `accent3-contrast`, `accent4`, `accent4-light`, `accent4-dark`, `accent4-contrast`, `accent5`, `accent5-light`, `accent5-dark`, `accent5-contrast`, `accent6`, `accent6-light`, `accent6-dark`, `accent6-contrast`
+- **Accents**: `accent`, `accent-light`, `accent-dark`, `accent-contrast`, `accent2`, `accent2-light`, `accent2-dark`, `accent2-contrast`, `accent3`, `accent3-light`, `accent3-dark`, `accent3-contrast`, `accent4`, `accent4-light`, `accent4-dark`, `accent4-contrast`, `accent5`, `accent5-light`, `accent5-dark`, `accent5-contrast`
 
 **Never use**: `gray-*`, `white`, `black`, `slate-*` — always map to a semantic token.
 

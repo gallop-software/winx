@@ -32,7 +32,7 @@ export function BlogSearch({ categories }: BlogSearchProps) {
           icon={magnifyingGlassIcon}
           className="w-5 h-5 shrink-0"
         />
-        <span>Search Douglas Newby articles...</span>
+        <span>Search Founder Notes essays...</span>
       </button>
 
       <div className="relative bg-body shadow-md rounded-md">
@@ -45,7 +45,7 @@ export function BlogSearch({ categories }: BlogSearchProps) {
           )}
         >
           <option value="">
-            Select a category to read additional articles by Douglas Newby...
+            Choose a topic to explore more essays...
           </option>
           {categories.map((c) => (
             <option

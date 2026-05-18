@@ -153,7 +153,7 @@ function AsyncSidebarPanel({
       const slug = blogPostMatch[3] ?? ''
       if (!slug) return
       const title = link.textContent?.trim() || slug
-      const url = `https://douglasnewby.com/${blogPostMatch[1]}/${blogPostMatch[2]}/${slug}`
+      const url = `${process.env.NEXT_PUBLIC_PRODUCTION_URL ?? ''}/${blogPostMatch[1]}/${blogPostMatch[2]}/${slug}`
       push({ title, componentId: slug, url })
       return
     }
