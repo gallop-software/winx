@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "slug": "hello-world",
+    "url": "/2026/05/hello-world",
+    "metadata": {
+      "title": "Hello world!",
+      "description": "Welcome to WordPress. This is your first post. Edit or delete it, then start writing!",
+      "date": "2026-05-18T18:22:36",
+      "categories": [
+        "Uncategorized"
+      ],
+      "categorySlugs": [
+        "uncategorized"
+      ],
+      "tags": [],
+      "tagSlugs": [],
+      "featuredImage": "",
+      "author": "Winx",
+      "authorSlug": "winx"
+    }
+  }
+]

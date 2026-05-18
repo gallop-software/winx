@@ -1,0 +1,159 @@
+---
+description: Workflow for adding or updating Canon ESLint rules
+globs: 
+alwaysApply: false
+---
+
+# Canon Rule Development Workflow
+
+When asked to add, update, or fix a Canon ESLint rule, follow these steps:
+
+## When to Use ESLint vs Documentation
+
+- **ESLint enforcement (preferred):** Always create an ESLint rule unless technically impossible to detect. Enforced patterns catch violations automatically.
+- **Documentation only:** Only use when ESLint cannot reasonably detect the violation (e.g., semantic naming conventions, architectural decisions that span multiple files).
+
+When in doubt, create an ESLint rule.
+
+## 1. Update Schema (if new rule)
+
+Edit `/Users/chrisb/Sites/canon/canon/schema.json`:
+- Add new pattern entry with id, title, file, category, status, enforcement, rule, summary
+- Add pattern id to relevant guarantees if applicable
+
+## 2. Create Pattern Documentation (if new rule)
+
+Create `canon/patterns/0XX-rule-name.md` with:
+- Summary, Rationale, Bad/Good examples, Exceptions
+
+## 3. Create or Update the ESLint Rule
+
+Location: `canon/src/eslint/rules/rule-name.ts`
+
+```typescript
+import type { Rule } from 'eslint'
+import { getCanonUrl, getCanonPattern } from '../utils/canon.js'
+
+const RULE_NAME = 'rule-name'
+const pattern = getCanonPattern(RULE_NAME)
+
+const rule: Rule.RuleModule = {
+  meta: {
+    type: 'suggestion',
+    docs: {
+      description: pattern?.summary || 'Description',
+      recommended: true,
+      url: getCanonUrl(RULE_NAME),
+    },
+    messages: {
+      messageId: `[Canon ${pattern?.id || '0XX'}] Error message.`,
+    },
+    schema: [],
+  },
+
+  create(context) {
+    const filename = context.filename || context.getFilename()
+    if (!filename.includes('/blocks/')) return {}
+
+    return {
+      JSXOpeningElement(node: any) {
+        // Rule logic - use context.report({ node, messageId }) to flag
+      },
+    }
+  },
+}
+
+export default rule
+```
+
+## 4. Register the Rule (if new)
+
+Edit `canon/src/eslint/index.ts`:
+- Add import for the new rule
+- Add to `rules` object
+- Add to `recommended` config object
+
+## 5. Build and Publish
+
+```bash
+cd ~/Sites/canon/canon
+npm run build
+```
+
+Bump version in `canon/package.json`:
+- Patch: bug fixes
+- Minor: new rules
+- Major: breaking changes
+
+```bash
+cd ~/Sites/canon
+npm publish --workspace=canon --access public
+```
+
+## 6. Update Speedwell
+
+```bash
+cd ~/Sites/speedwell
+npm install @gallop.software/canon@X.X.X
+```
+
+## 7. Test the Rule
+
+```bash
+npx eslint src/blocks/test-file.tsx
+```
+
+## 8. Regenerate AI Rules
+
+```bash
+npm run generate:ai-rules
+```
+
+## 9. Commit and Push Both Repos
+
+Canon:
+```bash
+cd ~/Sites/canon
+git add -A && git commit -m "feat: description" && git push
+```
+
+Speedwell:
+```bash
+cd ~/Sites/speedwell
+git add -A && git commit -m "chore: update canon" && git push
+```
+
+## Common Rule Patterns
+
+### Check for specific component
+```typescript
+if (node.name?.name === 'ComponentName') { ... }
+```
+
+### Get attribute value
+```typescript
+const attr = node.attributes?.find(a => a.name?.name === 'propName')
+const value = attr?.value?.value
+```
+
+### Check className for patterns
+```typescript
+const classAttr = node.attributes?.find(a => a.name?.name === 'className')
+if (classAttr?.value?.value?.includes('some-class')) { ... }
+```
+
+### Check parent elements
+```typescript
+let parent = node.parent
+while (parent) {
+  if (parent.openingElement?.name?.name === 'Parent') return
+  parent = parent.parent
+}
+```
+
+### Check for text children
+```typescript
+const hasText = node.parent?.children?.some(c => 
+  c.type === 'JSXText' && c.value.trim().length > 0
+)
+```

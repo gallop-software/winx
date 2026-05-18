@@ -1,0 +1,20 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Uncategorized",
+      "slug": "uncategorized",
+      "description": "",
+      "count": 1
+    }
+  ],
+  "tags": [],
+  "authors": [
+    {
+      "id": 1,
+      "name": "Winx",
+      "slug": "winx",
+      "description": ""
+    }
+  ]
+}

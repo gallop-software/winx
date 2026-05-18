@@ -1,0 +1,301 @@
+@import 'tailwindcss';
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* @custom-variant hero (.hero &); */
+
+@theme {
+  --font-heading: var(--font-heading-family);
+  --font-heading2: var(--font-heading2-family);
+  --font-heading3: var(--font-heading3-family);
+  --font-body: var(--font-body-family);
+  --font-accent: var(--font-accent-family);
+
+  --radius-4xl: 2rem;
+
+  --container-2xl: 600px;
+
+  --breakpoint-sm: 650px;
+  --breakpoint-md: 860px;
+  --breakpoint-lg: 1080px;
+  --breakpoint-xl: 1280px;
+
+  --text-xs: 1rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 1.25rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.4rem;
+  --text-base--line-height: 1.5;
+  --text-lg: 1.5rem;
+  --text-lg--line-height: 1.5;
+  --text-xl: 1.6rem;
+  --text-xl--line-height: 1.3;
+  --text-2xl: 1.7rem;
+  --text-2xl--line-height: 1.3;
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 1.3;
+  --text-4xl: 2.9rem;
+  --text-4xl--line-height: 1.3;
+  --text-5xl: 3.2rem;
+  --text-5xl--line-height: 1.3;
+
+  /* ── Surface / Background ── */
+  --color-body: #ffffff;
+  --color-body-light: #ffe7bd;
+  --color-body-dark: #eed093;
+  --color-body2: #f5f5f5;
+
+  /* ── Text / Foreground ── */
+  --color-contrast: #482401;
+  --color-contrast-light: #936f4d;
+  --color-contrast-dark: #603813;
+
+  /* ── Overlay (fixed context — image/video scrims) ── */
+  --color-overlay: #000000;
+  --color-overlay-text: #ffffff;
+
+  /* ── Brand Accent 1 ── */
+  --color-accent: #AC1600;
+  --color-accent-light: #b2220d;
+  --color-accent-dark: #a01602;
+  --color-accent-contrast: #ffffff;
+
+  --color-accent2: #CC6600;
+  --color-accent2-light: #d2761a;
+  --color-accent2-dark: #c46302;
+  --color-accent2-contrast: #ffffff;
+
+  --color-accent3: #f5f5f5;
+  --color-accent3-light: #fafafa;
+  --color-accent3-dark: #e6e6e6;
+  --color-accent3-contrast: #1a1a1a;
+
+  --color-accent4: #ffe8d6;
+  --color-accent4-light: #fff3e8;
+  --color-accent4-dark: #ffb380;
+  --color-accent4-contrast: #1a1a1a;
+
+  --color-accent5: #e6e6e6;
+  --color-accent5-light: #f0f0f0;
+  --color-accent5-dark: #cccccc;
+  --color-accent5-contrast: #1a1a1a;
+
+  --color-accent6: #000000;
+  --color-accent6-light: #333333;
+  --color-accent6-dark: #000000;
+  --color-accent6-contrast: #ffffff;
+
+  --color-caption: #4b5563;
+}
+
+* {
+  scroll-margin-top: 40px !important;
+}
+
+/* Hide scrollbars while keeping scroll functionality */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  /* Text stroke/outline effect */
+  .text-stroke {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 1px;
+  }
+  .text-stroke-body {
+    -webkit-text-stroke-color: var(--color-body);
+  }
+  .text-stroke-contrast {
+    -webkit-text-stroke-color: var(--color-contrast);
+  }
+  .text-stroke-accent {
+    -webkit-text-stroke-color: var(--color-accent);
+  }
+
+  /* Padding top matching navbar height at different breakpoints */
+  /* Navbar: pt-12 sm:pt-16 + logo (~60px mobile, ~80px desktop) + pb-10 */
+  .pt-navbar {
+    @apply pt-40 sm:pt-48 md:pt-56 lg:pt-60;
+  }
+
+  /* Subtle cross pattern background */
+  .bg-pattern-cross {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@keyframes move-x {
+  0% {
+    transform: translateX(var(--move-x-from));
+  }
+  100% {
+    transform: translateX(var(--move-x-to));
+  }
+}
+
+@keyframes fall-slow {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(600px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-medium {
+  0% {
+    transform: translateY(0) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(550px) rotate(-270deg) translateX(30px);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-fast {
+  0% {
+    transform: translateY(0) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(500px) rotate(180deg) translateX(-20px);
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .animate-fall-slow {
+    animation: fall-slow 8s ease-in-out infinite;
+  }
+  .animate-fall-medium {
+    animation: fall-medium 6s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+  .animate-fall-fast {
+    animation: fall-fast 5s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+  .animate-spin-slow-reverse {
+    animation: spin-slow-reverse 10s linear infinite;
+  }
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+  .animate-spin-medium {
+    animation: spin-medium 15s linear infinite;
+  }
+  .animate-spin-medium-reverse {
+    animation: spin-medium-reverse 15s linear infinite;
+  }
+}
+
+@utility animate-dots {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  vertical-align: bottom;
+  animation: dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  to {
+    width: 1.25em;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-medium {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-medium-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes spin-slow-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* Diagonal clip path for hero sections */
+.clip-diagonal {
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 65%);
+}
+
+/* Confetti explosion and fall animation - plays once */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(120vh) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .animate-confetti-fall {
+    animation: confetti-fall cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  }
+}

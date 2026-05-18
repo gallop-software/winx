@@ -1,0 +1,16 @@
+# Other files to ignore
+node_modules/
+.next/
+dist/
+build/
+
+# Assets and generated files
+public/
+*.woff2
+*.ttf
+
+# Lock files
+package-lock.json
+
+# Markdown files
+*.md
