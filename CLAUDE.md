@@ -1,6 +1,6 @@
-# Speedwell — Gallop Canon Template
+# Winx — Gallop Canon Template
 
-Speedwell is a Next.js template for small businesses built on the Gallop Canon architecture system. Canon provides ESLint rules (`@gallop.software/canon/eslint`) and an audit CLI (`gallop audit`) that enforce the patterns below. The `CLAUDE.md` file is the canonical AI reference — there is no auto-generation pipeline.
+Winx is a Next.js template for writers, journalists, and content creators built on the Gallop Canon architecture system. Canon provides ESLint rules (`@gallop.software/canon/eslint`) and an audit CLI (`gallop audit`) that enforce the patterns below. The `CLAUDE.md` file is the canonical AI reference — there is no auto-generation pipeline.
 
 ## Auto-Generated Files — Never Edit Manually
 
