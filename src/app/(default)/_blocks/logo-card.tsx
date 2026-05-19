@@ -4,9 +4,9 @@ import { Image } from '@/components/image'
 export default function LogoCard() {
   return (
     <Section className="bg-body2 py-7">
-      <div className="rounded-sm p-12 flex items-center justify-center max-w-4xl mx-auto">
+      <div className="bg-accent rounded-sm p-12 flex items-center justify-center max-w-4xl mx-auto">
         <Image
-          src="/webplantmedia-logo.png"
+          src="/founder_notes_transparent_logo.png"
           alt="Founder Notes"
           size="medium"
           rounded="rounded-none"
