@@ -10,7 +10,7 @@ import {
 
 export default function ContactForm() {
   return (
-    <Section className="bg-body2 pt-10 pb-20">
+    <Section className="bg-body2 pt-6 pb-20">
       <div className="max-w-3xl">
         <Form gap="gap-3" honeypot>
           <FormInput

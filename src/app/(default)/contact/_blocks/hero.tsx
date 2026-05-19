@@ -10,10 +10,11 @@ export default function Hero() {
           Contact
         </Heading>
         <Heading as="h2" margin="mb-0">
-          Questions, feedback, or just want to say hello?
+          For inquiries, feedback, and correspondence.
         </Heading>
-        <Paragraph margin="mt-6 mb-0">
-          Send a note and we&rsquo;ll get back to you. We read every message.
+        <Paragraph margin="mt-4 mb-0">
+          Use the form below to get in touch. Every message is read personally,
+          and we aim to respond within a few business days.
         </Paragraph>
       </div>
     </Section>

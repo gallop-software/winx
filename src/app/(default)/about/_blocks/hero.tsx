@@ -10,12 +10,14 @@ export default function Hero() {
           About Founder Notes
         </Heading>
         <Heading as="h2" margin="mb-0">
-          An independent publication for people building companies.
+          An independent publication for the people building today&rsquo;s
+          companies.
         </Heading>
-        <Paragraph margin="mt-6 mb-0">
-          One carefully written essay each week on product strategy,
-          fundraising, hiring, and the day-to-day work of building an
-          early-stage startup. No threads, no upsells, no sponsored takes.
+        <Paragraph margin="mt-4 mb-0">
+          Each week, Founder Notes publishes a single, carefully considered
+          essay on product strategy, fundraising, hiring, and the practical
+          realities of building an early-stage company. No social threads, no
+          promotional content, and no sponsored commentary.
         </Paragraph>
       </div>
     </Section>

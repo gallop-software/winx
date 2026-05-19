@@ -11,17 +11,19 @@ export default function Body() {
           <Heading as="h3" margin="mb-4">
             Why this exists
           </Heading>
-          <Paragraph margin="mb-4">
-            Most startup writing is either too abstract to be useful or too
-            tactical to be true. Founder Notes sits in the middle — long
-            enough to think clearly, specific enough to act on, and written
-            from the perspective of someone who has actually shipped product,
-            raised capital, hired wrong, and figured out what to do next.
+          <Paragraph margin="mt-4 mb-4">
+            A great deal of startup writing is either too abstract to be
+            useful or too tactical to be credible. Founder Notes is intended
+            to occupy the space between the two — substantive enough to
+            support clear thinking, specific enough to inform real decisions,
+            and grounded in the perspective of operators who have shipped
+            product, raised capital, navigated difficult hires, and learned
+            from each.
           </Paragraph>
-          <Paragraph margin="mb-0">
-            The goal isn&rsquo;t to sell a framework or a course. The goal is
-            to help founders think more clearly about the decisions in front
-            of them.
+          <Paragraph margin="mt-4 mb-0">
+            The objective is not to promote a framework or sell a course. It
+            is to help founders reason more clearly about the decisions in
+            front of them.
           </Paragraph>
         </div>
 
@@ -29,12 +31,12 @@ export default function Body() {
           <Heading as="h3" margin="mb-4">
             What you&rsquo;ll find here
           </Heading>
-          <Paragraph margin="mb-0">
+          <Paragraph margin="mt-4 mb-0">
             Long-form essays on product strategy, fundraising, hiring,
-            go-to-market, leadership, and the quieter parts of company
-            building that rarely make it onto a conference stage. One piece a
-            week, delivered every Sunday — and a growing archive you can read
-            in any order.
+            go-to-market, and leadership — including the less visible aspects
+            of company building that rarely surface on a conference stage.
+            One essay is published each Sunday, alongside a growing archive
+            that can be read in any order.
           </Paragraph>
         </div>
 
@@ -42,11 +44,11 @@ export default function Body() {
           <Heading as="h3" margin="mb-4">
             Who it&rsquo;s for
           </Heading>
-          <Paragraph margin="mb-0">
-            If you&rsquo;re building something — pre-seed, post-PMF, or
-            somewhere in the messy middle — this publication is for you. It
-            is also written for the people who back, advise, and work
-            alongside founders.
+          <Paragraph margin="mt-4 mb-0">
+            Founder Notes is written for those building companies at any
+            stage — pre-seed, post product-market fit, or anywhere in
+            between — as well as for the investors, advisors, and operators
+            who work alongside them.
           </Paragraph>
         </div>
 
@@ -54,9 +56,10 @@ export default function Body() {
           <Heading as="h3" margin="mb-4">
             How it&rsquo;s funded
           </Heading>
-          <Paragraph margin="mb-0">
-            Founder Notes is reader-supported. No sponsored posts, no paid
-            placements, no display ads. Just the work.
+          <Paragraph margin="mt-4 mb-0">
+            Founder Notes is entirely reader-supported. There are no
+            sponsored posts, paid placements, or display advertisements —
+            only the writing itself.
           </Paragraph>
         </div>
 
