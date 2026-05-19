@@ -33,8 +33,6 @@ interface BlogPost {
     featuredImageWidth?: number
     featuredImageHeight?: number
   }
-  shareCount?: number
-  likeCount?: number
 }
 
 export interface BlogQuery {
@@ -123,13 +121,17 @@ function BlogClientInner({
   }, [cacheKey, posts, page, totalPages])
 
   useEffect(() => {
+    const slugById = new Map<number, string>()
+    for (const p of posts) slugById.set(p.id, p.slug)
+
     const missingPostIds = posts
       .map((p) => p.id)
       .filter(
         (id) =>
-          state.likeCounts[id] === undefined || state.liked[id] === undefined
+          state.likeCounts[slugById.get(id)!] === undefined ||
+          state.liked[id] === undefined
       )
-    const missingSlugs = posts
+    const missingShareSlugs = posts
       .map((p) => p.slug)
       .filter((slug) => state.shareCounts[slug] === undefined)
 
@@ -146,8 +148,9 @@ function BlogClientInner({
         .then((data) => {
           if (cancelled) return
           for (const id of missingPostIds) {
-            if (state.likeCounts[id] === undefined) {
-              state.likeCounts[id] = data.counts?.[id] ?? 0
+            const slug = slugById.get(id)!
+            if (state.likeCounts[slug] === undefined) {
+              state.likeCounts[slug] = data.counts?.[id] ?? 0
             }
             if (state.liked[id] === undefined) {
               state.liked[id] = Boolean(data.liked?.[id])
@@ -157,13 +160,13 @@ function BlogClientInner({
         .catch(() => {})
     }
 
-    if (missingSlugs.length > 0) {
-      const params = new URLSearchParams({ slugs: missingSlugs.join(',') })
+    if (missingShareSlugs.length > 0) {
+      const params = new URLSearchParams({ slugs: missingShareSlugs.join(',') })
       fetch(`/api/share-count?${params.toString()}`)
         .then((r) => r.json())
         .then((data) => {
           if (cancelled) return
-          for (const slug of missingSlugs) {
+          for (const slug of missingShareSlugs) {
             if (state.shareCounts[slug] === undefined) {
               state.shareCounts[slug] = data.counts?.[slug] ?? 0
             }

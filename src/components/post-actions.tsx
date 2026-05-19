@@ -14,6 +14,7 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { state, useSnapshot } from '@/state'
 import { getOrCreateAnonId } from '@/utils/anon-id'
+import { recordShareIntent } from '@/utils/record-share-intent'
 
 function shareLabel(id: string): string {
   switch (id) {
@@ -34,8 +35,6 @@ function shareLabel(id: string): string {
 
 interface PostActionsProps {
   postId?: number
-  initialLikeCount?: number
-  initialShareCount?: number
   title: string
   url: string
   slug?: string
@@ -46,8 +45,6 @@ interface PostActionsProps {
 
 export function PostActions({
   postId,
-  initialLikeCount,
-  initialShareCount,
   title,
   url,
   slug,
@@ -60,40 +57,25 @@ export function PostActions({
   const lineHeight = size === 'md' ? 'leading-6' : 'leading-5'
 
   const snap = useSnapshot(state)
-  const likeCount =
-    typeof postId === 'number'
-      ? (snap.likeCounts[postId] ?? initialLikeCount)
-      : undefined
+  const likeCount = slug ? snap.likeCounts[slug] : undefined
+  const shareCount = slug ? snap.shareCounts[slug] : undefined
   const liked = typeof postId === 'number' ? !!snap.liked[postId] : false
-  const shareCount = slug
-    ? (snap.shareCounts[slug] ?? initialShareCount)
-    : undefined
-  const countsHydrated =
-    likeCount !== undefined && (!slug || shareCount !== undefined)
+  const countsHydrated = likeCount !== undefined && shareCount !== undefined
   const [pending, setPending] = useState(false)
 
   useEffect(() => {
     if (skipBackfill) return
-    if (typeof postId !== 'number') return
-    if (state.likeCounts[postId] === undefined && initialLikeCount !== undefined) {
-      state.likeCounts[postId] = initialLikeCount
-    }
-    if (
-      state.likeCounts[postId] !== undefined &&
-      state.liked[postId] !== undefined
-    ) {
-      return
-    }
+    if (typeof postId !== 'number' || !slug) return
+    if (state.likeCounts[slug] !== undefined && state.liked[postId] !== undefined) return
+
     let cancelled = false
     const anonId = getOrCreateAnonId()
-    fetch(
-      `/api/blog-likes?postIds=${postId}&anonId=${encodeURIComponent(anonId)}`
-    )
+    fetch(`/api/blog-likes?postIds=${postId}&anonId=${encodeURIComponent(anonId)}`)
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return
-        if (state.likeCounts[postId] === undefined) {
-          state.likeCounts[postId] = data.counts?.[postId] ?? 0
+        if (state.likeCounts[slug] === undefined) {
+          state.likeCounts[slug] = data.counts?.[postId] ?? 0
         }
         if (state.liked[postId] === undefined) {
           state.liked[postId] = Boolean(data.liked?.[postId])
@@ -103,16 +85,12 @@ export function PostActions({
     return () => {
       cancelled = true
     }
-  }, [postId, initialLikeCount, skipBackfill])
+  }, [postId, slug, skipBackfill])
 
   useEffect(() => {
-    if (skipBackfill) return
-    if (!slug) return
+    if (skipBackfill || !slug) return
     if (state.shareCounts[slug] !== undefined) return
-    if (initialShareCount !== undefined) {
-      state.shareCounts[slug] = initialShareCount
-      return
-    }
+
     let cancelled = false
     fetch(`/api/share-count?slug=${encodeURIComponent(slug)}`)
       .then((r) => r.json())
@@ -126,19 +104,19 @@ export function PostActions({
     return () => {
       cancelled = true
     }
-  }, [slug, initialShareCount, skipBackfill])
+  }, [slug, skipBackfill])
 
   const onLike = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (typeof postId !== 'number' || pending) return
+    if (typeof postId !== 'number' || !slug || pending) return
     setPending(true)
 
     const nextLiked = !liked
     const prevLiked = liked
-    const prevCount = state.likeCounts[postId] ?? 0
+    const prevCount = state.likeCounts[slug] ?? 0
     state.liked[postId] = nextLiked
-    state.likeCounts[postId] = prevCount + (nextLiked ? 1 : -1)
+    state.likeCounts[slug] = prevCount + (nextLiked ? 1 : -1)
 
     try {
       const res = await fetch('/api/blog-likes', {
@@ -152,10 +130,10 @@ export function PostActions({
       })
       if (!res.ok) throw new Error('request failed')
       const data = await res.json()
-      if (typeof data.count === 'number') state.likeCounts[postId] = data.count
+      if (typeof data.count === 'number') state.likeCounts[slug] = data.count
     } catch {
       state.liked[postId] = prevLiked
-      state.likeCounts[postId] = prevCount
+      state.likeCounts[slug] = prevCount
     } finally {
       setPending(false)
     }
@@ -163,37 +141,13 @@ export function PostActions({
 
   const [copied, setCopied] = useState(false)
 
-  const recordShareIntent = (target: string) => {
-    if (!slug) return
-    const prevCount = state.shareCounts[slug]
-    state.shareCounts[slug] = (prevCount ?? 0) + 1
-    fetch('/api/share-count', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug, target }),
-      keepalive: true,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (typeof data.count === 'number') {
-          state.shareCounts[slug] = data.count
-        }
-      })
-      .catch(() => {
-        if (prevCount === undefined) {
-          delete state.shareCounts[slug]
-        } else {
-          state.shareCounts[slug] = prevCount
-        }
-      })
-  }
-
   const onCopyLink = async () => {
+    if (!slug) return
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-      recordShareIntent('copy')
+      recordShareIntent(slug, 'copy')
     } catch {}
   }
 
@@ -222,9 +176,7 @@ export function PostActions({
               !countsHydrated && 'invisible'
             )}
           >
-            {countsHydrated
-              ? formatCompactCount((likeCount ?? 0) + (shareCount ?? 0))
-              : '0'}
+            {countsHydrated ? formatCompactCount(likeCount ?? 0) : '0'}
           </Span>
         </button>
       )}
@@ -238,6 +190,18 @@ export function PostActions({
             icon={shareIcon}
             className={clsx(iconSize, 'shrink-0')}
           />
+          {slug && (
+            <Span
+              fontSize={fontSize}
+              lineHeight={lineHeight}
+              className={clsx(
+                'inline-block min-w-[3ch] text-left',
+                !countsHydrated && 'invisible'
+              )}
+            >
+              {countsHydrated ? formatCompactCount(shareCount ?? 0) : '0'}
+            </Span>
+          )}
         </PopoverButton>
         <PopoverPanel
           anchor={{ to: 'top start', gap: 8 }}
@@ -255,7 +219,7 @@ export function PostActions({
                       ? {}
                       : { target: '_blank', rel: 'noopener noreferrer' })}
                     onClick={() => {
-                      recordShareIntent(target.id)
+                      if (slug) recordShareIntent(slug, target.id)
                       close()
                     }}
                     className="flex items-center gap-3 px-4 py-2 text-xs text-contrast hover:bg-contrast/5 transition-colors"

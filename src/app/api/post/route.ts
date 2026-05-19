@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import blogData from '@/../_data/_blog.json'
-import { getShareCount } from '@/utils/blog-shares'
 
 export async function GET(request: NextRequest) {
   const slug = request.nextUrl.searchParams.get('slug')
@@ -26,13 +24,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Post not found' }, { status: 404 })
   }
 
-  const localPost = (blogData as { id: number; slug: string }[]).find(
-    (p) => p.slug === slug
-  )
-  const shareCount = localPost ? await getShareCount(localPost.id) : 0
-
   return NextResponse.json({
     content: posts[0].content?.rendered || '',
-    shareCount,
   })
 }

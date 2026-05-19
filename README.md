@@ -357,7 +357,6 @@ winx/
 ├── _scripts/                 # Build scripts
 │   ├── generate-blog-metadata.mjs
 │   ├── generate-search.mjs
-│   ├── seed-share-counts.mjs
 │   └── ...
 ├── next.config.mjs          # Next.js configuration
 ├── tsconfig.json            # TypeScript config
@@ -394,7 +393,6 @@ winx/
 
 - **`npm run blog`** - Generate blog post metadata to `_data/_blog.json` → [docs](./_scripts/generate-blog-metadata.md)
 - **`npm run search`** - Build FlexSearch index for site search → [docs](./_scripts/generate-search.md)
-- **`npm run seed:shares`** - Seed initial share counts into the database
 - **`npm run bust:kv`** - Bust the KV cache for fresh data
 - **`npm run blocks`** - Generate blocks catalog with screenshots
 - **`npm run blocks:screenshots`** - Force regenerate all block screenshots

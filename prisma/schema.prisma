@@ -14,12 +14,15 @@ model BlogLike {
   @@map("blog_likes")
 }
 
-model BlogPostSeed {
-  post_id    Int      @id
-  seed_count Int      @default(0)
-  seeded_at  DateTime @default(now())
+model Subscriber {
+  email      String   @id
+  first_name String?
+  last_name  String?
+  subscribed Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
-  @@map("blog_post_seeds")
+  @@map("subscribers")
 }
 
 model BlogShareIntent {

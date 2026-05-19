@@ -11,8 +11,8 @@ const state = proxy({
   lastScrollingDirection: 'down',
   lockScrollDirection: false,
   isLoggedIn: false,
+  likeCounts: {} as Record<string, number>,
   shareCounts: {} as Record<string, number>,
-  likeCounts: {} as Record<number, number>,
   liked: {} as Record<number, boolean>,
   pageBackButtonOutOfView: false,
 })

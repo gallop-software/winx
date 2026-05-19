@@ -5,26 +5,22 @@ import { Icon } from '@/components/icon'
 import { formatCompactCount } from '@/utils/format-count'
 import { shareTargets } from '@/utils/share-targets'
 import { state, useSnapshot } from '@/state'
+import { recordShareIntent } from '@/utils/record-share-intent'
 
 interface ShareBarProps {
   title: string
   slug: string
   url: string
-  initialShareCount?: number
 }
 
-export function ShareBar({ title, slug, url, initialShareCount }: ShareBarProps) {
+export function ShareBar({ title, slug, url }: ShareBarProps) {
   const snap = useSnapshot(state)
-  const shareCount = snap.shareCounts[slug] ?? initialShareCount
+  const shareCount = snap.shareCounts[slug]
   const [copied, setCopied] = useState(false)
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (state.shareCounts[slug] !== undefined) return
-    if (initialShareCount !== undefined) {
-      state.shareCounts[slug] = initialShareCount
-      return
-    }
     fetch(`/api/share-count?slug=${encodeURIComponent(slug)}`)
       .then((res) => res.json())
       .then((data) => {
@@ -33,7 +29,7 @@ export function ShareBar({ title, slug, url, initialShareCount }: ShareBarProps)
         }
       })
       .catch(() => {})
-  }, [slug, initialShareCount])
+  }, [slug])
 
   return (
     <div className="flex items-center justify-start gap-3 py-10 max-w-full overflow-x-auto scrollbar-hide">
@@ -47,29 +43,6 @@ export function ShareBar({ title, slug, url, initialShareCount }: ShareBarProps)
         {shareTargets.map((btn) => {
           const isProtocol = btn.id === 'email' || btn.id === 'sms'
           const isCopied = !!(btn.copy && copied)
-          const recordIntent = () => {
-            const prevCount = state.shareCounts[slug]
-            state.shareCounts[slug] = (prevCount ?? 0) + 1
-            fetch('/api/share-count', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ slug, target: btn.id }),
-              keepalive: true,
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                if (typeof data.count === 'number') {
-                  state.shareCounts[slug] = data.count
-                }
-              })
-              .catch(() => {
-                if (prevCount === undefined) {
-                  delete state.shareCounts[slug]
-                } else {
-                  state.shareCounts[slug] = prevCount
-                }
-              })
-          }
           const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
             if (btn.copy) {
               e.preventDefault()
@@ -78,7 +51,7 @@ export function ShareBar({ title, slug, url, initialShareCount }: ShareBarProps)
                 if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
                 setCopied(true)
                 copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000)
-                recordIntent()
+                recordShareIntent(slug, btn.id)
               }
               if (navigator.clipboard?.writeText) {
                 navigator.clipboard.writeText(text).then(done).catch(() => {})
@@ -97,7 +70,7 @@ export function ShareBar({ title, slug, url, initialShareCount }: ShareBarProps)
               }
               return
             }
-            recordIntent()
+            recordShareIntent(slug, btn.id)
           }
           return (
             <a

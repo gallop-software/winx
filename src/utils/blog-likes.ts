@@ -4,6 +4,7 @@ import { kv, likeCountKey, likesKey } from '@/utils/kv'
 
 const TTL_SECONDS = 60 * 60 * 24 // 24h
 
+// Clears the cached like count and likers set. Use after a like/unlike write.
 export async function invalidateLike(id: number): Promise<void> {
   const p = kv.pipeline()
   p.del(likeCountKey(id))
@@ -13,6 +14,14 @@ export async function invalidateLike(id: number): Promise<void> {
 
 export async function getLikeCountFromDb(id: number): Promise<number> {
   return prisma.blogLike.count({ where: { post_id: id } })
+}
+
+export async function getLikeCount(id: number): Promise<number> {
+  const cached = await kv.get<number | string>(likeCountKey(id))
+  if (cached != null) return Number(cached)
+  const total = await getLikeCountFromDb(id)
+  await kv.set(likeCountKey(id), total, { ex: TTL_SECONDS })
+  return total
 }
 
 // Cache-aside batch read. KV is checked first; any postId whose like_count is
@@ -32,11 +41,7 @@ export async function getLikesBatch(
   if (anonId) {
     for (const id of ids) probe.sismember(likesKey(id), anonId)
   }
-  const probeResults = (await probe.exec()) as (
-    | number
-    | string
-    | null
-  )[]
+  const probeResults = (await probe.exec()) as (number | string | null)[]
 
   const counts: Record<number, number> = {}
   const liked: Record<number, boolean> = {}
@@ -48,9 +53,7 @@ export async function getLikesBatch(
       missing.push(id)
     } else {
       counts[id] = Number(cached)
-      liked[id] = anonId
-        ? Boolean(probeResults[ids.length + i])
-        : false
+      liked[id] = anonId ? Boolean(probeResults[ids.length + i]) : false
     }
   })
 
@@ -72,14 +75,10 @@ export async function getLikesBatch(
         writeP.sadd(likesKey(id), ...(anons as [string, ...string[]]))
         writeP.expire(likesKey(id), TTL_SECONDS)
       }
-    }
-    await writeP.exec()
-
-    for (const id of missing) {
-      const anons = byPost.get(id) ?? []
       counts[id] = anons.length
       liked[id] = anonId ? anons.includes(anonId) : false
     }
+    await writeP.exec()
   }
 
   return { counts, liked }

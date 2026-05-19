@@ -31,7 +31,6 @@ interface BlogPost {
     featuredImageWidth?: number
     featuredImageHeight?: number
   }
-  shareCount?: number
 }
 
 interface FetchResult {

@@ -18,28 +18,22 @@ function unwrap(field: Field): string {
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}))
-  const firstName = unwrap(body.firstName).trim()
-  const lastName = unwrap(body.lastName).trim()
   const email = unwrap(body.email).trim().toLowerCase()
 
-  if (!firstName || !lastName || !email) {
-    return NextResponse.json({ message: 'Please fill in all fields.' }, { status: 400 })
-  }
-
-  if (!isValidEmail(email)) {
+  if (!email || !isValidEmail(email)) {
     return NextResponse.json({ message: 'Invalid email format.' }, { status: 400 })
   }
 
   try {
     await prisma.subscriber.upsert({
       where: { email },
-      create: { email, first_name: firstName, last_name: lastName, subscribed: true },
-      update: { first_name: firstName, last_name: lastName, subscribed: true },
+      create: { email, subscribed: false },
+      update: { subscribed: false },
     })
 
-    return NextResponse.json({ message: 'You have been subscribed successfully.' })
+    return NextResponse.json({ message: 'You have been unsubscribed.' })
   } catch (error) {
-    console.error('Error subscribing email:', error)
-    return NextResponse.json({ message: 'Failed to subscribe email' }, { status: 500 })
+    console.error('Error unsubscribing email:', error)
+    return NextResponse.json({ message: 'Failed to unsubscribe' }, { status: 500 })
   }
 }

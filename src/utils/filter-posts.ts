@@ -22,7 +22,6 @@ export interface BlogPost {
     author?: string
     authorSlug?: string
   }
-  shareCount?: number
 }
 
 const posts = blogData as BlogPost[]

@@ -5,4 +5,4 @@ export { kv }
 
 export const likesKey = (postId: number) => `likes:${postId}`
 export const likeCountKey = (postId: number) => `like_count:${postId}`
-export const sharesKey = (postId: number) => `shares:${postId}`
+export const shareCountKey = (postId: number) => `share_count:${postId}`
