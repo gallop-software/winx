@@ -24,7 +24,9 @@ interface PageProps {
 }
 
 async function fetchPost(slug: string, year: string, month: string) {
-  const wpJson = (process.env.NEXT_PUBLIC_WORDPRESS_URL ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json` : undefined)
+  const wpJson = process.env.NEXT_PUBLIC_WORDPRESS_URL
+    ? `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json`
+    : undefined
   if (!wpJson) return null
 
   const linkUrl = `${wpJson}/wp/v2/posts?slug=${encodeURIComponent(slug)}&_fields=link`
@@ -66,7 +68,9 @@ export function generateStaticParams() {
       if (!match) return null
       return { year: match[1], month: match[2], slug: match[3] }
     })
-    .filter((p): p is { year: string; month: string; slug: string } => p !== null)
+    .filter(
+      (p): p is { year: string; month: string; slug: string } => p !== null
+    )
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -105,7 +109,9 @@ export async function generateMetadata({ params }: PageProps) {
       type: 'article' as const,
       title: seo?.opengraphTitle || seo?.title || post.postTitle,
       description: seo?.opengraphDescription,
-      ...(seo?.opengraphUrl ? { url: replaceProductionUrl(seo.opengraphUrl) } : {}),
+      ...(seo?.opengraphUrl
+        ? { url: replaceProductionUrl(seo.opengraphUrl) }
+        : {}),
       ...(seo?.opengraphSiteName ? { siteName: seo.opengraphSiteName } : {}),
       ...(featuredImage
         ? {
@@ -192,11 +198,15 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <PageWrapper metadata={metadata}>
-      <Section className="pt-7 pb-20">
+      <Section className="pt-7 pb-10">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-start gap-3">
             <BackButton className="text-lg sm:text-xl md:text-2xl shrink-0" />
-            <Heading as="h1" margin="mb-0" className="!mb-0">
+            <Heading
+              as="h1"
+              margin="mb-0"
+              className="!mb-0"
+            >
               {post.postTitle}
             </Heading>
           </div>
@@ -219,7 +229,10 @@ export default async function PostPage({ params }: PageProps) {
           />
           {categories.length > 0 && (
             <div className="mt-7 flex flex-wrap items-center gap-2">
-              <Heading as="h4" className="sr-only">
+              <Heading
+                as="h4"
+                className="sr-only"
+              >
                 Categories
               </Heading>
               <Paragraph margin="mb-0">Filed Under:</Paragraph>

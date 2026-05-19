@@ -94,14 +94,19 @@ function Inner() {
 
   return (
     <>
-      <Heading as="h1" textAlign="text-left" margin="mb-12">
+      <Heading
+        as="h1"
+        textAlign="text-left"
+        margin="mb-10"
+      >
         {heading}
       </Heading>
       {!hasInput ? (
         <Paragraph textAlign="text-left">Enter a search term.</Paragraph>
       ) : showLoading ? (
         <Paragraph textAlign="text-left">
-          Loading<LoadingDots />
+          Loading
+          <LoadingDots />
         </Paragraph>
       ) : !showResult || state.result!.posts.length === 0 ? (
         <Paragraph textAlign="text-left">
@@ -125,11 +130,16 @@ export function SearchResultsClient() {
     <Suspense
       fallback={
         <>
-          <Heading as="h1" textAlign="text-left" margin="mb-12">
+          <Heading
+            as="h1"
+            textAlign="text-left"
+            margin="mb-10"
+          >
             Search Results For:
           </Heading>
           <Paragraph textAlign="text-left">
-            Loading<LoadingDots />
+            Loading
+            <LoadingDots />
           </Paragraph>
         </>
       }

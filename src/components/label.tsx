@@ -52,12 +52,12 @@ export function Label({
 
   // Use user-defined values if provided, otherwise use defaults
   const finalFontSize = fontSize || variantFontSizes[variant]
-  const finalColor = color || 'text-contrast'
+  const finalColor = color || 'text-accent2'
   const finalFontFamily = fontFamily || '' // no default font family
-  const finalFontWeight = fontWeight || 'font-medium' // default font weight
+  const finalFontWeight = fontWeight || 'font-semibold' // default font weight
   const finalFontStyle = fontStyle || '' // no default font style
   const finalLineHeight = lineHeight || 'leading-normal' // default line height
-  const finalLetterSpacing = letterSpacing || 'tracking-wider' // default letter spacing
+  const finalLetterSpacing = letterSpacing || 'tracking-[0.18em]' // default letter spacing
   const finalTextTransform = textTransform || 'uppercase' // default text transform
   const finalTextAlign = textAlign || '' // no default text alignment
   const finalMargin = margin || '' // no default margin for labels

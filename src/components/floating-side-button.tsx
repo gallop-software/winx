@@ -40,7 +40,7 @@ export function FloatingSideButton() {
           <div className="flex justify-end h-full">
             <DialogPanel
               transition
-              className="pointer-events-auto h-full bg-body2 shadow-xl w-full overflow-hidden overflow-y-auto scrollbar-hide duration-500 ease-in-out transition data-[closed]:translate-x-full [-webkit-overflow-scrolling:touch]"
+              className="pointer-events-auto h-full bg-body shadow-xl w-full overflow-hidden overflow-y-auto scrollbar-hide duration-500 ease-in-out transition data-[closed]:translate-x-full [-webkit-overflow-scrolling:touch]"
             >
               <div className="flex flex-col pt-6 pb-14 px-7">
                 <div className="w-full flex justify-between items-center mb-6">

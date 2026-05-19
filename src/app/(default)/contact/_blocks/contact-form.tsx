@@ -1,4 +1,6 @@
 import { Section } from '@/components/section'
+import { Heading } from '@/components/heading'
+import { Paragraph } from '@/components/paragraph'
 import {
   Form,
   FormFirstName,
@@ -10,9 +12,17 @@ import {
 
 export default function ContactForm() {
   return (
-    <Section className="bg-body2 pt-6 pb-20">
+    <Section className="bg-body pb-10">
       <div className="max-w-3xl">
-        <Form gap="gap-3" honeypot>
+        <Heading as="h2">For inquiries, feedback, and correspondence.</Heading>
+        <Paragraph margin="mb-4">
+          Use the form below to get in touch. Every message is read personally,
+          and we aim to respond within a few business days.
+        </Paragraph>
+        <Form
+          gap="gap-3"
+          honeypot
+        >
           <FormInput
             name="emailSubject"
             defaultValue="Contact Form"

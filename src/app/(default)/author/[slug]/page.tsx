@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { BlogClient } from '@/components/blog/blog-client'
 import { Heading } from '@/components/heading'
+import { Label } from '@/components/label'
 import { PageWrapper } from '@/components/page-wrapper'
 import { Section } from '@/components/section'
 import { generatePageMetadata, type PageMetadata } from '@/utils/page-helpers'
@@ -63,11 +64,11 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <PageWrapper metadata={metadata}>
-      <Section className="bg-body2 pt-7 pb-20">
+      <Section className="bg-body pt-7 pb-10">
+        <Label margin="mb-2">Author</Label>
         <Heading
           as="h1"
-          textAlign="text-left"
-          margin="mb-12"
+          margin="mb-10"
         >
           {author.name}
         </Heading>

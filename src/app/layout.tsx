@@ -64,7 +64,7 @@ export default function RootLayout({
       lang="en"
       style={rootStyle}
     >
-      <body className="bg-body2 font-body text-base font-medium leading-normal text-contrast antialiased">
+      <body className="bg-body font-body text-base font-medium leading-normal text-contrast antialiased">
         <div>{children}</div>
         <SmoothScroll />
         <IframeHeight />

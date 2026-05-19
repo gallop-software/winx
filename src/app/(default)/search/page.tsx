@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Label } from '@/components/label'
 import { PageWrapper } from '@/components/page-wrapper'
 import { Section } from '@/components/section'
 import { type PageMetadata } from '@/utils/page-helpers'
@@ -17,7 +18,8 @@ const pageMetadata: PageMetadata = {
 export default function SearchPage() {
   return (
     <PageWrapper metadata={pageMetadata}>
-      <Section className="bg-body2 pt-7 pb-20">
+      <Section className="bg-body pt-7">
+        <Label margin="mb-2">Archive</Label>
         <SearchResultsClient />
       </Section>
     </PageWrapper>

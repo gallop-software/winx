@@ -60,7 +60,7 @@ export function Heading({
       case 'h1':
         return {
           fontSize: 'text-lg/[1.2] sm:text-xl/[1.2] md:text-2xl/[1.2]',
-          fontWeight: 'font-bold',
+          fontWeight: 'font-semibold',
           letterSpacing: 'tracking-tight',
           lineHeight: 'leading-[1.2]',
           textWrap: 'text-balance',
@@ -71,8 +71,8 @@ export function Heading({
       case 'h2':
         return {
           fontSize: 'text-base',
-          fontWeight: 'font-bold',
-          letterSpacing: 'tracking-normal',
+          fontWeight: 'font-semibold',
+          letterSpacing: 'tracking-tight',
           lineHeight: 'leading-tight sm:leading-tight md:leading-tight',
           textWrap: '',
           fontFamily: 'font-heading',

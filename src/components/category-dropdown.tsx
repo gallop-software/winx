@@ -37,5 +37,13 @@ export function CategoryDropdown({
     href: `/category/${c.slug}`,
   }))
 
-  return <Dropdown label={label} items={items} searchable={searchable} {...rest} />
+  return (
+    <Dropdown
+      label={label}
+      items={items}
+      searchable={searchable}
+      buttonClassName="border border-accent5 shadow-sm"
+      {...rest}
+    />
+  )
 }

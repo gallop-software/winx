@@ -82,7 +82,7 @@ export function SearchResults({
 }) {
   if (!collection || collection.items.length === 0) {
     return (
-      <div className="px-4 py-10 bg-body2 text-contrast text-center">
+      <div className="px-4 py-10 bg-body text-contrast text-center">
         No results for &ldquo;{query}&rdquo;
       </div>
     )
@@ -96,7 +96,7 @@ export function SearchResults({
             return (
               <li
                 key={result.url}
-                className="group block cursor-pointer rounded-md px-3 py-2 aria-selected:bg-accent4"
+                className="group block cursor-pointer rounded-md px-3 py-2 aria-selected:bg-accent/10"
                 {...autocomplete.getItemProps({
                   item: result,
                   source: collection.source,
@@ -131,7 +131,7 @@ export function SearchResults({
         return (
           <li
             key={href}
-            className="group block cursor-default rounded-md px-3 py-2 aria-selected:bg-accent4"
+            className="group block cursor-default rounded-md px-3 py-2 aria-selected:bg-accent/10"
             {...autocomplete.getItemProps({
               item: result,
               source: collection.source,

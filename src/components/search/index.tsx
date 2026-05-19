@@ -90,7 +90,7 @@ export function Search({
                 </div>
 
                 <div
-                  className="mt-0 flex-1 overflow-auto rounded-none border-0 empty:hidden scrollbar-hide bg-body2 p-2 min-h-0 [-webkit-overflow-scrolling:touch]"
+                  className="mt-0 flex-1 overflow-auto rounded-none border-0 empty:hidden scrollbar-hide bg-body p-2 min-h-0 [-webkit-overflow-scrolling:touch]"
                   {...autocomplete.getPanelProps({})}
                 >
                   {'isOpen' in autocompleteState &&

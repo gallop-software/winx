@@ -25,9 +25,9 @@ import { getAllCategories } from '@/utils/taxonomies'
 import chevronDownIcon from '@iconify/icons-heroicons/chevron-down'
 import { resetBlogScroll } from '@/components/blog/blog-client'
 import magnifyingGlassIcon from '@iconify/icons-heroicons/magnifying-glass'
-import homeIcon from '@iconify/icons-heroicons/bookmark'
-import informationCircleIcon from '@iconify/icons-heroicons/information-circle'
-import newspaperIcon from '@iconify/icons-heroicons/newspaper'
+import homeIcon from '@iconify/icons-heroicons/home'
+import informationCircleIcon from '@iconify/icons-heroicons/user-circle'
+import newspaperIcon from '@iconify/icons-heroicons/bookmark'
 import envelopeIcon from '@iconify/icons-heroicons/envelope'
 import bars2Icon from '@iconify/icons-heroicons/bars-2-20-solid'
 import xMarkIcon from '@iconify/icons-heroicons/x-mark-20-solid'
@@ -62,16 +62,19 @@ export function Navigation() {
   }, [isSearching])
   const menuItems: { label: string; href: string; icon: IconifyIcon }[] = [
     { label: 'Home', href: '/', icon: homeIcon },
+    { label: 'Essays', href: '/essays', icon: newspaperIcon },
     {
       label: 'About',
       href: '/about',
       icon: informationCircleIcon,
     },
-    { label: 'Essays', href: '/essays', icon: newspaperIcon },
     { label: 'Contact', href: '/contact', icon: envelopeIcon },
   ]
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href)
   const buttonClass =
     'flex items-center justify-center xl:justify-start gap-4 rounded-md p-2 w-fit xl:w-full text-contrast hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium cursor-pointer'
+  const activeClass = 'bg-accent/10 text-accent'
 
   const navBackButton = (
     <Button
@@ -88,7 +91,7 @@ export function Navigation() {
     <Link
       href="/"
       onClick={handleHomeClick}
-      className="inline-block md:mb-8"
+      className="inline-flex items-center gap-3 md:mb-8"
       aria-label="Founder Notes"
     >
       <div className="w-12 h-12 shrink-0 overflow-hidden">
@@ -100,13 +103,18 @@ export function Navigation() {
           className="w-full h-full object-cover"
         />
       </div>
+      <span className="hidden xl:inline text-xs font-heading font-semibold uppercase tracking-[0.18em] text-accent leading-tight">
+        Founder
+        <br />
+        Notes
+      </span>
     </Link>
   )
 
   return (
     <>
       {/* Mobile bar (<md) */}
-      <aside className="md:hidden flex flex-row items-center bg-body2 rounded-md px-7 py-5 border-b border-contrast-light/15">
+      <aside className="md:hidden flex flex-row items-center bg-body rounded-md px-7 py-5 border-b border-contrast-light/15">
         {brand}
         {pageBackButtonOutOfView && <div className="ml-3">{navBackButton}</div>}
         <button
@@ -123,7 +131,7 @@ export function Navigation() {
       </aside>
 
       {/* Desktop sidebar (md+) */}
-      <aside className="hidden md:flex flex-col items-center xl:items-start bg-body2 rounded-md pr-7 pl-7 xl:pl-9 pt-7 pb-5 border-b border-contrast-light/15 h-full overflow-y-auto scrollbar-hide">
+      <aside className="hidden md:flex flex-col items-center xl:items-start bg-body rounded-md pr-7 pl-7 xl:pl-9 pt-7 pb-5 border-b border-contrast-light/15 h-full overflow-y-auto scrollbar-hide">
         <div
           className={clsx(
             'grid overflow-hidden origin-top transition-all duration-[350ms] ease-out xl:w-full',
@@ -136,24 +144,30 @@ export function Navigation() {
         </div>
         {brand}
         <nav className="flex flex-col gap-4 xl:w-full">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={(e) => {
-                if (item.href === '/') handleHomeClick(e)
-              }}
-              className={buttonClass}
-            >
-              <Icon
-                icon={item.icon}
-                className="w-7 h-7 shrink-0 text-contrast"
-              />
-              <span className="leading-none hidden xl:inline">
-                {item.label}
-              </span>
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const active = isActive(item.href)
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={(e) => {
+                  if (item.href === '/') handleHomeClick(e)
+                }}
+                className={clsx(buttonClass, active && activeClass)}
+              >
+                <Icon
+                  icon={item.icon}
+                  className={clsx(
+                    'w-7 h-7 shrink-0',
+                    active ? 'text-accent' : 'text-contrast'
+                  )}
+                />
+                <span className="leading-none hidden xl:inline">
+                  {item.label}
+                </span>
+              </Link>
+            )
+          })}
           <button
             type="button"
             onClick={() => setIsSearching(true)}
@@ -183,7 +197,7 @@ export function Navigation() {
           <div className="flex justify-end h-full">
             <DialogPanel
               transition
-              className="pointer-events-auto h-full bg-body2 shadow-xl w-full overflow-hidden overflow-y-auto scrollbar-hide duration-500 ease-in-out transition data-[closed]:translate-x-full [-webkit-overflow-scrolling:touch]"
+              className="pointer-events-auto h-full bg-body shadow-xl w-full overflow-hidden overflow-y-auto scrollbar-hide duration-500 ease-in-out transition data-[closed]:translate-x-full [-webkit-overflow-scrolling:touch]"
             >
               <div className="flex flex-col pt-6 pb-14 px-7">
                 <div className="w-full flex justify-between items-center mb-6">

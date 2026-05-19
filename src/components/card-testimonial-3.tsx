@@ -17,7 +17,7 @@ export function CardTestimonial3({
   image,
 }: CardTestimonial3Props) {
   return (
-    <div className="bg-body rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
+    <div className="bg-body rounded-lg p-5 border border-accent5 shadow-sm flex flex-col h-full">
       <Paragraph className="grow">{review}</Paragraph>
 
       <div className="mt-auto flex items-center gap-4">
@@ -32,10 +32,17 @@ export function CardTestimonial3({
           />
         )}
         <div>
-          <Heading as="h3" margin="mb-2">
+          <Heading
+            as="h3"
+            margin="mb-2"
+          >
             {name}
           </Heading>
-          <Heading as="h4" margin="mb-0" className="capitalize">
+          <Heading
+            as="h4"
+            margin="mb-0"
+            className="capitalize"
+          >
             {title}
           </Heading>
         </div>

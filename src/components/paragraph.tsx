@@ -53,11 +53,11 @@ export function Paragraph({
 
   // Use user-defined values if provided, otherwise use defaults
   const finalFontSize = fontSize || variantFontSizes[variant]
-  const finalColor = color || 'text-contrast'
+  const finalColor = color || 'text-contrast-light'
   const finalFontFamily = fontFamily || '' // no default font family
   const finalFontWeight = fontWeight || 'font-normal' // default font weight
   const finalFontStyle = fontStyle || '' // no default font style
-  const finalLineHeight = lineHeight || 'leading-normal' // default line height
+  const finalLineHeight = lineHeight || 'leading-relaxed' // default line height
   const finalTextAlign = textAlign || '' // no default text alignment
   const finalMargin = margin || 'mb-8'
 

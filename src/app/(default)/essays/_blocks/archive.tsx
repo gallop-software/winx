@@ -35,13 +35,13 @@ export default function Archive() {
     .filter((g) => g.posts.length > 0)
 
   return (
-    <Section className="bg-body2 pt-0 pb-20">
-      <div className="max-w-4xl mx-auto space-y-14">
+    <Section className="bg-body pb-10">
+      <div className="max-w-4xl mx-auto space-y-12">
         {groups.map(({ cat, posts: catPosts }) => (
           <div key={cat.slug}>
             <Heading
               as="h2"
-              margin="mb-0"
+              margin="mb-4"
             >
               <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
             </Heading>
@@ -49,7 +49,7 @@ export default function Archive() {
               {catPosts.map((post) => (
                 <article
                   key={post.slug}
-                  className="relative flex items-start gap-4 sm:gap-6 py-3 border-b border-contrast/10 last:border-b-0 group"
+                  className="relative flex items-start gap-4 sm:gap-6 py-3 border-b border-accent5 last:border-b-0 group"
                 >
                   <Link
                     href={post.url}

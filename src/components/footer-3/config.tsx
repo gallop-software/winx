@@ -28,10 +28,18 @@ export const socialLinks: SocialLink[] = [
   { name: 'Email', href: 'mailto:me@your-company.com', icon: emailIcon },
 ]
 
-export const editorHeading = 'About the editor'
+export const editorHeading = 'About the Editor'
+
+export const editorName = 'Nathan Baugh'
+
+export const editorRole = 'Operator. Investor. Writer.'
 
 export const editorBio =
-  'Founder Notes is written and edited independently — one carefully written essay each week on product, fundraising, hiring, and the day-to-day work of building an early-stage company. No sponsored posts, no paid placements, no hot takes. Just the work.'
+  'I write about building, scaling, and leading companies. Previously founded an enterprise SaaS company and invested in early-stage startups.'
+
+export const editorLinkLabel = 'More about Nathan'
+
+export const editorLinkHref = '/about'
 
 export const editorImage = {
   src: '/pexels-maide-arslan-128712163-31750448.jpg',
