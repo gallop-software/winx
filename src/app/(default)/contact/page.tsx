@@ -5,6 +5,7 @@ import { buildPageSchema } from '@/utils/structured-data'
 
 import Hero from './_blocks/hero'
 import ContactForm from './_blocks/contact-form'
+import Testimonial from './_blocks/testimonial'
 
 const title = 'Contact | Founder Notes'
 const description =
@@ -53,6 +54,7 @@ export default function Page() {
     <PageWrapper metadata={metadata}>
       <Hero />
       <ContactForm />
+      <Testimonial />
     </PageWrapper>
   )
 }

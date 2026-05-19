@@ -52,18 +52,18 @@ html::-webkit-scrollbar {
   --color-body2: #f5f5f5;
 
   /* ── Text / Foreground ── */
-  --color-contrast: #482401;
-  --color-contrast-light: #936f4d;
-  --color-contrast-dark: #603813;
+  --color-contrast: #1a1a1a;
+  --color-contrast-light: #4a4a4a;
+  --color-contrast-dark: #1c1917;
 
   /* ── Overlay (fixed context — image/video scrims) ── */
   --color-overlay: #000000;
   --color-overlay-text: #ffffff;
 
   /* ── Brand Accent 1 ── */
-  --color-accent: #AC1600;
-  --color-accent-light: #b2220d;
-  --color-accent-dark: #a01602;
+  --color-accent: #2a3a5c;
+  --color-accent-light: #3a4d75;
+  --color-accent-dark: #1f2a44;
   --color-accent-contrast: #ffffff;
 
   --color-accent2: #CC6600;
