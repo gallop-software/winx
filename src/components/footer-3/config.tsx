@@ -21,10 +21,10 @@ export const phone = {
 }
 
 export const socialLinks: SocialLink[] = [
-  { name: 'Twitter', href: '/winx', icon: twitterIcon },
-  { name: 'LinkedIn', href: '/winx', icon: linkedinIcon },
-  { name: 'Instagram', href: '/winx', icon: instagramIcon },
-  { name: 'Facebook', href: '/winx', icon: facebookIcon },
+  { name: 'Twitter', href: 'https://twitter.com/winx', icon: twitterIcon },
+  { name: 'LinkedIn', href: 'https://linkedin.com/winx', icon: linkedinIcon },
+  { name: 'Instagram', href: 'https://instagram.com/winx', icon: instagramIcon },
+  { name: 'Facebook', href: 'https://facebook.com/winx', icon: facebookIcon },
   { name: 'Email', href: 'mailto:me@your-company.com', icon: emailIcon },
 ]
 
