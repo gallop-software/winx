@@ -23,6 +23,7 @@
     "dev": "next dev",
     "build": "npm run blog && next build",
     "postinstall": "prisma generate",
+    "db:generate": "npx prisma generate",
     "db:migrate": "prisma migrate dev",
     "start": "next start",
     "lint": "eslint src/",
