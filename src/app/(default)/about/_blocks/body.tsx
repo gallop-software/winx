@@ -61,7 +61,7 @@ export default function Body() {
         </div>
 
         <div className="pt-4">
-          <Button href="/essays">Read the latest essays</Button>
+          <Button href="/essays" className="w-full">Read the Latest Essays</Button>
         </div>
       </div>
     </Section>

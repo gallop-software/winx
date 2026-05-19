@@ -85,7 +85,7 @@ function IntroBlock({ isHome }: { isHome: boolean }) {
         </Link>
         .
       </Paragraph>
-      <Button href="/essays">Read the latest essays</Button>
+      <Button href="/essays" className="w-full">Read the Latest Essays</Button>
     </div>
   )
 }
@@ -128,22 +128,16 @@ function SubscribeBlock() {
         <FormFirstName
           name="firstName"
           placeholder="First name"
-          label="First name"
-          className="!text-xs !px-3 !py-2 !border"
-        />
+          label="First name"        />
         <FormLastName
           name="lastName"
           placeholder="Last name"
-          label="Last name"
-          className="!text-xs !px-3 !py-2 !border"
-        />
+          label="Last name"        />
         <FormInput
           name="email"
           type="email"
           placeholder="Your email address"
-          label="Email"
-          className="!text-xs !px-3 !py-2 !border"
-        />
+          label="Email"        />
         <FormButton
           name="submit"
           label="Subscribe for Insights"

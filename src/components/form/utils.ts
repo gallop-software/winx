@@ -147,8 +147,8 @@ export const TIME_SLOTS = generateTimeSlots()
 // ============================================================================
 
 export const inputBaseStyles = `
-  w-full rounded-md bg-body2 px-6 py-4 text-contrast font-medium
-  border-2 border-contrast/40 outline-none transition
+  w-full rounded-md bg-body2 px-3 py-2 text-xs text-contrast font-medium
+  border border-contrast/40 outline-none transition
   placeholder:text-contrast/50
   focus:border-contrast focus:ring-0
 `

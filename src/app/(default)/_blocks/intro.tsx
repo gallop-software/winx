@@ -26,8 +26,9 @@ export default function Intro() {
             href="#favorite-articles"
             icon={arrowDownIcon}
             iconPlacement="after"
+            className="w-full"
           >
-            Read the latest essays
+            Read the Latest Essays
           </Button>
         </div>
       </div>

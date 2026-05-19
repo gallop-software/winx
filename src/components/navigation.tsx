@@ -28,6 +28,7 @@ import magnifyingGlassIcon from '@iconify/icons-heroicons/magnifying-glass'
 import homeIcon from '@iconify/icons-heroicons/bookmark'
 import informationCircleIcon from '@iconify/icons-heroicons/information-circle'
 import newspaperIcon from '@iconify/icons-heroicons/newspaper'
+import envelopeIcon from '@iconify/icons-heroicons/envelope'
 import bars2Icon from '@iconify/icons-heroicons/bars-2-20-solid'
 import xMarkIcon from '@iconify/icons-heroicons/x-mark-20-solid'
 import type { IconifyIcon } from '@iconify/types'
@@ -67,6 +68,7 @@ export function Navigation() {
       icon: informationCircleIcon,
     },
     { label: 'Essays', href: '/essays', icon: newspaperIcon },
+    { label: 'Contact', href: '/contact', icon: envelopeIcon },
   ]
   const buttonClass =
     'flex items-center justify-center xl:justify-start gap-4 rounded-md p-2 w-fit xl:w-full text-contrast hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium cursor-pointer'
