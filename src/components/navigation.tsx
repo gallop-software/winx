@@ -78,7 +78,7 @@ export function Navigation() {
 
   const navBackButton = (
     <Button
-      className="w-12! h-12! p-0!"
+      className="w-11! h-11! p-0!"
       onClick={goBack}
       aria-label="Go back"
       icon={chevronLeftIcon}
@@ -91,23 +91,25 @@ export function Navigation() {
     <Link
       href="/"
       onClick={handleHomeClick}
-      className="inline-flex items-center gap-3 md:mb-8"
+      className="flex items-center justify-center xl:justify-start w-fit xl:w-full md:mb-8"
       aria-label="Founder Notes"
     >
-      <div className="w-12 h-12 shrink-0 overflow-hidden">
+      <div className="w-11 h-11 shrink-0 overflow-hidden xl:hidden">
         <Image
           src="/favicon.png"
           alt="Founder Notes"
           size="small"
           rounded="rounded-none"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
       </div>
-      <span className="hidden xl:inline text-xs font-heading font-semibold uppercase tracking-[0.18em] text-accent leading-tight">
-        Founder
-        <br />
-        Notes
-      </span>
+      <Image
+        src="/logo.png"
+        alt="Founder Notes"
+        size="small"
+        rounded="rounded-none"
+        className="hidden xl:block w-full h-11 object-contain"
+      />
     </Link>
   )
 

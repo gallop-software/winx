@@ -33,7 +33,7 @@ import arrowRightIcon from '@iconify/icons-heroicons/arrow-right'
 function IntroBlock() {
   return (
     <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
-      <Heading as="h2">
+      <Heading as="h2" margin="mb-2">
         Founder Notes — Essays on Product, Fundraising, Hiring, and Building a
         Startup
       </Heading>
@@ -58,7 +58,7 @@ function IntroBlock() {
 function EditorBlock() {
   return (
     <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
-      <Heading as="h2">{editorHeading}</Heading>
+      <Heading as="h2" margin="mb-2">{editorHeading}</Heading>
       <div className="flex items-center gap-4 mt-4">
         <div className="w-14 h-14 shrink-0 overflow-hidden rounded-full">
           <Image
@@ -93,14 +93,14 @@ function EditorBlock() {
 function SubscribeBlock() {
   return (
     <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
-      <Heading as="h4" styleAs="h2" margin="mb-0">
+      <Heading as="h2" margin="mb-2">
         {subscribeHeading}
       </Heading>
-      <Paragraph margin="mt-4 mb-4">{subscribeIntro}</Paragraph>
-      <Heading as="h3" styleAs="h2" margin="mb-0">
+      <Paragraph margin="mt-4 mb-8">{subscribeIntro}</Paragraph>
+      <Heading as="h3" styleAs="h2" margin="mb-2">
         {subscribeSubheading}
       </Heading>
-      <Paragraph margin="mt-4 mb-4">{subscribeDescription}</Paragraph>
+      <Paragraph margin="mt-4 mb-8">{subscribeDescription}</Paragraph>
       <Form gap="gap-3" honeypot action={subscribeAction}>
         <FormFirstName
           name="firstName"

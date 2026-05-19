@@ -14,8 +14,8 @@ export default function ContactForm() {
   return (
     <Section className="bg-body pb-10">
       <div className="max-w-3xl">
-        <Heading as="h2">For inquiries, feedback, and correspondence.</Heading>
-        <Paragraph margin="mb-4">
+        <Heading as="h2" margin="mb-2">For inquiries, feedback, and correspondence.</Heading>
+        <Paragraph margin="mt-4 mb-8">
           Use the form below to get in touch. Every message is read personally,
           and we aim to respond within a few business days.
         </Paragraph>

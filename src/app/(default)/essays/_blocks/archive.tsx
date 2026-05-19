@@ -41,7 +41,7 @@ export default function Archive() {
           <div key={cat.slug}>
             <Heading
               as="h2"
-              margin="mb-4"
+              margin="mb-2"
             >
               <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
             </Heading>

@@ -10,12 +10,12 @@ export default function Archive() {
       id="favorite-articles"
     >
       <div className="max-w-5xl mx-auto">
-        <div className="mb-10 flex items-baseline justify-between">
+        <div className="flex items-baseline justify-between">
           <div>
             <Label margin="mb-2">Latest essays</Label>
             <Heading
               as="h1"
-              margin="mb-0"
+              margin="mb-10"
             >
               New writing from Founder Notes
             </Heading>

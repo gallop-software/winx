@@ -46,14 +46,14 @@ export default function Body() {
           <div key={s.title}>
             <Heading
               as="h2"
-              margin="mb-4"
+              margin="mb-2"
             >
               {s.title}
             </Heading>
             {s.paragraphs.map((p, i) => (
               <Paragraph
                 key={i}
-                margin={i === s.paragraphs.length - 1 ? 'mb-0' : 'mb-4'}
+                margin={i === s.paragraphs.length - 1 ? 'mt-4 mb-0' : 'mt-4 mb-4'}
               >
                 {p}
               </Paragraph>

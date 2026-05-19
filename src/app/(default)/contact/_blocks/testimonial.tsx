@@ -11,7 +11,7 @@ export default function Testimonial() {
         <Label margin="mb-2">Readers</Label>
         <Heading
           as="h2"
-          margin="mb-0"
+          margin="mb-2"
         >
           What Our Readers Are Saying
         </Heading>
