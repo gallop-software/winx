@@ -320,12 +320,6 @@
   ],
   "authors": [
     {
-      "id": 2,
-      "name": "Gallop Software",
-      "slug": "dev",
-      "description": ""
-    },
-    {
       "id": 1,
       "name": "Winx",
       "slug": "winx",
