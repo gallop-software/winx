@@ -318,7 +318,7 @@ async function generateBlocksCatalog(mode = 'smart', filterBlock = null) {
         blockFile.slug
       )
       const routePrefix = getRoutePrefix(slug)
-      const tier = layoutTiers.get(routePrefix) || 'free'
+      const tier = layoutTiers.get(routePrefix) || 'pro'
 
       allBlocksMap.set(displayName, {
         name,

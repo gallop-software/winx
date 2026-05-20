@@ -5,8 +5,8 @@ A collection of 5 pre-built page layouts for the Winx template.
 ## Overview
 
 - **Total Layouts:** 5
-- **Free Layouts:** 5
-- **Pro Layouts:** 0
+- **Free Layouts:** 0
+- **Pro Layouts:** 5
 
 ## Layouts
 
@@ -18,7 +18,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 **Path:** `(default)/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -30,7 +30,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 **Path:** `(default)/about/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -42,7 +42,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 **Path:** `(default)/contact/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -54,7 +54,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 **Path:** `(default)/essays/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -66,7 +66,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 **Path:** `(default)/search/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 

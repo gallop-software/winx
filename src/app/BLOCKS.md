@@ -5,8 +5,8 @@ A collection of 9 pre-built UI blocks for the Winx template.
 ## Overview
 
 - **Total Blocks:** 9
-- **Free Blocks:** 9
-- **Pro Blocks:** 0
+- **Free Blocks:** 0
+- **Pro Blocks:** 9
 
 ## Categories
 
@@ -27,7 +27,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `archive`  
 **Path:** `(default)/_blocks/archive.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -37,7 +37,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `essays/archive`  
 **Path:** `(default)/essays/_blocks/archive.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -49,7 +49,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `about/body`  
 **Path:** `(default)/about/_blocks/body.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -61,7 +61,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `contact/contact-form`  
 **Path:** `(default)/contact/_blocks/contact-form.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -73,7 +73,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `about/hero`  
 **Path:** `(default)/about/_blocks/hero.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -83,7 +83,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `contact/hero`  
 **Path:** `(default)/contact/_blocks/hero.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -93,7 +93,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `essays/hero`  
 **Path:** `(default)/essays/_blocks/hero.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -105,7 +105,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `logo-card`  
 **Path:** `(default)/_blocks/logo-card.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 
@@ -117,7 +117,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 **Slug:** `contact/testimonial`  
 **Path:** `(default)/contact/_blocks/testimonial.tsx`  
-**Tier:** Free
+**Tier:** Pro
 
 ---
 

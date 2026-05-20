@@ -538,8 +538,8 @@ async function generateLayoutsCatalog(mode = 'smart') {
         layoutPage.isHomePage
       )
 
-      // layout-2 and up are pro, everything else is free
-      const tier = /^layout-\d+$/.test(slug) ? 'pro' : 'free'
+      // All layouts in this template are pro
+      const tier = 'pro'
 
       // Find all layout files that apply to this page
       const layoutFiles = await findLayoutsForPage(layoutPage.pagePath)
