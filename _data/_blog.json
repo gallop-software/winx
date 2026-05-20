@@ -1,5 +1,338 @@
 [
   {
+    "id": 22,
+    "slug": "culture-is-what-happens-when-the-founder-is-not-in-the-room",
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room",
+    "metadata": {
+      "title": "Culture is what happens when the founder is not in the room",
+      "description": "Culture is not the values page or the founder’s intent. It is the pattern of behavior that survives when nobody is watching.",
+      "date": "2026-05-20T15:06:53",
+      "categories": [
+        "Leadership"
+      ],
+      "categorySlugs": [
+        "leadership"
+      ],
+      "tags": [
+        "Company Building",
+        "Early-Stage Startups",
+        "Founder Leadership",
+        "Operators",
+        "Startup Culture",
+        "Team Management"
+      ],
+      "tagSlugs": [
+        "company-building",
+        "early-stage-startups",
+        "founder-leadership",
+        "operators",
+        "startup-culture",
+        "team-management"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_10_12-AM-1.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 21,
+    "slug": "the-series-a-story-starts-before-the-seed-metrics-look-good",
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good",
+    "metadata": {
+      "title": "The Series A story starts before the seed metrics look good",
+      "description": "The best Series A stories are not assembled at the end of the seed stage. They are built through choices long before the numbers look clean.",
+      "date": "2026-05-20T15:06:24",
+      "categories": [
+        "Fundraising"
+      ],
+      "categorySlugs": [
+        "fundraising"
+      ],
+      "tags": [
+        "Founders",
+        "Seed Stage",
+        "Series A",
+        "Startup Fundraising",
+        "Startup Metrics",
+        "Venture Capital"
+      ],
+      "tagSlugs": [
+        "founders",
+        "seed-stage",
+        "series-a",
+        "startup-fundraising",
+        "startup-metrics",
+        "venture-capital"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_10_22-AM-2.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 20,
+    "slug": "your-metrics-dashboard-may-be-hiding-the-truth",
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth",
+    "metadata": {
+      "title": "Your metrics dashboard may be hiding the truth",
+      "description": "A dashboard can make a company feel more disciplined while quietly hiding the questions that actually matter.",
+      "date": "2026-05-20T15:05:51",
+      "categories": [
+        "Product Strategy"
+      ],
+      "categorySlugs": [
+        "product-strategy"
+      ],
+      "tags": [
+        "Dashboards",
+        "Founders",
+        "Growth Metrics",
+        "Product Analytics",
+        "Product Strategy",
+        "Startup Metrics"
+      ],
+      "tagSlugs": [
+        "dashboards",
+        "founders",
+        "growth-metrics",
+        "product-analytics",
+        "product-strategy",
+        "startup-metrics"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_10_22-AM-3.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 19,
+    "slug": "most-hiring-problems-start-before-the-interview",
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview",
+    "metadata": {
+      "title": "Most hiring problems start before the interview",
+      "description": "Bad interviews are often symptoms of unclear hiring judgment. The real work begins before the first candidate enters the process.",
+      "date": "2026-05-20T15:05:01",
+      "categories": [
+        "Hiring & Team"
+      ],
+      "categorySlugs": [
+        "hiring-and-team"
+      ],
+      "tags": [
+        "Early-Stage Startups",
+        "Founder Hiring",
+        "Hiring",
+        "Interview Process",
+        "Operators",
+        "Startup Hiring"
+      ],
+      "tagSlugs": [
+        "early-stage-startups",
+        "founder-hiring",
+        "hiring",
+        "interview-process",
+        "operators",
+        "startup-hiring"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_10_22-AM-5.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 18,
+    "slug": "your-icp-is-not-the-customer-who-likes-you-most",
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most",
+    "metadata": {
+      "title": "Your ICP is not the customer who likes you most",
+      "description": "The best early customer is not always the one who praises the product. A useful ICP is built around urgency, willingness to change, and repeatable demand.",
+      "date": "2026-05-20T15:04:12",
+      "categories": [
+        "Go-to-Market"
+      ],
+      "categorySlugs": [
+        "go-to-market"
+      ],
+      "tags": [
+        "Customer Discovery",
+        "Founders",
+        "Go-To-Market",
+        "ICP",
+        "Ideal Customer Profile",
+        "Startup Sales"
+      ],
+      "tagSlugs": [
+        "customer-discovery",
+        "founders",
+        "go-to-market",
+        "icp",
+        "ideal-customer-profile",
+        "startup-sales"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_00_57-AM-4.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 13,
+    "slug": "the-founder-bottleneck-does-not-announce-itself",
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself",
+    "metadata": {
+      "title": "The founder bottleneck does not announce itself",
+      "description": "Founder bottlenecks rarely feel like bottlenecks at first. They feel like quality control, context, speed, and care.",
+      "date": "2026-05-20T14:57:41",
+      "categories": [
+        "Leadership"
+      ],
+      "categorySlugs": [
+        "leadership"
+      ],
+      "tags": [
+        "Company Building",
+        "Delegation",
+        "Founder Leadership",
+        "Operators",
+        "Scaling Startups",
+        "Startup Leadership"
+      ],
+      "tagSlugs": [
+        "company-building",
+        "delegation",
+        "founder-leadership",
+        "operators",
+        "scaling-startups",
+        "startup-leadership"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_10_22-AM-4.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 12,
+    "slug": "your-first-sales-hire-should-not-rescue-you",
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you",
+    "metadata": {
+      "title": "Your first sales hire should not rescue you",
+      "description": "The first sales hire cannot compensate for unclear positioning, weak urgency, or a founder who has not learned the market yet.",
+      "date": "2026-05-20T14:56:31",
+      "categories": [
+        "Go-to-Market"
+      ],
+      "categorySlugs": [
+        "go-to-market"
+      ],
+      "tags": [
+        "Early-Stage Startups",
+        "Founder-Led Sales",
+        "Founders",
+        "Go-To-Market",
+        "Sales Hire",
+        "Startup Sales"
+      ],
+      "tagSlugs": [
+        "early-stage-startups",
+        "founder-led-sales",
+        "founders",
+        "go-to-market",
+        "sales-hire",
+        "startup-sales"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_00_57-AM-3.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 11,
+    "slug": "the-seed-round-does-not-fix-the-company",
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company",
+    "metadata": {
+      "title": "The seed round does not fix the company",
+      "description": "Raising a seed round gives a company more room, but it does not solve the underlying problems. In many cases, it exposes them faster.",
+      "date": "2026-05-20T14:55:39",
+      "categories": [
+        "Fundraising"
+      ],
+      "categorySlugs": [
+        "fundraising"
+      ],
+      "tags": [
+        "Early-Stage Startups",
+        "Founders",
+        "Fundraising",
+        "Seed Round",
+        "Startup Funding",
+        "Venture Capital"
+      ],
+      "tagSlugs": [
+        "early-stage-startups",
+        "founders",
+        "fundraising",
+        "seed-round",
+        "startup-funding",
+        "venture-capital"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_00_56-AM-2.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
+    "id": 10,
+    "slug": "your-product-roadmap-is-probably-too-polite",
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite",
+    "metadata": {
+      "title": "Your product roadmap is probably too polite",
+      "description": "Most startup roadmaps fail because they try to make everyone feel heard. A useful roadmap should force harder decisions, not hide them.",
+      "date": "2026-05-20T14:55:01",
+      "categories": [
+        "Product Strategy"
+      ],
+      "categorySlugs": [
+        "product-strategy"
+      ],
+      "tags": [
+        "Early-Stage Startups",
+        "Founders",
+        "Product Management",
+        "Product Strategy",
+        "Roadmap",
+        "Startup Product"
+      ],
+      "tagSlugs": [
+        "early-stage-startups",
+        "founders",
+        "product-management",
+        "product-strategy",
+        "roadmap",
+        "startup-product"
+      ],
+      "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/ChatGPT-Image-May-20-2026-10_00_56-AM-1.png",
+      "featuredImageWidth": 1672,
+      "featuredImageHeight": 941,
+      "author": "Gallop Software",
+      "authorSlug": "dev"
+    }
+  },
+  {
     "id": 7,
     "slug": "the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
     "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
@@ -13,8 +346,30 @@
       "categorySlugs": [
         "hiring-and-team"
       ],
-      "tags": [],
-      "tagSlugs": [],
+      "tags": [
+        "Company Building",
+        "Early-Stage Startups",
+        "First Ten Hires",
+        "Founder Leadership",
+        "Hiring",
+        "Operators",
+        "Startup Hiring",
+        "Startup Leadership",
+        "Talent Strategy",
+        "Team Building"
+      ],
+      "tagSlugs": [
+        "company-building",
+        "early-stage-startups",
+        "first-ten-hires",
+        "founder-leadership",
+        "hiring",
+        "operators",
+        "startup-hiring",
+        "startup-leadership",
+        "talent-strategy",
+        "team-building"
+      ],
       "featuredImage": "https://winx-wp.gallop.software/wp-content/uploads/2026/05/pexels-thirdman-5257578-scaled.jpg",
       "featuredImageWidth": 2560,
       "featuredImageHeight": 1707,

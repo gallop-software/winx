@@ -370,74 +370,77 @@ function BlogClientInner({
         ref={containerRef}
         className={clsx('w-full max-w-4xl mx-auto', {
           'relative overflow-hidden': isMasonryEnabled,
-          'space-y-6': !isMasonryEnabled,
+          'space-y-8': !isMasonryEnabled,
         })}
         style={isMasonryEnabled ? { height: `${containerHeight}px` } : {}}
       >
         {currentPosts.map((post, index) => (
-            <div
-              key={post.slug}
-              ref={(el) => {
-                itemRefs.current[index] = el
-                if (el && el.offsetHeight > 0 && isMasonryEnabled) {
-                  setTimeout(() => calculateLayout(), 50)
-                }
-              }}
-              className={clsx(
-                'last:[&_article]:border-b-0',
-                {
-                  absolute: isMasonryEnabled,
-                  relative: !isMasonryEnabled,
-                }
-              )}
-            >
-              <article className="border-b border-contrast/10 pb-8 flex flex-col gap-2">
-                <Link
-                  href={post.url}
-                  scroll={true}
-                  prefetch={true}
-                  className="flex flex-col gap-2 hover:text-accent transition-colors duration-300"
+          <div
+            key={post.slug}
+            ref={(el) => {
+              itemRefs.current[index] = el
+              if (el && el.offsetHeight > 0 && isMasonryEnabled) {
+                setTimeout(() => calculateLayout(), 50)
+              }
+            }}
+            className={clsx('last:[&_article]:border-b-0', {
+              absolute: isMasonryEnabled,
+              relative: !isMasonryEnabled,
+            })}
+          >
+            <article className="border-b border-contrast/10 pb-8 flex flex-col gap-2">
+              <Link
+                href={post.url}
+                scroll={true}
+                prefetch={true}
+                className="flex flex-col gap-2 hover:text-accent transition-colors duration-300"
+              >
+                <Heading
+                  as="h2"
+                  margin="mb-0"
                 >
-                  <Heading as="h2" margin="mb-0">
-                    {post.metadata.title}
-                  </Heading>
-                  {post.metadata.description && (
-                    <Paragraph
-                      margin="mb-0"
-                      className="line-clamp-3"
-                    >
-                      {post.metadata.description}
-                    </Paragraph>
-                  )}
-                  {post.metadata.featuredImage && (
-                    <div className="block w-full overflow-hidden rounded-sm mt-2">
-                      <Image
-                        src={post.metadata.featuredImage}
-                        alt={post.metadata.title!}
-                        size="large"
-                        width={post.metadata.featuredImageWidth}
-                        height={post.metadata.featuredImageHeight}
-                        className="w-full h-auto block"
-                        rounded="rounded-none"
-                      />
-                    </div>
-                  )}
-                </Link>
-                <PostActions
-                  postId={post.id}
-                  title={post.metadata.title || ''}
-                  url={`${baseURL}${post.url}/`}
-                  slug={post.slug}
-                  skipBackfill
-                  className="mt-2"
-                />
-              </article>
-            </div>
-          ))}
+                  {post.metadata.title}
+                </Heading>
+                {post.metadata.description && (
+                  <Paragraph
+                    margin="mb-0"
+                    className="line-clamp-3"
+                  >
+                    {post.metadata.description}
+                  </Paragraph>
+                )}
+                {post.metadata.featuredImage && (
+                  <div className="block w-full overflow-hidden rounded-sm mt-2">
+                    <Image
+                      src={post.metadata.featuredImage}
+                      alt={post.metadata.title!}
+                      size="large"
+                      width={post.metadata.featuredImageWidth}
+                      height={post.metadata.featuredImageHeight}
+                      className="w-full h-auto block"
+                      rounded="rounded-none"
+                    />
+                  </div>
+                )}
+              </Link>
+              <PostActions
+                postId={post.id}
+                title={post.metadata.title || ''}
+                url={`${baseURL}${post.url}/`}
+                slug={post.slug}
+                skipBackfill
+                className="mt-2"
+              />
+            </article>
+          </div>
+        ))}
       </div>
 
       {hasMore && (
-        <div ref={sentinelRef} aria-hidden={!isLoading}>
+        <div
+          ref={sentinelRef}
+          aria-hidden={!isLoading}
+        >
           {isLoading ? (
             <Paragraph textAlign="text-center">
               Loading

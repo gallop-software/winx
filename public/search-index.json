@@ -32,24 +32,475 @@
   {
     "url": "/contact#for-inquiries-feedback-and-correspondence",
     "title": "For inquiries, feedback, and correspondence.",
-    "content": "Use the form below to get in touch. Every message is read personally, and we aim to respond within a few business days.",
+    "content": "Use the form below to get in touch. Every message is read personally, and we aim to respond within a few business days. Send Message",
     "pageTitle": "Contact"
+  },
+  {
+    "url": "/essays#all-essays-notes",
+    "title": "All Essays & Notes",
+    "content": "On building companies, product strategy, fundraising, hiring, and the work of being a founder.",
+    "pageTitle": "All Essays & Notes"
+  },
+  {
+    "url": "/essays#heading",
+    "title": "Fundraising",
+    "content": "The Series A story starts before the seed metrics look goodThe seed round does not fix the company",
+    "pageTitle": "All Essays & Notes"
+  },
+  {
+    "url": "/essays#heading",
+    "title": "Go-to-Market",
+    "content": "Your ICP is not the customer who likes you mostYour first sales hire should not rescue you",
+    "pageTitle": "All Essays & Notes"
   },
   {
     "url": "/essays#heading",
     "title": "Hiring & Team",
-    "content": "The first ten hires decide everything. Most founders get them wrong.",
-    "pageTitle": "All Essays & Notes on Building Companies, Product Strategy, Fundraising, Hiring, and the Work of Being a Founder"
+    "content": "Most hiring problems start before the interviewThe first ten hires decide everything. Most founders get them wrong.",
+    "pageTitle": "All Essays & Notes"
+  },
+  {
+    "url": "/essays#heading",
+    "title": "Leadership",
+    "content": "Culture is what happens when the founder is not in the roomThe founder bottleneck does not announce itself",
+    "pageTitle": "All Essays & Notes"
+  },
+  {
+    "url": "/essays#heading",
+    "title": "Product Strategy",
+    "content": "Your metrics dashboard may be hiding the truthYour product roadmap is probably too polite",
+    "pageTitle": "All Essays & Notes"
+  },
+  {
+    "url": "/#culture-is-what-happens-when-the-founder-is-not-in-the-room",
+    "title": "Culture is what happens when the founder is not in the room",
+    "content": "Culture is not the values page or the founder’s intent. It is the pattern of behavior that survives when nobody is watching. Read the EssayView All Essays",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#culture-is-what-happens-when-the-founder-is-not-in-the-room",
+    "title": "Culture is what happens when the founder is not in the room",
+    "content": "Culture is not the values page or the founder’s intent. It is the pattern of behavior that survives when nobody is watching.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#the-series-a-story-starts-before-the-seed-metrics-look-good",
+    "title": "The Series A story starts before the seed metrics look good",
+    "content": "The best Series A stories are not assembled at the end of the seed stage. They are built through choices long before the numbers look clean.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#your-metrics-dashboard-may-be-hiding-the-truth",
+    "title": "Your metrics dashboard may be hiding the truth",
+    "content": "A dashboard can make a company feel more disciplined while quietly hiding the questions that actually matter.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#most-hiring-problems-start-before-the-interview",
+    "title": "Most hiring problems start before the interview",
+    "content": "Bad interviews are often symptoms of unclear hiring judgment. The real work begins before the first candidate enters the process.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#your-icp-is-not-the-customer-who-likes-you-most",
+    "title": "Your ICP is not the customer who likes you most",
+    "content": "The best early customer is not always the one who praises the product. A useful ICP is built around urgency, willingness to change, and repeatable demand.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#the-founder-bottleneck-does-not-announce-itself",
+    "title": "The founder bottleneck does not announce itself",
+    "content": "Founder bottlenecks rarely feel like bottlenecks at first. They feel like quality control, context, speed, and care.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#your-first-sales-hire-should-not-rescue-you",
+    "title": "Your first sales hire should not rescue you",
+    "content": "The first sales hire cannot compensate for unclear positioning, weak urgency, or a founder who has not learned the market yet.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#the-seed-round-does-not-fix-the-company",
+    "title": "The seed round does not fix the company",
+    "content": "Raising a seed round gives a company more room, but it does not solve the underlying problems. In many cases, it exposes them faster.",
+    "pageTitle": "New writing from Founder Notes"
+  },
+  {
+    "url": "/#your-product-roadmap-is-probably-too-polite",
+    "title": "Your product roadmap is probably too polite",
+    "content": "Most startup roadmaps fail because they try to make everyone feel heard. A useful roadmap should force harder decisions, not hide them.",
+    "pageTitle": "New writing from Founder Notes"
   },
   {
     "url": "/#the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
     "title": "The first ten hires decide everything. Most founders get them wrong.",
-    "content": "Your first ten hires don’t just build the product — they set the ceiling on every hire that follows. Here’s how to think about them before you start writing job descriptions.0"
+    "content": "Your first ten hires don’t just build the product — they set the ceiling on every hire that follows. Here’s how to think about them before you start writing job descriptions.",
+    "pageTitle": "New writing from Founder Notes"
   },
   {
     "url": "/search#search-results-for",
     "title": "Search Results For:",
-    "content": "Loading"
+    "content": "ArchiveSearch Results For:Loading"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#culture-is-the-repeated-behavior",
+    "title": "Culture is the repeated behavior",
+    "content": "Culture is not the values page. It is not the offsite deck. It is not the phrases people repeat during all-hands. Culture is what people learn is actually rewarded. Do people tell the truth early, or do they wait until the problem is undeniable? Do teams make decisions with customer evidence, or with the opinion of the loudest person? Do managers protect focus, or celebrate constant availability? Do people raise the quality bar, or avoid conflict because the company calls that being collaborative? That is culture.",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#the-founder-sets-culture-through-reactions",
+    "title": "The founder sets culture through reactions",
+    "content": "Founders usually think they set culture through statements. They do, but not nearly as much as they set it through reactions. How does the founder respond when a deadline slips? When a customer complains? When a senior person is wrong? When a junior person sees something clearly? When someone brings bad news early? When a team pushes back on a tempting but distracting opportunity? The company studies those moments. People remember what the founder tolerated, praised, ignored, and punished. They adjust accordingly.",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#culture-gets-tested-by-convenience",
+    "title": "Culture gets tested by convenience",
+    "content": "Values are easiest to maintain when they are cheap. Every company values quality until speed is rewarded more. Every company values candor until candor makes an important person uncomfortable. Every company values focus until a large customer asks for something distracting. Every company values ownership until ownership produces a decision the founder would not have made. The real culture appears when the value costs something.",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#the-first-managers-multiply-the-culture",
+    "title": "The first managers multiply the culture",
+    "content": "The first layer of management is one of the most important cultural moments in a startup. Before managers, most people learn the company directly from the founder. After managers, they learn the company through translation. That translation can strengthen the culture or distort it. If managers understand the reasoning behind the company’s standards, they can scale judgment. If they only copy the founder’s preferences, they scale imitation. If they avoid hard conversations, the company becomes polite and slow. If they use urgency to excuse chaos, the company becomes permanently reactive. The first managers do not just manage work. They teach people what the company means.",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#do-not-confuse-intensity-with-standards",
+    "title": "Do not confuse intensity with standards",
+    "content": "Many early teams mistake founder intensity for high standards. They are not the same. Intensity can create motion. Standards create quality. Intensity can make people respond quickly. Standards help people decide well when nobody is pushing them. Intensity often depends on the founder being present. Standards can survive absence. The goal is not to make the company less ambitious. The goal is to make ambition less dependent on one person’s emotional force.",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#the-room-is-the-test",
+    "title": "The room is the test",
+    "content": "The simplest test of culture is what happens when the founder is not in the room. Does the team make the hard tradeoff? Does someone name the real problem? Does the standard hold? Does customer evidence matter? Does the best argument win? Does the company keep its promises to itself? If the answer is yes, culture is beginning to exist. If the answer is no, the company may still be running on founder presence. That is not failure. It is just a stage. But it is a stage the founder eventually has to outgrow. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room#categories",
+    "title": "Categories",
+    "content": "Filed Under: Leadership",
+    "pageTitle": "Culture is what happens when the founder is not in the room"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#investors-are-not-only-buying-progress",
+    "title": "Investors are not only buying progress",
+    "content": "Progress matters, of course. But a Series A investor is not simply asking whether the company moved forward. They are asking whether the movement reveals a company that can become much larger. That means the story needs more than metrics. It needs a convincing explanation of why the early evidence should compound. Why this customer segment? Why this product wedge? Why this sales motion? Why now? Why does the company become stronger as it grows instead of more chaotic? If the seed stage was a collection of disconnected wins, the Series A story will be difficult to tell.",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#the-story-depends-on-what-you-chose-not-to-do",
+    "title": "The story depends on what you chose not to do",
+    "content": "Focus is easy to claim and hard to prove. By the time a company raises a Series A, investors can usually see whether focus was real. They see it in the customer base. They see it in the product. They see it in the go-to-market motion. They see it in the hires. They see it in the metrics that improved and the ones that stayed noisy. A good Series A story often depends on the opportunities the company rejected earlier. The enterprise pilot it did not chase. The adjacent market it did not enter. The custom feature it did not build. The hire it delayed because the constraint was somewhere else. Those decisions create coherence.",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#do-not-wait-for-the-deck-to-find-the-narrative",
+    "title": "Do not wait for the deck to find the narrative",
+    "content": "The best fundraising narratives are not invented in slide order. They are discovered through operating discipline. What did we believe at the seed round? What did we learn? What changed? What became more true? What surprised us? Which part of the business now looks more repeatable than it did six months ago? If those answers are clear internally, the deck becomes much easier. If they are not clear, the deck becomes a cosmetic exercise over strategic confusion.",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#the-market-slide-is-not-the-market-story",
+    "title": "The market slide is not the market story",
+    "content": "Many founders treat the market slide as proof that the company can be big. The market size may be large. That is rarely enough. The stronger question is why this company has earned the right to expand inside that market. The early wedge should make the broader opportunity more believable. The first customer segment should teach the company something valuable about the next one. The product should become harder to replace as usage deepens. A large market makes the outcome possible. A sharp wedge makes the path credible.",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#build-the-memo-while-you-build-the-company",
+    "title": "Build the memo while you build the company",
+    "content": "I like the discipline of keeping a living Series A memo during the seed stage. Not a polished investor document. Just a running record of what the company is learning and what it believes now. Which customers are pulling hardest? Which metrics matter most? Which objection keeps appearing? Which product behavior predicts retention? Which channel is showing signs of repeatability? Which assumption from the seed pitch no longer feels true? That memo makes the company more honest. It also prevents the founder from discovering the fundraising story only when the calendar is already full of investor meetings.",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#the-next-round-is-built-in-the-current-operating-rhythm",
+    "title": "The next round is built in the current operating rhythm",
+    "content": "A strong Series A is not just the result of good numbers. It is the result of numbers that make sense together. The company grew because it chose a customer. The customer retained because the product solved a frequent pain. The product improved because the team understood the workflow. The sales motion became clearer because the buyer pattern repeated. That is a story. And it starts long before the seed metrics look clean. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/the-series-a-story-starts-before-the-seed-metrics-look-good#categories",
+    "title": "Categories",
+    "content": "Filed Under: Fundraising",
+    "pageTitle": "The Series A story starts before the seed metrics look good"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#metrics-are-not-the-same-as-understanding",
+    "title": "Metrics are not the same as understanding",
+    "content": "The mistake is assuming that because the company is measuring something, it understands what is happening. A number can move for reasons nobody has inspected. Activation can improve because the wrong users stopped signing up. Retention can look better because the newest cohort is smaller. Pipeline can grow while deal quality declines. Revenue can increase while the product becomes less repeatable. The dashboard shows the change. It does not automatically explain the cause. Founders get into trouble when they treat the dashboard as the answer instead of the beginning of the next question.",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#a-good-metric-creates-discomfort",
+    "title": "A good metric creates discomfort",
+    "content": "The best metrics are not the ones that make the company feel informed. They are the ones that make the company harder to fool. A useful metric should expose a tension. Are users reaching value quickly enough? Are the customers we are acquiring the ones we can retain? Are sales improving because the motion is working, or because the founder is still carrying every important deal? Are we growing in a way that makes the company stronger or just busier? If a metric never changes anyone’s mind, it is probably decoration.",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#most-dashboards-have-too-many-numbers",
+    "title": "Most dashboards have too many numbers",
+    "content": "Early companies often track too much because tracking feels like discipline. The problem is not the existence of many numbers. The problem is that too many numbers let every team choose the story they prefer. Product can point to engagement. Sales can point to pipeline. Marketing can point to traffic. Customer success can point to anecdotes. The founder can point to revenue. Everyone can be right inside their slice while the company misses the larger pattern. A startup does not need more metrics as much as it needs a shared hierarchy of metrics.",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#the-top-metric-should-match-the-constraint",
+    "title": "The top metric should match the constraint",
+    "content": "If retention is the constraint, do not organize the company around acquisition. If activation is the constraint, do not let total signups dominate the conversation. If sales cycle length is the constraint, do not celebrate pipeline without inspecting velocity. The metric that matters most should be the one tied to the company’s current bottleneck. This does not mean every other number disappears. It means the operating conversation has a center of gravity.",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#look-for-the-number-behind-the-number",
+    "title": "Look for the number behind the number",
+    "content": "When a metric changes, the next question should be what behavior changed underneath it. Did users invite teammates? Did they complete the core workflow? Did they return without being reminded? Did buyers involve finance earlier? Did prospects mention a sharper pain? Did support tickets decline because the product improved, or because usage dropped? The surface metric matters. The behavioral pattern matters more.",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#the-dashboard-should-make-the-company-braver",
+    "title": "The dashboard should make the company braver",
+    "content": "A good dashboard helps a team make harder decisions sooner. It tells you when a segment is not working. It shows when a feature is admired but unused. It exposes when growth is coming from low-quality demand. It makes it harder to hide behind averages. It gives the company permission to stop doing work that feels productive but does not change the trajectory. That is the point. The dashboard should not help the company tell a better story. It should help the company face the real one. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/your-metrics-dashboard-may-be-hiding-the-truth#categories",
+    "title": "Categories",
+    "content": "Filed Under: Product Strategy",
+    "pageTitle": "Your metrics dashboard may be hiding the truth"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#a-vague-role-creates-vague-judgment",
+    "title": "A vague role creates vague judgment",
+    "content": "Early-stage job descriptions are often collections of needs, not definitions of ownership. The company needs someone strategic but hands-on. Senior but scrappy. Independent but collaborative. Technical but customer-facing. Able to build from zero, but also comfortable with process. Strong communicator. Low ego. High agency. None of this is wrong. It is just not enough. If the role can be described in a way that fits twenty different people, the interview process will reward confidence, familiarity, and the founder’s personal taste more than actual fit.",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#the-first-question-is-not-who-to-hire",
+    "title": "The first question is not who to hire",
+    "content": "The first question is what must be true six months from now for this hire to have mattered. That question changes the conversation. If the answer is “they shipped three major product surfaces,” you are hiring for execution velocity and product judgment. If the answer is “they built a repeatable outbound motion,” you are hiring for market learning and sales process creation. If the answer is “they removed the founder from daily customer support,” you are hiring for operational ownership and emotional consistency. The clearer the six-month outcome, the easier it becomes to separate impressive candidates from useful candidates.",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#most-interviews-overvalue-polish",
+    "title": "Most interviews overvalue polish",
+    "content": "Polish is seductive because it makes the process feel safe. The candidate has crisp answers. They know how to describe their impact. They use the right language. They ask thoughtful questions. They feel senior. But polished candidates can still be wrong for the stage. Early companies need people who can create shape where there is none. They need people who can make decisions with partial context, explain their reasoning, and recover quickly when the first answer is wrong. That does not always sound polished. Sometimes it sounds specific, slightly messy, and deeply grounded in the work.",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#design-the-process-around-the-work",
+    "title": "Design the process around the work",
+    "content": "A better interview process starts with the real work the person will inherit. Show them a messy customer note. Ask how they would turn it into product direction. Give them a half-formed pipeline report. Ask what they would inspect first. Share a vague team problem. Ask what information they would need before acting. The goal is not to create a puzzle. The goal is to watch judgment in motion.",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#the-founder-has-to-decide-the-tradeoff",
+    "title": "The founder has to decide the tradeoff",
+    "content": "No candidate is complete. One person has more experience and less adaptability. Another has sharper judgment and less pattern recognition. One can scale the function later. Another is better for the next twelve months. One reduces founder workload immediately. Another may raise the ceiling of the team over time. The founder’s job is not to find the candidate with no tradeoffs. The founder’s job is to know which tradeoff the company can afford.",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#hiring-gets-easier-when-the-bar-is-real",
+    "title": "Hiring gets easier when the bar is real",
+    "content": "A real hiring bar is not a list of virtues. It is a standard tied to the company’s current constraint. When that standard is clear, interviews become less theatrical. Debriefs become more useful. References become more targeted. Rejections become easier. Offers become more confident. Most hiring problems start before the interview. Fix the definition of the role, and the process gets sharper almost immediately. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/most-hiring-problems-start-before-the-interview#categories",
+    "title": "Categories",
+    "content": "Filed Under: Hiring & Team",
+    "pageTitle": "Most hiring problems start before the interview"
+  },
+  {
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most#interest-is-cheaper-than-urgency",
+    "title": "Interest is cheaper than urgency",
+    "content": "Most markets contain people who will agree that the problem exists. Agreement is not the same as demand. A real ideal customer profile is not built around who understands the product. It is built around who has enough pain, budget, authority, and timing to do something about it now. This distinction sounds simple. It is one of the easiest things to miss. Founders want to believe the customer who says, “This is exactly where the market is going.” But the better question is whether that customer will buy, implement, use, and renew before the market fully gets there.",
+    "pageTitle": "Your ICP is not the customer who likes you most"
+  },
+  {
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most#the-wrong-icp-makes-everything-look-broken",
+    "title": "The wrong ICP makes everything look broken",
+    "content": "When the ICP is wrong, the company starts misdiagnosing itself. Sales looks too slow. Marketing looks too weak. Product looks incomplete. Pricing feels too high. Onboarding seems too heavy. Every part of the company appears to need improvement. Some of that may be true. But sometimes the company is simply trying to sell to people who are interested enough to talk and not urgent enough to act. That is a brutal place to build from because it creates motion without momentum.",
+    "pageTitle": "Your ICP is not the customer who likes you most"
+  },
+  {
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most#good-customers-create-useful-pressure",
+    "title": "Good customers create useful pressure",
+    "content": "The best early customers do not just validate the idea. They pressure the company in the right direction. They expose which workflows matter. They reveal what the buyer actually fears. They force the product to become more specific. They make pricing feel less theoretical. They show where implementation breaks down. They turn vague positioning into language that can be repeated. A good ICP gives the company better problems. A bad ICP gives the company flattering conversations.",
+    "pageTitle": "Your ICP is not the customer who likes you most"
+  },
+  {
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most#how-i-would-test-an-icp",
+    "title": "How I would test an ICP",
+    "content": "I would stop asking whether the customer likes the product and start asking whether the customer behaves differently because of the product. Do they move faster than other prospects? Do they involve the right people early? Do they describe the pain in their own words? Do they already have a workaround? Do they know what doing nothing costs them? Do they push for implementation details because they can imagine using it? Those signals matter more than praise. Praise tells you the product is understandable. Behavior tells you whether the product is necessary.",
+    "pageTitle": "Your ICP is not the customer who likes you most"
+  },
+  {
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most#your-icp-should-narrow-the-company",
+    "title": "Your ICP should narrow the company",
+    "content": "A useful ICP should make the company feel smaller at first. It should reduce the number of people you are trying to serve. It should make some opportunities easier to reject. It should sharpen the roadmap. It should change the homepage. It should make outbound more specific. It should make sales calls feel less like discovery theater and more like pattern recognition. If your ICP does not force tradeoffs, it is probably a persona, not a strategy. The goal is not to find customers who like you. The goal is to find customers whose urgency teaches the company how to win. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "Your ICP is not the customer who likes you most"
+  },
+  {
+    "url": "/2026/05/your-icp-is-not-the-customer-who-likes-you-most#categories",
+    "title": "Categories",
+    "content": "Filed Under: Go-to-Market",
+    "pageTitle": "Your ICP is not the customer who likes you most"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#the-bottleneck-usually-starts-as-a-strength",
+    "title": "The bottleneck usually starts as a strength",
+    "content": "In the earliest stage, the company works because the founder is everywhere. The founder holds the product vision, customer context, fundraising narrative, hiring bar, and emotional temperature of the team. When there are five people, this is not only normal. It is often necessary. The problem is that the same behavior that creates momentum at five people can quietly destroy momentum at twenty-five. At some point, the founder’s involvement stops raising the bar and starts lowering the company’s capacity.",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#people-adapt-around-the-founder",
+    "title": "People adapt around the founder",
+    "content": "Teams are very good at learning what gets rewarded. If every meaningful decision eventually comes back to the founder, people stop making complete decisions. They bring options instead of recommendations. They wait for approval instead of committing. They learn the founder’s preferences more carefully than they learn the customer’s needs. This is rarely because the team lacks ownership. It is because the operating system has taught them that ownership is provisional.",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#the-founder-feels-the-pain-last",
+    "title": "The founder feels the pain last",
+    "content": "The founder is often the last person to realize they are the constraint because the system keeps sending them proof that they are needed. People ask for their opinion. Important work improves when they touch it. Mistakes happen when they are not involved. Customers respond well when they join the call. Candidates close faster when they tell the story. All of that may be true. But it does not answer the more important question: is the company becoming more capable without them?",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#delegation-is-not-disappearing",
+    "title": "Delegation is not disappearing",
+    "content": "Founders often hear delegation as withdrawal. That is the wrong frame. The goal is not for the founder to care less. The goal is for the company to carry more of what the founder cares about. That requires making judgment visible. Why is this candidate below the bar? Why does this product decision feel wrong? Why does this customer segment matter more than that one? Why does this investor narrative work while the other one sounds flat? If the founder only gives answers, the company stays dependent. If the founder teaches the reasoning, the company can begin to move.",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#a-useful-test",
+    "title": "A useful test",
+    "content": "Look at the last ten decisions that crossed your desk. For each one, ask whether you were the only person who could make the decision, or merely the person everyone expected to make it. Those are not the same. If you were truly the only person, the company may have a hiring or context problem. If you were simply expected to decide, the company has an operating habit that needs to change. The fix is not to vanish. The fix is to name the decisions you no longer own, explain the principles behind them, and let people feel the weight of real authority.",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#the-company-should-not-scale-your-anxiety",
+    "title": "The company should not scale your anxiety",
+    "content": "A founder bottleneck is often anxiety disguised as standards. The founder worries that the product will get worse, the pitch will get softer, the team will drift, the customer will be misunderstood, or the culture will become less precise. So they keep touching everything. But a company cannot scale by routing every important judgment through one nervous system. At some point, the work is not to make every decision better yourself. The work is to build a company that can make better decisions without waiting for you. That is a different kind of leadership. It is also the only kind that scales. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/the-founder-bottleneck-does-not-announce-itself#categories",
+    "title": "Categories",
+    "content": "Filed Under: Leadership",
+    "pageTitle": "The founder bottleneck does not announce itself"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#sales-cannot-compensate-for-unclear-learning",
+    "title": "Sales cannot compensate for unclear learning",
+    "content": "In the early days, founder-led sales is not just about closing customers. It is about learning the shape of the market. Which buyers understand the pain immediately? Which ones only pretend to? What language creates urgency? What objections are real? What objections are polite ways of saying no? Which features matter before purchase, and which features only matter after adoption? If the founder has not learned these things, the first sales hire inherits confusion. They can make more calls. They can run a cleaner process. They can follow up better than the founder. But they cannot manufacture clarity that the company has not earned yet.",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#the-wrong-first-sales-hire-looks-impressive",
+    "title": "The wrong first sales hire looks impressive",
+    "content": "The dangerous candidate is often the polished one. They came from a well-known company. They know the vocabulary. They talk about pipeline coverage, MEDDICC, conversion rates, sales stages, and account scoring. They have carried quota. They know how a real sales organization works. That may be useful later. But the first sales hire in a startup is not joining a sales organization. They are helping discover one. If they need a finished deck, clean ICP, stable pricing, working CRM, defined handoff, and a product that already explains itself, they are probably too late-stage for the job you actually have.",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#what-the-first-sales-hire-really-needs-to-do",
+    "title": "What the first sales hire really needs to do",
+    "content": "The first sales hire should make the company smarter every week. They should notice patterns in objections. They should challenge the founder’s assumptions about the buyer. They should separate bad-fit prospects from poorly explained value. They should help turn messy founder intuition into language another person can use. Their job is not just to close. Their job is to turn sales conversations into company knowledge. That requires a different profile than many founders search for. You want someone who can sell, but also someone who can operate inside ambiguity without translating every messy input into blame.",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#the-founder-should-still-stay-close",
+    "title": "The founder should still stay close",
+    "content": "Hiring sales is not permission for the founder to disappear from the market. At the beginning, the founder should still listen to calls. Still join important demos. Still read the notes. Still watch where prospects lean in and where they go quiet. The goal is not to micromanage the salesperson. The goal is to stay close enough to reality that the company does not outsource its understanding of the customer. The first sales hire should increase the founder’s learning rate, not replace it.",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#a-better-hiring-filter",
+    "title": "A better hiring filter",
+    "content": "Before hiring the first salesperson, I would ask three questions: Can this person sell without a perfect system?Can this person teach us what they are learning?Can this person tell the difference between a sales problem and a product problem? The third question is the one I care about most. Early sales conversations expose everything. Weak positioning looks like a sales problem. Missing urgency looks like a sales problem. Bad onboarding looks like a sales problem. Wrong customer selection looks like a sales problem. A mediocre first sales hire will push harder. A strong one will help the company see what is actually happening.",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#do-not-hire-them-to-save-you",
+    "title": "Do not hire them to save you",
+    "content": "The first sales hire can be a force multiplier. They can bring discipline to the motion. They can create consistency where the founder created chaos. They can help the company learn faster, sell better, and stop confusing interest with demand. But they should not be hired as a rescue plan. If the founder has not done enough selling to understand the customer, the first sales hire becomes an expensive interpreter of a language the company still does not speak. Do the uncomfortable work first. Then hire someone who can make that work repeatable. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/your-first-sales-hire-should-not-rescue-you#categories",
+    "title": "Categories",
+    "content": "Filed Under: Go-to-Market",
+    "pageTitle": "Your first sales hire should not rescue you"
+  },
+  {
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company#money-removes-excuses-before-it-removes-problems",
+    "title": "Money removes excuses before it removes problems",
+    "content": "Before a raise, it is easy to explain away slow progress. The team is small. The product is early. The founder is doing sales, support, hiring, and half of product. The company is operating inside real constraints, so every problem has a believable external cause. After the round, the excuses get thinner. If the product direction is unclear, more engineers will not automatically make it clearer. If customers are interested but not urgent, more outbound will not magically create urgency. If the founder cannot delegate decisions, hiring stronger people may make the bottleneck more visible, not less. Capital does not remove the need for judgment. It raises the cost of bad judgment.",
+    "pageTitle": "The seed round does not fix the company"
+  },
+  {
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company#the-dangerous-part-is-emotional-relief",
+    "title": "The dangerous part is emotional relief",
+    "content": "The most understandable mistake after closing a round is relaxing too much. Not operationally. Most founders keep working hard. The relaxation happens deeper than that. The company starts to believe that the raise itself validated the strategy. The investor memo becomes a substitute for customer evidence. The hiring plan becomes a substitute for product momentum. The runway number becomes a substitute for urgency. A closed round is not proof that the company is working. It is proof that investors believed the next version of the company might work. That distinction matters.",
+    "pageTitle": "The seed round does not fix the company"
+  },
+  {
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company#the-first-ninety-days-after-a-raise-are-easy-to-waste",
+    "title": "The first ninety days after a raise are easy to waste",
+    "content": "Most post-raise plans are too broad. Hire three engineers. Bring on a marketer. Improve onboarding. Expand sales. Clean up infrastructure. Launch the next product line. Build the metrics dashboard. Start founder-led content. Talk to enterprise buyers. Every item sounds reasonable. Together, they create drag. The company has more money, but it does not yet have more organizational capacity. The founder is still the routing layer for too many decisions. The team is still learning how to work together. New hires are not productive on day one. The product still contains all the compromises made during the pre-seed sprint. The first ninety days should not be treated as a spending window. They should be treated as a narrowing window.",
+    "pageTitle": "The seed round does not fix the company"
+  },
+  {
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company#what-i-would-do-instead",
+    "title": "What I would do instead",
+    "content": "I would choose one primary constraint and make the entire post-raise plan answer it. If activation is the constraint, do not pretend the main priority is hiring sales. If sales cycle length is the constraint, do not hide behind product polish. If retention is weak, do not use the seed round to pour more users into a leaky system. Pick the constraint that, if solved, most changes the company’s next financing or profitability path. Then make the team, roadmap, and operating rhythm serve that constraint until the evidence changes. This sounds obvious. It is rarely how companies behave after raising.",
+    "pageTitle": "The seed round does not fix the company"
+  },
+  {
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company#the-round-buys-time-not-permission",
+    "title": "The round buys time, not permission",
+    "content": "A seed round buys time to become sharper. It does not give the company permission to become looser. It buys time to learn which customers matter. It buys time to make the product more necessary. It buys time to turn founder intuition into repeatable company behavior. It buys time to replace heroic effort with systems that actually work. But the clock is still running. The worst version of a seed-stage company is not the one that fails quickly. It is the one that spends eighteen months confusing activity with progress, then discovers too late that the hard questions were the same ones it had before the money arrived. The round does not fix the company. It gives the company a better chance to fix itself. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "The seed round does not fix the company"
+  },
+  {
+    "url": "/2026/05/the-seed-round-does-not-fix-the-company#categories",
+    "title": "Categories",
+    "content": "Filed Under: Fundraising",
+    "pageTitle": "The seed round does not fix the company"
+  },
+  {
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite#a-roadmap-is-not-a-list-of-requests",
+    "title": "A roadmap is not a list of requests",
+    "content": "The first mistake is treating the roadmap as a storage system for good ideas. A customer asks for something. A competitor launches something. An investor sends a memo. A teammate says, “We should probably add this.” All of it gets captured. Very little of it gets judged. That feels responsible. It is not. A startup does not win because it collects the most inputs. It wins because it learns which inputs matter before it runs out of time. The roadmap should be where that judgment becomes visible. If every reasonable request makes it onto the roadmap, the roadmap is not doing its job. It is just transferring the cost of indecision from leadership to the team.",
+    "pageTitle": "Your product roadmap is probably too polite"
+  },
+  {
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite#the-real-question-is-what-gets-protected",
+    "title": "The real question is what gets protected",
+    "content": "Every roadmap protects something. Most founders think the roadmap protects velocity. It rarely does. A weak roadmap protects comfort. It protects the founder from difficult customer conversations. It protects the team from having to say no. It protects the company from the discomfort of choosing a narrower path. A useful roadmap protects learning. That means the roadmap should make it painfully clear what the company needs to understand next. Not what it wants to ship. Not what would look good in a board update. Not what would make the loudest customer quiet for three weeks. What does the company need to learn in order to make the next better decision?",
+    "pageTitle": "Your product roadmap is probably too polite"
+  },
+  {
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite#the-best-roadmap-has-fewer-safe-items",
+    "title": "The best roadmap has fewer safe items",
+    "content": "Safe roadmap items are dangerous because they are easy to defend. Performance improvements. Small UX polish. Another admin setting. A partial integration. A reporting enhancement. None of these are bad. Some are necessary. But when a roadmap is full of safe work, it usually means the company is avoiding the harder question: what would change the slope of the business? Early-stage companies need a small number of bets that can actually teach them something. A feature that tests whether a user segment is real. A workflow that proves whether customers will pay more. A product change that makes onboarding meaningfully faster. A packaging experiment that exposes whether the sales motion is broken or merely underdeveloped. If everything on the roadmap is incremental, the company may be moving without advancing.",
+    "pageTitle": "Your product roadmap is probably too polite"
+  },
+  {
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite#how-i-would-rewrite-most-startup-roadmaps",
+    "title": "How I would rewrite most startup roadmaps",
+    "content": "I would start by removing anything that exists only because someone important asked for it. Then I would group the remaining work under three questions: What are we trying to prove?What must be true for this work to matter?What will we stop doing if the answer is no? That last question is the one most roadmaps avoid. It is also the one that makes the roadmap useful. A roadmap that cannot kill work cannot focus work. It can only sequence it.",
+    "pageTitle": "Your product roadmap is probably too polite"
+  },
+  {
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite#the-founders-job",
+    "title": "The founder’s job",
+    "content": "The founder’s job is not to make the roadmap look balanced. It is to make the tradeoffs honest. Some customers will be disappointed. Some internal teams will feel under-served. Some ideas that are obviously good will still need to wait. This is not a failure of planning. It is what planning is. The mistake is pretending that a startup has enough capacity to satisfy every reasonable argument at the same time. It does not. Your roadmap should make that clear. If it does not, the real roadmap will be written later by urgency, anxiety, and whoever complains most effectively. This is the kind of question I write about every Sunday. If you found this useful, the newsletter is below — one essay a week, no upsells.",
+    "pageTitle": "Your product roadmap is probably too polite"
+  },
+  {
+    "url": "/2026/05/your-product-roadmap-is-probably-too-polite#categories",
+    "title": "Categories",
+    "content": "Filed Under: Product Strategy",
+    "pageTitle": "Your product roadmap is probably too polite"
   },
   {
     "url": "/2026/05/the-first-ten-hires-decide-everything-most-founders-get-them-wrong#what-the-first-ten-actually-do",
@@ -76,9 +527,63 @@
     "pageTitle": "The first ten hires decide everything. Most founders get them wrong."
   },
   {
+    "url": "/category/leadership#culture-is-what-happens-when-the-founder-is-not-in-the-room",
+    "title": "Culture is what happens when the founder is not in the room",
+    "content": "Culture is not the values page or the founder’s intent. It is the pattern of behavior that survives when nobody is watching.",
+    "pageTitle": "Leadership"
+  },
+  {
+    "url": "/category/leadership#the-founder-bottleneck-does-not-announce-itself",
+    "title": "The founder bottleneck does not announce itself",
+    "content": "Founder bottlenecks rarely feel like bottlenecks at first. They feel like quality control, context, speed, and care.",
+    "pageTitle": "Leadership"
+  },
+  {
+    "url": "/category/fundraising#the-series-a-story-starts-before-the-seed-metrics-look-good",
+    "title": "The Series A story starts before the seed metrics look good",
+    "content": "The best Series A stories are not assembled at the end of the seed stage. They are built through choices long before the numbers look clean.",
+    "pageTitle": "Fundraising"
+  },
+  {
+    "url": "/category/fundraising#the-seed-round-does-not-fix-the-company",
+    "title": "The seed round does not fix the company",
+    "content": "Raising a seed round gives a company more room, but it does not solve the underlying problems. In many cases, it exposes them faster.",
+    "pageTitle": "Fundraising"
+  },
+  {
+    "url": "/category/product-strategy#your-metrics-dashboard-may-be-hiding-the-truth",
+    "title": "Your metrics dashboard may be hiding the truth",
+    "content": "A dashboard can make a company feel more disciplined while quietly hiding the questions that actually matter.",
+    "pageTitle": "Product Strategy"
+  },
+  {
+    "url": "/category/product-strategy#your-product-roadmap-is-probably-too-polite",
+    "title": "Your product roadmap is probably too polite",
+    "content": "Most startup roadmaps fail because they try to make everyone feel heard. A useful roadmap should force harder decisions, not hide them.",
+    "pageTitle": "Product Strategy"
+  },
+  {
+    "url": "/category/hiring-and-team#most-hiring-problems-start-before-the-interview",
+    "title": "Most hiring problems start before the interview",
+    "content": "Bad interviews are often symptoms of unclear hiring judgment. The real work begins before the first candidate enters the process.",
+    "pageTitle": "Hiring & Team"
+  },
+  {
     "url": "/category/hiring-and-team#the-first-ten-hires-decide-everything-most-founders-get-them-wrong",
     "title": "The first ten hires decide everything. Most founders get them wrong.",
     "content": "Your first ten hires don’t just build the product — they set the ceiling on every hire that follows. Here’s how to think about them before you start writing job descriptions.",
     "pageTitle": "Hiring & Team"
+  },
+  {
+    "url": "/category/go-to-market#your-icp-is-not-the-customer-who-likes-you-most",
+    "title": "Your ICP is not the customer who likes you most",
+    "content": "The best early customer is not always the one who praises the product. A useful ICP is built around urgency, willingness to change, and repeatable demand.",
+    "pageTitle": "Go-to-Market"
+  },
+  {
+    "url": "/category/go-to-market#your-first-sales-hire-should-not-rescue-you",
+    "title": "Your first sales hire should not rescue you",
+    "content": "The first sales hire cannot compensate for unclear positioning, weak urgency, or a founder who has not learned the market yet.",
+    "pageTitle": "Go-to-Market"
   }
 ]

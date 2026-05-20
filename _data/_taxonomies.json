@@ -1,11 +1,39 @@
 {
   "categories": [
     {
+      "id": 4,
+      "name": "Fundraising",
+      "slug": "fundraising",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 5,
+      "name": "Go-to-Market",
+      "slug": "go-to-market",
+      "description": "",
+      "count": 2
+    },
+    {
       "id": 2,
       "name": "Hiring & Team",
       "slug": "hiring-and-team",
       "description": "",
-      "count": 1
+      "count": 2
+    },
+    {
+      "id": 6,
+      "name": "Leadership",
+      "slug": "leadership",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 3,
+      "name": "Product Strategy",
+      "slug": "product-strategy",
+      "description": "",
+      "count": 2
     },
     {
       "id": 1,
@@ -15,8 +43,288 @@
       "count": 0
     }
   ],
-  "tags": [],
+  "tags": [
+    {
+      "id": 32,
+      "name": "Company Building",
+      "slug": "company-building",
+      "description": "",
+      "count": 3
+    },
+    {
+      "id": 33,
+      "name": "Customer Discovery",
+      "slug": "customer-discovery",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 41,
+      "name": "Dashboards",
+      "slug": "dashboards",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 31,
+      "name": "Delegation",
+      "slug": "delegation",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 15,
+      "name": "Early-Stage Startups",
+      "slug": "early-stage-startups",
+      "description": "",
+      "count": 6
+    },
+    {
+      "id": 49,
+      "name": "First Ten Hires",
+      "slug": "first-ten-hires",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 39,
+      "name": "Founder Hiring",
+      "slug": "founder-hiring",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 28,
+      "name": "Founder Leadership",
+      "slug": "founder-leadership",
+      "description": "",
+      "count": 3
+    },
+    {
+      "id": 24,
+      "name": "Founder-Led Sales",
+      "slug": "founder-led-sales",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 16,
+      "name": "Founders",
+      "slug": "founders",
+      "description": "",
+      "count": 6
+    },
+    {
+      "id": 21,
+      "name": "Fundraising",
+      "slug": "fundraising",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 25,
+      "name": "Go-To-Market",
+      "slug": "go-to-market",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 43,
+      "name": "Growth Metrics",
+      "slug": "growth-metrics",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 37,
+      "name": "Hiring",
+      "slug": "hiring",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 34,
+      "name": "ICP",
+      "slug": "icp",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 35,
+      "name": "Ideal Customer Profile",
+      "slug": "ideal-customer-profile",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 36,
+      "name": "Interview Process",
+      "slug": "interview-process",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 30,
+      "name": "Operators",
+      "slug": "operators",
+      "description": "",
+      "count": 4
+    },
+    {
+      "id": 40,
+      "name": "Product Analytics",
+      "slug": "product-analytics",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 18,
+      "name": "Product Management",
+      "slug": "product-management",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 17,
+      "name": "Product Strategy",
+      "slug": "product-strategy",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 13,
+      "name": "Roadmap",
+      "slug": "roadmap",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 26,
+      "name": "Sales Hire",
+      "slug": "sales-hire",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 27,
+      "name": "Scaling Startups",
+      "slug": "scaling-startups",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 19,
+      "name": "Seed Round",
+      "slug": "seed-round",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 46,
+      "name": "Seed Stage",
+      "slug": "seed-stage",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 44,
+      "name": "Series A",
+      "slug": "series-a",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 48,
+      "name": "Startup Culture",
+      "slug": "startup-culture",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 20,
+      "name": "Startup Funding",
+      "slug": "startup-funding",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 45,
+      "name": "Startup Fundraising",
+      "slug": "startup-fundraising",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 38,
+      "name": "Startup Hiring",
+      "slug": "startup-hiring",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 29,
+      "name": "Startup Leadership",
+      "slug": "startup-leadership",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 42,
+      "name": "Startup Metrics",
+      "slug": "startup-metrics",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 14,
+      "name": "Startup Product",
+      "slug": "startup-product",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 23,
+      "name": "Startup Sales",
+      "slug": "startup-sales",
+      "description": "",
+      "count": 2
+    },
+    {
+      "id": 51,
+      "name": "Talent Strategy",
+      "slug": "talent-strategy",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 50,
+      "name": "Team Building",
+      "slug": "team-building",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 47,
+      "name": "Team Management",
+      "slug": "team-management",
+      "description": "",
+      "count": 1
+    },
+    {
+      "id": 22,
+      "name": "Venture Capital",
+      "slug": "venture-capital",
+      "description": "",
+      "count": 2
+    }
+  ],
   "authors": [
+    {
+      "id": 2,
+      "name": "Gallop Software",
+      "slug": "dev",
+      "description": ""
+    },
     {
       "id": 1,
       "name": "Winx",
