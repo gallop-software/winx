@@ -27,7 +27,8 @@ import {
   subscribeSubheading,
   subscribeDescription,
   subscribeAction,
-} from '@/components/footer-3/config'
+  socialLinks,
+} from '@/components/footer/config'
 import arrowRightIcon from '@iconify/icons-heroicons/arrow-right'
 
 function IntroBlock() {
@@ -86,6 +87,20 @@ function EditorBlock() {
       >
         {editorLinkLabel}
       </Button>
+      <div className="flex flex-wrap items-center gap-5 mt-5">
+        {socialLinks.map((s) => (
+          <a
+            key={s.name}
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={s.name}
+            className="text-contrast-light hover:text-accent"
+          >
+            <Icon icon={s.icon} className="w-5 h-5" />
+          </a>
+        ))}
+      </div>
     </div>
   )
 }

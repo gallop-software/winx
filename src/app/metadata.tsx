@@ -1,5 +1,5 @@
 import { getStudioImage } from '@/utils/studio-helpers'
-import { socialLinks } from '@/components/footer-3/config'
+import { socialLinks } from '@/components/footer/config'
 
 const socialSameAs = socialLinks
   .map((l) => l.href)

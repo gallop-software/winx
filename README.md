@@ -263,9 +263,9 @@ Think of Canon as training wheels that never come off. AI stays within proven pa
 
 **Canon Commands:**
 
-- `npm run check` - Run lint, TypeScript, and unused checks together
-- `npm run generate:ai-rules` - Regenerate AI rules from Canon
-- `npm run update:canon` - Update to latest Canon version
+- `npm run check` - Run ESLint and TypeScript checks together
+- `npm run audit` - Audit the codebase for Canon compliance
+- `npm run unused` - Detect unused files and exports with Knip
 
 ### Built for SEO and AI Discoverability
 
@@ -308,33 +308,31 @@ winx/
 │   │   │   ├── search/        # Search results page
 │   │   │   ├── contact/
 │   │   │   └── .../           # Other routes with _blocks/
-│   │   ├── (post)/            # Blog post layout group
-│   │   │   ├── layout.tsx
-│   │   │   └── post/[slug]/   # Dynamic blog post route
-│   │   ├── api/               # API routes (share counts, etc.)
+│   │   ├── api/               # API routes (likes, share counts, etc.)
 │   │   ├── global-error.tsx   # Error boundary
 │   │   ├── global-not-found.tsx # 404 page
 │   │   ├── layout.tsx         # Root layout
 │   │   ├── metadata.tsx       # Site metadata
 │   │   ├── robots.ts          # Robots.txt config
-│   │   ├── sitemap.ts         # Sitemap config
+│   │   ├── *-sitemap.xml      # Generated sitemaps (post, author, category, tag)
+│   │   ├── BLOCKS.md          # Auto-generated blocks catalog
+│   │   ├── LAYOUTS.md         # Auto-generated layouts catalog
 │   │   └── *.png, *.ico       # App icons and favicon
 │   ├── blog/                  # Blog post content (TSX files)
 │   ├── components/            # React components
-│   │   ├── navbar/           # Main navigation
 │   │   ├── blog/             # Blog post components
-│   │   ├── search/           # Search components
-│   │   ├── footer/           # Footer components
+│   │   ├── footer/           # Footer config and components
 │   │   ├── form/             # Form components
 │   │   ├── lightbox/         # Lightbox gallery for post images
+│   │   ├── search/           # Search components
+│   │   ├── sidebar-stack/    # Sidebar panel stack
+│   │   ├── navigation.tsx    # Main navigation
 │   │   ├── page-wrapper.tsx  # Page wrapper with structured data
-│   │   ├── accordion.tsx
 │   │   ├── button.tsx
-│   │   ├── card-*.tsx        # Post card variants
+│   │   ├── card-testimonial.tsx
 │   │   ├── gallery.tsx
 │   │   ├── heading.tsx
 │   │   ├── image.tsx
-│   │   ├── logo.tsx
 │   │   ├── section.tsx
 │   │   └── ...
 │   ├── fonts/                # Font configuration files
@@ -393,11 +391,13 @@ winx/
 
 - **`npm run blog`** - Generate blog post metadata to `_data/_blog.json` → [docs](./_scripts/generate-blog-metadata.md)
 - **`npm run search`** - Build FlexSearch index for site search → [docs](./_scripts/generate-search.md)
-- **`npm run bust:kv`** - Bust the KV cache for fresh data
-- **`npm run blocks`** - Generate blocks catalog with screenshots
+- **`npm run bust:kv`** - Bust the KV cache for likes and share counts
+- **`npm run blocks`** - Generate blocks catalog (`src/app/BLOCKS.md`)
 - **`npm run blocks:screenshots`** - Force regenerate all block screenshots
-- **`npm run layouts`** - Generate layouts catalog from app route groups
+- **`npm run blocks:sort`** - Sort the blocks catalog
+- **`npm run layouts`** - Generate layouts catalog (`src/app/LAYOUTS.md`)
 - **`npm run layouts:screenshots`** - Force regenerate all layout screenshots
+- **`npm run layouts:sort`** - Sort the layouts catalog
 
 ### Environment
 
@@ -414,8 +414,14 @@ winx/
 - **`npm run update:interactive`** - Interactively choose updates
 - **`npm run update:doctor`** - Update and test changes incrementally
 
+### Database
+
+- **`npm run db:generate`** - Regenerate the Prisma client
+- **`npm run db:migrate`** - Run Prisma migrations in development
+
 ### Maintenance
 
+- **`npm run unused`** - Find unused files and exports with Knip
 - **`npm run refresh`** - Remove node_modules and .next, then reinstall
 - **`npm run clean`** - Remove node_modules, .next, and package-lock.json, then reinstall
 

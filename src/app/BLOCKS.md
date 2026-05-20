@@ -1,22 +1,21 @@
 # Winx Blocks
 
-A collection of 12 pre-built UI blocks for the Winx template.
+A collection of 9 pre-built UI blocks for the Winx template.
 
 ## Overview
 
-- **Total Blocks:** 12
+- **Total Blocks:** 9
+- **Free Blocks:** 9
+- **Pro Blocks:** 0
 
 ## Categories
 
 - **Archive:** 2 blocks
-- **Body:** 1 block
-- **Contact Form:** 1 block
-- **Expertise:** 1 block
+- **Body:** 1 blocks
+- **Contact Form:** 1 blocks
 - **Hero:** 3 blocks
-- **Intro:** 1 block
-- **Logo Card:** 1 block
-- **Search:** 1 block
-- **Testimonial:** 1 block
+- **Logo Card:** 1 blocks
+- **Testimonial:** 1 blocks
 
 ## Blocks
 
@@ -24,15 +23,21 @@ A collection of 12 pre-built UI blocks for the Winx template.
 
 #### Archive
 
-**Slug:** `archive`
-**Path:** `(default)/_blocks/archive.tsx`
+<img src="/blocks/archive.jpg" alt="Archive" width="350">
+
+**Slug:** `archive`  
+**Path:** `(default)/_blocks/archive.tsx`  
+**Tier:** Free
 
 ---
 
 #### Essays / Archive
 
-**Slug:** `essays/archive`
-**Path:** `(default)/essays/_blocks/archive.tsx`
+<img src="/blocks/essays/archive.jpg" alt="Essays / Archive" width="350">
+
+**Slug:** `essays/archive`  
+**Path:** `(default)/essays/_blocks/archive.tsx`  
+**Tier:** Free
 
 ---
 
@@ -40,8 +45,11 @@ A collection of 12 pre-built UI blocks for the Winx template.
 
 #### About / Body
 
-**Slug:** `about/body`
-**Path:** `(default)/about/_blocks/body.tsx`
+<img src="/blocks/about/body.jpg" alt="About / Body" width="350">
+
+**Slug:** `about/body`  
+**Path:** `(default)/about/_blocks/body.tsx`  
+**Tier:** Free
 
 ---
 
@@ -49,17 +57,11 @@ A collection of 12 pre-built UI blocks for the Winx template.
 
 #### Contact / Contact Form
 
-**Slug:** `contact/contact-form`
-**Path:** `(default)/contact/_blocks/contact-form.tsx`
+<img src="/blocks/contact/contact-form.jpg" alt="Contact / Contact Form" width="350">
 
----
-
-### Expertise
-
-#### Expertise
-
-**Slug:** `expertise`
-**Path:** `(default)/_blocks/expertise.tsx`
+**Slug:** `contact/contact-form`  
+**Path:** `(default)/contact/_blocks/contact-form.tsx`  
+**Tier:** Free
 
 ---
 
@@ -67,31 +69,31 @@ A collection of 12 pre-built UI blocks for the Winx template.
 
 #### About / Hero
 
-**Slug:** `about/hero`
-**Path:** `(default)/about/_blocks/hero.tsx`
+<img src="/blocks/about/hero.jpg" alt="About / Hero" width="350">
+
+**Slug:** `about/hero`  
+**Path:** `(default)/about/_blocks/hero.tsx`  
+**Tier:** Free
 
 ---
 
 #### Contact / Hero
 
-**Slug:** `contact/hero`
-**Path:** `(default)/contact/_blocks/hero.tsx`
+<img src="/blocks/contact/hero.jpg" alt="Contact / Hero" width="350">
+
+**Slug:** `contact/hero`  
+**Path:** `(default)/contact/_blocks/hero.tsx`  
+**Tier:** Free
 
 ---
 
 #### Essays / Hero
 
-**Slug:** `essays/hero`
-**Path:** `(default)/essays/_blocks/hero.tsx`
+<img src="/blocks/essays/hero.jpg" alt="Essays / Hero" width="350">
 
----
-
-### Intro
-
-#### Intro
-
-**Slug:** `intro`
-**Path:** `(default)/_blocks/intro.tsx`
+**Slug:** `essays/hero`  
+**Path:** `(default)/essays/_blocks/hero.tsx`  
+**Tier:** Free
 
 ---
 
@@ -99,17 +101,11 @@ A collection of 12 pre-built UI blocks for the Winx template.
 
 #### Logo Card
 
-**Slug:** `logo-card`
-**Path:** `(default)/_blocks/logo-card.tsx`
+<img src="/blocks/logo-card.jpg" alt="Logo Card" width="350">
 
----
-
-### Search
-
-#### Search
-
-**Slug:** `search`
-**Path:** `(default)/_blocks/search.tsx`
+**Slug:** `logo-card`  
+**Path:** `(default)/_blocks/logo-card.tsx`  
+**Tier:** Free
 
 ---
 
@@ -117,7 +113,11 @@ A collection of 12 pre-built UI blocks for the Winx template.
 
 #### Contact / Testimonial
 
-**Slug:** `contact/testimonial`
-**Path:** `(default)/contact/_blocks/testimonial.tsx`
+<img src="/blocks/contact/testimonial.jpg" alt="Contact / Testimonial" width="350">
+
+**Slug:** `contact/testimonial`  
+**Path:** `(default)/contact/_blocks/testimonial.tsx`  
+**Tier:** Free
 
 ---
+

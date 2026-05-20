@@ -60,7 +60,7 @@ const kv = createClient({
 })
 
 function keysForPost(id) {
-  return [`likes:${id}`, `like_count:${id}`, `shares:${id}`]
+  return [`likes:${id}`, `like_count:${id}`, `share_count:${id}`]
 }
 
 async function main() {

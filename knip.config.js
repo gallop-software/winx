@@ -14,18 +14,12 @@ export default {
 
   // Ignore patterns - files that are intentionally standalone or dynamically used
   ignore: [
-    '_data/**',
-    // Config files that are used by tools
-    'src/components/**/config.ts',
-    'src/components/**/types.ts',
     // Hooks that may be used dynamically
     'src/hooks/**',
     // Tools/utilities
     'src/tools/**',
     // Lightbox has dynamic exports
     'src/components/lightbox/**',
-    // lite-only component, intentionally unused in pro version
-    'src/components/pro-block.tsx',
   ],
 
   // Dependencies used by config files or build tools (not direct imports)

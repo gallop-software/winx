@@ -6,8 +6,8 @@ import {
   businessAddress,
   copyrightYears,
   copyrightName,
-} from '@/components/footer-3/config'
-import type { TrademarkLink } from '@/components/footer-3/config'
+} from '@/components/footer/config'
+import type { TrademarkLink } from '@/components/footer/config'
 
 export function Legal() {
   return (

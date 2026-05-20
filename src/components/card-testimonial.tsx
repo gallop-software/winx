@@ -2,7 +2,7 @@ import { Paragraph } from '@/components/paragraph'
 import { Heading } from '@/components/heading'
 import { Image } from '@/components/image'
 
-interface CardTestimonial3Props {
+interface CardTestimonialProps {
   name: string
   title: string
   review: string
@@ -10,12 +10,12 @@ interface CardTestimonial3Props {
   image?: string
 }
 
-export function CardTestimonial3({
+export function CardTestimonial({
   name,
   title,
   review,
   image,
-}: CardTestimonial3Props) {
+}: CardTestimonialProps) {
   return (
     <div className="bg-body rounded-lg p-5 border border-accent5 shadow-sm flex flex-col h-full">
       <Paragraph className="grow">{review}</Paragraph>
