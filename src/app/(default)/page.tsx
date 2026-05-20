@@ -6,8 +6,7 @@ import { buildPageSchema } from '@/utils/structured-data'
 import LogoCard from './_blocks/logo-card'
 import Archive from './_blocks/archive'
 
-const title =
-  'Founder Notes | Essays on Product, Fundraising & Building a Startup'
+const title = 'Essays on Product, Fundraising & Building a Startup'
 const description = defaultDescription
 
 const metadata: PageMetadata = {

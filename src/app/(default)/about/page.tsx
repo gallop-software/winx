@@ -6,7 +6,7 @@ import { buildPageSchema } from '@/utils/structured-data'
 import Hero from './_blocks/hero'
 import Body from './_blocks/body'
 
-const title = 'About | Founder Notes'
+const title = 'About'
 const description =
   'Founder Notes is an independent publication for people building companies — essays on product strategy, fundraising, hiring, and the day-to-day work of running an early-stage startup.'
 

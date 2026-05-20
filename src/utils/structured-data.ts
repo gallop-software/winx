@@ -66,6 +66,7 @@ export function buildPageSchema({
   const datePublished = seo?.opengraphPublishedTime || toIso(post?.postDate)
   const dateModified = seo?.opengraphModifiedTime || toIso(post?.postModified)
 
+  const isPost = Boolean(datePublished)
   const webPage: Record<string, unknown> = {
     '@type': 'WebPage',
     '@id': fullUrl,
@@ -83,28 +84,30 @@ export function buildPageSchema({
     description: seo?.opengraphDescription || seo?.metaDesc || description,
     ...(datePublished ? { datePublished } : {}),
     ...(dateModified ? { dateModified } : {}),
+    ...(breadcrumbs?.length
+      ? { breadcrumb: { '@id': `${fullUrl}/#breadcrumb` } }
+      : {}),
   }
 
-  const graph: object[] = [
-    webPage,
-    {
-      '@type': 'WebSite',
-      '@id': `${baseURL}/#website`,
-      url: baseURL,
-      name: seo?.title || title,
-      description: seo?.metaDesc || description,
+  const graph: object[] = [webPage]
+
+  if (isPost) {
+    graph.push({
+      '@type': 'BlogPosting',
+      '@id': `${fullUrl}/#article`,
+      isPartOf: { '@id': fullUrl },
+      mainEntityOfPage: { '@id': fullUrl },
+      headline: seo?.title || title,
+      description: seo?.opengraphDescription || seo?.metaDesc || description,
       inLanguage: 'en-US',
-      publisher: { '@id': `${baseURL}/#person` },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${baseURL}/search?s={search_term_string}`,
-        },
-        'query-input': 'required name=search_term_string',
-      },
-    },
-  ]
+      url: fullUrl,
+      ...(primaryImageId ? { image: { '@id': primaryImageId } } : {}),
+      ...(datePublished ? { datePublished } : {}),
+      ...(dateModified ? { dateModified } : {}),
+      author: { '@id': `${baseURL}/#author` },
+      publisher: { '@id': `${baseURL}/#organization` },
+    })
+  }
 
   if (imageUrl && primaryImageId) {
     graph.push({

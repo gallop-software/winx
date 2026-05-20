@@ -38,7 +38,7 @@ export default function LogoCard() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-body via-body/85 to-transparent" />
         <div className="relative grid grid-cols-1 lg:grid-cols-2">
-          <div className="p-10 sm:p-12 lg:p-16 flex flex-col justify-center">
+          <div className="p-10 sm:p-12 lg:p-16 flex flex-col justify-center max-w-xl xl:max-w-none">
             <Label margin="mb-5">Featured Essay</Label>
             <Heading
               as="h2"

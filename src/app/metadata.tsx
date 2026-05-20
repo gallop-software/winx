@@ -8,7 +8,7 @@ const socialSameAs = socialLinks
 export const baseURL =
   process.env.NEXT_PUBLIC_PRODUCTION_URL || 'http://localhost:3000'
 
-const logoImageData = getStudioImage('/webplantmedia-logo.png', 'large')
+const logoImageData = getStudioImage('/logo.png', 'large')
 
 export const defaultDescription =
   'Founder Notes is an independent publication on product strategy, fundraising, hiring, and the unglamorous work of building a startup that lasts.'
@@ -36,13 +36,12 @@ export const defaultSEOConfig = {
 }
 
 const siteUrl = baseURL
-const mainUrl = process.env.NEXT_PUBLIC_MAIN_URL || siteUrl
 
-const logoImageUrl = logoImageData?.url
-  ? logoImageData.url.startsWith('http')
-    ? logoImageData.url
-    : `${siteUrl}${logoImageData.url}`
-  : ''
+function absoluteUrl(path: string) {
+  return path.startsWith('http') ? path : `${siteUrl}${path}`
+}
+
+const logoImageUrl = absoluteUrl(logoImageData?.url || '/logo.png')
 
 const logoImageObject = {
   '@type': 'ImageObject',
@@ -51,21 +50,22 @@ const logoImageObject = {
   contentUrl: logoImageUrl,
   width: logoImageData?.width || 0,
   height: logoImageData?.height || 0,
+  caption: 'Founder Notes',
+  inLanguage: 'en-US',
 }
 
-const personImageData = getStudioImage('/dougpicture-198.jpg', 'large')
-const personImageUrlPath = personImageData?.url || '/dougpicture-198.jpg'
-const personImageUrl = personImageUrlPath.startsWith('http')
-  ? personImageUrlPath
-  : `${siteUrl}${personImageUrlPath}`
+const personImageData = getStudioImage('/headshot.jpg', 'large')
+const personImageUrl = absoluteUrl(personImageData?.url || '/headshot.jpg')
 
 const personImageObject = {
   '@type': 'ImageObject',
-  '@id': `${siteUrl}/#personimage`,
+  '@id': `${siteUrl}/#authorimage`,
   url: personImageUrl,
   contentUrl: personImageUrl,
   ...(personImageData?.width ? { width: personImageData.width } : {}),
   ...(personImageData?.height ? { height: personImageData.height } : {}),
+  caption: 'Founder Notes author',
+  inLanguage: 'en-US',
 }
 
 // Global structured data that appears on every page
@@ -73,15 +73,25 @@ export const defaultStructuredData = [
   logoImageObject,
   personImageObject,
   {
-    '@type': 'Person',
-    '@id': `${siteUrl}/#person`,
+    '@type': 'Organization',
+    '@id': `${siteUrl}/#organization`,
     name: 'Founder Notes',
-    url: `${siteUrl}/`,
-    image: { '@id': `${siteUrl}/#personimage` },
+    url: siteUrl,
+    logo: { '@id': `${siteUrl}/#logo` },
+    image: { '@id': `${siteUrl}/#logo` },
+    description: defaultDescription,
+    sameAs: socialSameAs,
+  },
+  {
+    '@type': 'Person',
+    '@id': `${siteUrl}/#author`,
+    name: 'Founder Notes',
+    url: `${siteUrl}/about`,
+    image: { '@id': `${siteUrl}/#authorimage` },
     jobTitle: 'Writer & Operator',
     description:
       'Independent writer and operator covering product strategy, fundraising, hiring, and the day-to-day work of building an early-stage company.',
-    worksFor: { '@id': `${siteUrl}/#business` },
+    worksFor: { '@id': `${siteUrl}/#organization` },
     knowsAbout: [
       'Startup founders',
       'Product strategy',
@@ -93,29 +103,36 @@ export const defaultStructuredData = [
       'Company building',
       'Product-market fit',
     ],
-    sameAs: [mainUrl, ...socialSameAs],
+    sameAs: socialSameAs,
   },
   {
-    '@type': 'Organization',
-    '@id': `${siteUrl}/#business`,
+    '@type': 'WebSite',
+    '@id': `${siteUrl}/#website`,
+    url: siteUrl,
     name: 'Founder Notes',
-    url: mainUrl,
-    image: { '@id': `${siteUrl}/#logo` },
-    logo: { '@id': `${siteUrl}/#logo` },
-    founder: { '@id': `${siteUrl}/#person` },
-    sameAs: [mainUrl, ...socialSameAs],
+    description: defaultDescription,
+    inLanguage: 'en-US',
+    publisher: { '@id': `${siteUrl}/#organization` },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteUrl}/search?s={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   },
   {
     '@type': 'Blog',
     '@id': `${siteUrl}/#blog`,
     name: 'Founder Notes',
     url: siteUrl,
-    description:
-      'Essays on building companies that matter — product strategy, fundraising, hiring, and the unglamorous work of building a startup that lasts.',
+    description: defaultDescription,
     image: { '@id': `${siteUrl}/#logo` },
     inLanguage: 'en-US',
-    author: { '@id': `${siteUrl}/#person` },
-    publisher: { '@id': `${siteUrl}/#person` },
+    isPartOf: { '@id': `${siteUrl}/#website` },
+    author: { '@id': `${siteUrl}/#author` },
+    publisher: { '@id': `${siteUrl}/#organization` },
     about: [
       'Startup Founders',
       'Product Strategy',

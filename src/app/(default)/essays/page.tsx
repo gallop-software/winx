@@ -6,7 +6,7 @@ import { buildPageSchema } from '@/utils/structured-data'
 import Hero from './_blocks/hero'
 import Archive from './_blocks/archive'
 
-const title = 'All Essays | Founder Notes'
+const title = 'All Essays'
 const description =
   'Browse the full archive of Founder Notes — essays on product strategy, fundraising, hiring, and the work of building an early-stage company.'
 

@@ -42,7 +42,7 @@ export const editorLinkLabel = 'More about Nathan'
 export const editorLinkHref = '/about'
 
 export const editorImage = {
-  src: '/pexels-maide-arslan-128712163-31750448.jpg',
+  src: '/headshot.jpg',
   alt: 'Founder Notes editor',
 }
 

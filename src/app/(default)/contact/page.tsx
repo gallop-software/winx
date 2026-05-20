@@ -7,7 +7,7 @@ import Hero from './_blocks/hero'
 import ContactForm from './_blocks/contact-form'
 import Testimonial from './_blocks/testimonial'
 
-const title = 'Contact | Founder Notes'
+const title = 'Contact'
 const description =
   'Get in touch with Founder Notes. Questions, feedback, or story ideas — send us a message and we will get back to you.'
 
