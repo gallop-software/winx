@@ -23,7 +23,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Archive
 
-<img src="/blocks/archive.jpg" alt="Archive" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/archive.jpg" alt="Archive" width="350">
 
 **Slug:** `archive`  
 **Path:** `(default)/_blocks/archive.tsx`  
@@ -33,7 +33,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Essays / Archive
 
-<img src="/blocks/essays/archive.jpg" alt="Essays / Archive" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/essays/archive.jpg" alt="Essays / Archive" width="350">
 
 **Slug:** `essays/archive`  
 **Path:** `(default)/essays/_blocks/archive.tsx`  
@@ -45,7 +45,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### About / Body
 
-<img src="/blocks/about/body.jpg" alt="About / Body" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/about/body.jpg" alt="About / Body" width="350">
 
 **Slug:** `about/body`  
 **Path:** `(default)/about/_blocks/body.tsx`  
@@ -57,7 +57,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Contact / Contact Form
 
-<img src="/blocks/contact/contact-form.jpg" alt="Contact / Contact Form" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/contact/contact-form.jpg" alt="Contact / Contact Form" width="350">
 
 **Slug:** `contact/contact-form`  
 **Path:** `(default)/contact/_blocks/contact-form.tsx`  
@@ -69,7 +69,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### About / Hero
 
-<img src="/blocks/about/hero.jpg" alt="About / Hero" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/about/hero.jpg" alt="About / Hero" width="350">
 
 **Slug:** `about/hero`  
 **Path:** `(default)/about/_blocks/hero.tsx`  
@@ -79,7 +79,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Contact / Hero
 
-<img src="/blocks/contact/hero.jpg" alt="Contact / Hero" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/contact/hero.jpg" alt="Contact / Hero" width="350">
 
 **Slug:** `contact/hero`  
 **Path:** `(default)/contact/_blocks/hero.tsx`  
@@ -89,7 +89,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Essays / Hero
 
-<img src="/blocks/essays/hero.jpg" alt="Essays / Hero" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/essays/hero.jpg" alt="Essays / Hero" width="350">
 
 **Slug:** `essays/hero`  
 **Path:** `(default)/essays/_blocks/hero.tsx`  
@@ -101,7 +101,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Logo Card
 
-<img src="/blocks/logo-card.jpg" alt="Logo Card" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/logo-card.jpg" alt="Logo Card" width="350">
 
 **Slug:** `logo-card`  
 **Path:** `(default)/_blocks/logo-card.tsx`  
@@ -113,7 +113,7 @@ A collection of 9 pre-built UI blocks for the Winx template.
 
 #### Contact / Testimonial
 
-<img src="/blocks/contact/testimonial.jpg" alt="Contact / Testimonial" width="350">
+<img src="https://winx-cdn.gallop.software/blocks/contact/testimonial.jpg" alt="Contact / Testimonial" width="350">
 
 **Slug:** `contact/testimonial`  
 **Path:** `(default)/contact/_blocks/testimonial.tsx`  

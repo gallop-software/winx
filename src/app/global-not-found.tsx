@@ -33,7 +33,7 @@ export default function GlobalNotFound() {
       lang="en"
       style={rootStyle}
     >
-      <body className="bg-body2 font-body text-base font-medium leading-normal text-contrast antialiased">
+      <body className="bg-body font-body text-base font-medium leading-normal text-contrast antialiased">
         <div className="grid grid-cols-1 [grid-template-areas:'left''main''right'] md:grid-cols-[80px_minmax(0,1fr)] md:[grid-template-areas:'left_main'_'._right'] lg:grid-cols-[80px_minmax(0,1fr)_420px] lg:[grid-template-areas:'left_main_right'] xl:grid-cols-[232px_minmax(0,1fr)_420px]">
           <div className="[grid-area:left] sticky top-0 z-40 self-start md:h-screen">
             <Navigation />

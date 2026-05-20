@@ -12,7 +12,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 
 #### Index
 
-<img src="/layouts/index.jpg" alt="Index" width="350">
+<img src="https://winx-cdn.gallop.software/layouts/index.jpg" alt="Index" width="350">
 
 **Slug:** `index`  
 **Path:** `(default)/page.tsx`  
@@ -24,7 +24,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 
 #### About
 
-<img src="/layouts/about.jpg" alt="About" width="350">
+<img src="https://winx-cdn.gallop.software/layouts/about.jpg" alt="About" width="350">
 
 **Slug:** `about`  
 **Path:** `(default)/about/page.tsx`  
@@ -36,7 +36,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 
 #### Contact
 
-<img src="/layouts/contact.jpg" alt="Contact" width="350">
+<img src="https://winx-cdn.gallop.software/layouts/contact.jpg" alt="Contact" width="350">
 
 **Slug:** `contact`  
 **Path:** `(default)/contact/page.tsx`  
@@ -48,7 +48,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 
 #### Essays
 
-<img src="/layouts/essays.jpg" alt="Essays" width="350">
+<img src="https://winx-cdn.gallop.software/layouts/essays.jpg" alt="Essays" width="350">
 
 **Slug:** `essays`  
 **Path:** `(default)/essays/page.tsx`  
@@ -60,7 +60,7 @@ A collection of 5 pre-built page layouts for the Winx template.
 
 #### Search
 
-<img src="/layouts/search.jpg" alt="Search" width="350">
+<img src="https://winx-cdn.gallop.software/layouts/search.jpg" alt="Search" width="350">
 
 **Slug:** `search`  
 **Path:** `(default)/search/page.tsx`  
