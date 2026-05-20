@@ -6,20 +6,25 @@ import { Button } from '@/components/button'
 
 export default function NotFound() {
   return (
-    <Section className="bg-body py-10">
-      <div className="max-w-2xl mx-auto text-center">
-        <Label margin="mb-5" textAlign="text-center">
-          404
-        </Label>
-        <Heading as="h1" textAlign="text-center" margin="mb-5">
+    <Section className="bg-body pt-7">
+      <div className="max-w-3xl">
+        <Label margin="mb-2">404</Label>
+        <Heading
+          as="h1"
+          margin="mb-2"
+        >
           Page Not Found
         </Heading>
-        <Paragraph textAlign="text-center" margin="mb-10">
+        <Paragraph margin="mb-10">
           The page you were looking for has moved, been retired, or never
           existed in the first place. From here, the archive of essays is the
           best place to start.
         </Paragraph>
-        <Button variant="outline" href="/" native>
+        <Button
+          variant="outline"
+          href="/"
+          native
+        >
           Return Home
         </Button>
       </div>
