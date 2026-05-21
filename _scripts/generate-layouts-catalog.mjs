@@ -34,6 +34,53 @@ const SCREENSHOT_WIDTH = 1920
 const SCREENSHOT_HEIGHT = 2400 // Tall screenshot for layouts
 const LARGE_SIZE = 1400 // Large image size on longest side
 const COLLECTION_PAGE_LIMIT = 3
+const BLOG_DATA_PATH = join(__dirname, '../_data/_blog.json')
+
+// Load a sample real slug for dynamic collection routes (category/tag/author),
+// so we can screenshot a page that actually has content.
+let _sampleSlugCache = null
+async function getSampleSlug(collectionName) {
+  if (!_sampleSlugCache) {
+    _sampleSlugCache = {}
+    try {
+      const raw = await readFile(BLOG_DATA_PATH, 'utf8')
+      const data = JSON.parse(raw)
+      const posts = Array.isArray(data) ? data : data.posts || Object.values(data)
+      for (const post of posts) {
+        const m = post?.metadata || {}
+        if (!_sampleSlugCache.category && m.categorySlugs?.[0]) {
+          _sampleSlugCache.category = m.categorySlugs[0]
+        }
+        if (!_sampleSlugCache.tag && m.tagSlugs?.[0]) {
+          _sampleSlugCache.tag = m.tagSlugs[0]
+        }
+        if (!_sampleSlugCache.author) {
+          const a = m.authorSlug || m.authorSlugs?.[0] || m.author
+          if (a) _sampleSlugCache.author = a
+        }
+        if (
+          _sampleSlugCache.category &&
+          _sampleSlugCache.tag &&
+          _sampleSlugCache.author
+        )
+          break
+      }
+    } catch {
+      // _blog.json missing — fall back to empty
+    }
+  }
+  return _sampleSlugCache[collectionName] || null
+}
+
+// Routes that need a special URL (query string or real dynamic slug) for screenshots.
+async function getSpecialUrlPath(slug) {
+  if (slug === 'search') return 'search?q=startup'
+  if (slug === 'category' || slug === 'tag' || slug === 'author') {
+    const sample = await getSampleSlug(slug)
+    if (sample) return `${slug}/${sample}`
+  }
+  return null
+}
 
 // Parse navbar config to derive layout ordering
 async function parseNavbarOrder() {
@@ -270,6 +317,27 @@ async function findLayoutPages() {
             } catch {
               // No page.tsx here — treat as a "collection" folder and look one level deeper
               const collectionDir = join(routeGroupPath, item.name)
+
+              // Dynamic-only collection (e.g. category/[slug], tag/[slug], author/[slug]):
+              // surface the parent as a single layout and screenshot a real example slug.
+              const dynamicPagePath = join(
+                collectionDir,
+                '[slug]',
+                'page.tsx'
+              )
+              try {
+                await stat(dynamicPagePath)
+                layouts.push({
+                  folderName: item.name,
+                  routeGroup: entry.name,
+                  pagePath: dynamicPagePath,
+                  isHomePage: false,
+                })
+                continue
+              } catch {
+                // no [slug]/page.tsx — fall through to generic collection logic below
+              }
+
               let subEntries = []
               try {
                 subEntries = await readdir(collectionDir, {
@@ -315,7 +383,7 @@ async function findLayoutPages() {
   return layouts
 }
 
-async function captureScreenshot(browser, slug, outputDir) {
+async function captureScreenshot(browser, slug, outputDir, urlPath) {
   const page = await browser.newPage()
 
   try {
@@ -327,7 +395,7 @@ async function captureScreenshot(browser, slug, outputDir) {
     })
 
     // Construct preview URL - layouts are at root level
-    const previewUrl = `${BASE_URL}/${slug}`
+    const previewUrl = `${BASE_URL}/${urlPath || slug}`
 
     console.log(`Capturing: ${slug} from ${previewUrl}`)
 
@@ -544,6 +612,8 @@ async function generateLayoutsCatalog(mode = 'smart') {
       // Find all layout files that apply to this page
       const layoutFiles = await findLayoutsForPage(layoutPage.pagePath)
 
+      const urlPath = await getSpecialUrlPath(slug)
+
       layouts.push({
         name,
         slug,
@@ -553,6 +623,7 @@ async function generateLayoutsCatalog(mode = 'smart') {
         pagePath: layoutPage.pagePath,
         isHomePage: layoutPage.isHomePage,
         layoutFiles,
+        ...(urlPath ? { urlPath } : {}),
       })
     }
 
@@ -656,7 +727,8 @@ async function generateLayoutsCatalog(mode = 'smart') {
         const success = await captureScreenshot(
           browser,
           layout.slug,
-          OUTPUT_DIR
+          OUTPUT_DIR,
+          layout.urlPath
         )
 
         if (success) {
