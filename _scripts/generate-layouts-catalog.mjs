@@ -806,8 +806,12 @@ function generateReadme(layouts) {
     if (layout.hasScreenshot) {
       readme += `<img src="${CDN_URL}/layouts/${layout.slug}.jpg" alt="${layout.displayName}" width="350">\n\n`
     }
-    readme += `**Slug:** \`${layout.slug}\`  \n`
-    // Generate relative path from src/app
+    // Emit the URL form as Slug for dynamic routes (e.g. category/leadership)
+    // and /search, so downstream consumers build a working previewUrl.
+    const displaySlug = layout.urlPath || layout.slug
+    readme += `**Slug:** \`${displaySlug}\`  \n`
+    // Path is the literal source file path (keeps [slug] placeholder intact
+    // so the filepath link resolves on disk).
     const relativePath = layout.pagePath.replace(/.*\/src\/app\//, '')
     readme += `**Path:** \`${relativePath}\`  \n`
     // Output each layout file path

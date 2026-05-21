@@ -38,7 +38,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 
 <img src="https://winx-cdn.gallop.software/layouts/author.jpg" alt="Author" width="350">
 
-**Slug:** `author`  
+**Slug:** `author/winx`  
 **Path:** `(default)/author/[slug]/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
@@ -50,7 +50,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 
 <img src="https://winx-cdn.gallop.software/layouts/category.jpg" alt="Category" width="350">
 
-**Slug:** `category`  
+**Slug:** `category/leadership`  
 **Path:** `(default)/category/[slug]/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
@@ -86,7 +86,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 
 <img src="https://winx-cdn.gallop.software/layouts/search.jpg" alt="Search" width="350">
 
-**Slug:** `search`  
+**Slug:** `search?s=startup`  
 **Path:** `(default)/search/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
@@ -98,7 +98,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 
 <img src="https://winx-cdn.gallop.software/layouts/tag.jpg" alt="Tag" width="350">
 
-**Slug:** `tag`  
+**Slug:** `tag/company-building`  
 **Path:** `(default)/tag/[slug]/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
