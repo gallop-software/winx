@@ -31,7 +31,7 @@ const NAVBAR_CONFIG_PATH = join(__dirname, '../src/components/navbar/config.ts')
 const BASE_URL = 'https://winx.gallop.software'
 const CDN_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || ''
 const SCREENSHOT_WIDTH = 1920
-const SCREENSHOT_HEIGHT = 2400 // Tall screenshot for layouts
+const SCREENSHOT_HEIGHT = 1700 // Tall screenshot for layouts
 const LARGE_SIZE = 1400 // Large image size on longest side
 const COLLECTION_PAGE_LIMIT = 3
 const BLOG_DATA_PATH = join(__dirname, '../_data/_blog.json')
@@ -74,7 +74,7 @@ async function getSampleSlug(collectionName) {
 
 // Routes that need a special URL (query string or real dynamic slug) for screenshots.
 async function getSpecialUrlPath(slug) {
-  if (slug === 'search') return 'search?q=startup'
+  if (slug === 'search') return 'search?s=startup'
   if (slug === 'category' || slug === 'tag' || slug === 'author') {
     const sample = await getSampleSlug(slug)
     if (sample) return `${slug}/${sample}`
@@ -391,7 +391,7 @@ async function captureScreenshot(browser, slug, outputDir, urlPath) {
     await page.setViewport({
       width: SCREENSHOT_WIDTH,
       height: 1080,
-      deviceScaleFactor: 2, // For retina/high-DPI screenshots
+      deviceScaleFactor: 1.5, // For retina/high-DPI screenshots
     })
 
     // Construct preview URL - layouts are at root level
@@ -486,6 +486,32 @@ async function captureScreenshot(browser, slug, outputDir, urlPath) {
 
     // Additional wait to ensure video frames are rendered
     await new Promise((resolve) => setTimeout(resolve, 5000))
+
+    // Neutralize internal scroll containers (e.g. sticky side sections) so
+    // their full content is visible in the tall crop instead of just their
+    // initial viewport.
+    await page.evaluate(() => {
+      const els = document.querySelectorAll('*')
+      for (const el of els) {
+        const style = getComputedStyle(el)
+        const overflowY = style.overflowY
+        const isScrollable =
+          (overflowY === 'auto' || overflowY === 'scroll') &&
+          el.scrollHeight > el.clientHeight + 1
+        const isSticky = style.position === 'sticky'
+        if (isScrollable || isSticky) {
+          el.style.setProperty('overflow', 'visible', 'important')
+          el.style.setProperty('max-height', 'none', 'important')
+          el.style.setProperty('height', 'auto', 'important')
+          if (isSticky) {
+            el.style.setProperty('position', 'static', 'important')
+          }
+        }
+      }
+    })
+
+    // Brief reflow wait after style overrides
+    await new Promise((resolve) => setTimeout(resolve, 300))
 
     // Take screenshot of the top portion as buffer (tall screenshot)
     const screenshotBuffer = await page.screenshot({
