@@ -7,7 +7,10 @@ export default function Hero() {
     <Section className="bg-body pt-7">
       <div className="max-w-3xl">
         <Label margin="mb-2">Get in touch</Label>
-        <Heading as="h1" margin="mb-10">
+        <Heading
+          as="h1"
+          margin="mb-5"
+        >
           Contact
         </Heading>
       </div>

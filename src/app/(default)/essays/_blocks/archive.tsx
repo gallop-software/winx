@@ -35,7 +35,7 @@ export default function Archive() {
     .filter((g) => g.posts.length > 0)
 
   return (
-    <Section className="bg-body pb-10">
+    <Section className="bg-body pb-10 pt-5">
       <div className="max-w-4xl mx-auto space-y-12">
         {groups.map(({ cat, posts: catPosts }) => (
           <div key={cat.slug}>

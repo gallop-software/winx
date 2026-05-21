@@ -14,7 +14,7 @@ export default function Hero() {
         >
           All Essays &amp; Notes
         </Heading>
-        <Paragraph margin="mb-10">
+        <Paragraph margin="mb-5">
           On building companies, product strategy, fundraising, hiring, and the
           work of being a founder.
         </Paragraph>

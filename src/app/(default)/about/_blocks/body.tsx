@@ -40,7 +40,7 @@ const sections = [
 
 export default function Body() {
   return (
-    <Section className="bg-body pb-10">
+    <Section className="bg-body pb-10 pt-5">
       <div className="max-w-3xl space-y-6">
         {sections.map((s) => (
           <div key={s.title}>
@@ -53,7 +53,9 @@ export default function Body() {
             {s.paragraphs.map((p, i) => (
               <Paragraph
                 key={i}
-                margin={i === s.paragraphs.length - 1 ? 'mt-4 mb-0' : 'mt-4 mb-4'}
+                margin={
+                  i === s.paragraphs.length - 1 ? 'mt-4 mb-0' : 'mt-4 mb-4'
+                }
               >
                 {p}
               </Paragraph>

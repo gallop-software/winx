@@ -9,7 +9,7 @@ export default function Hero() {
         <Label margin="mb-2">About</Label>
         <Heading
           as="h1"
-          margin="mb-10"
+          margin="mb-5"
         >
           About Founder Notes
         </Heading>
