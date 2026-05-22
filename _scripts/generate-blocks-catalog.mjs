@@ -154,7 +154,7 @@ async function captureScreenshot(browser, slug, outputDir) {
     await page.setViewport({
       width: 1920,
       height: 1080,
-      deviceScaleFactor: 2, // For retina/high-DPI screenshots
+      deviceScaleFactor: 1.5, // For retina/high-DPI screenshots
     })
 
     // Construct preview URL
@@ -170,6 +170,37 @@ async function captureScreenshot(browser, slug, outputDir) {
 
     // Wait a bit for any animations or lazy-loaded content
     await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    // Force lazy-loaded images to load: scroll through the page, flip
+    // loading="lazy" → "eager", and wait for all images to finish decoding.
+    await page.evaluate(async () => {
+      const step = window.innerHeight
+      const total = document.body.scrollHeight
+      for (let y = 0; y < total; y += step) {
+        window.scrollTo(0, y)
+        await new Promise((r) => setTimeout(r, 100))
+      }
+      window.scrollTo(0, 0)
+
+      for (const img of document.querySelectorAll('img')) {
+        img.loading = 'eager'
+        if (img.dataset.src && !img.src) img.src = img.dataset.src
+      }
+
+      await Promise.all(
+        Array.from(document.querySelectorAll('img')).map((img) => {
+          if (img.complete && img.naturalWidth > 0) return Promise.resolve()
+          return new Promise((resolve) => {
+            img.addEventListener('load', resolve, { once: true })
+            img.addEventListener('error', resolve, { once: true })
+            setTimeout(resolve, 8000)
+          })
+        })
+      )
+    })
+
+    // Brief reflow wait after force-load
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
     // Get the actual content height to avoid extra bottom whitespace
     const bodyHeight = await page.evaluate(() => {
