@@ -1,12 +1,12 @@
 # Winx Layouts
 
-A collection of 8 pre-built page layouts for the Winx template.
+A collection of 9 pre-built page layouts for the Winx template.
 
 ## Overview
 
-- **Total Layouts:** 8
-- **Free Layouts:** 0
-- **Pro Layouts:** 8
+- **Total Layouts:** 9
+- **Free Layouts:** 9
+- **Pro Layouts:** 0
 
 ## Layouts
 
@@ -18,7 +18,19 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
+
+---
+
+#### Blog
+
+<img src="https://winx-cdn.gallop.software/layouts/blog.jpg" alt="Blog" width="350">
+
+**Slug:** `2026/05/culture-is-what-happens-when-the-founder-is-not-in-the-room`  
+**Path:** `(default)/[year]/[month]/[slug]/page.tsx`  
+**Layout:** `(default)/layout.tsx`  
+**Layout:** `layout.tsx`  
+**Tier:** Free
 
 ---
 
@@ -30,7 +42,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/about/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 
@@ -42,7 +54,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/author/[slug]/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 
@@ -54,7 +66,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/category/[slug]/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 
@@ -66,7 +78,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/contact/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 
@@ -78,7 +90,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/essays/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 
@@ -86,11 +98,11 @@ A collection of 8 pre-built page layouts for the Winx template.
 
 <img src="https://winx-cdn.gallop.software/layouts/search.jpg" alt="Search" width="350">
 
-**Slug:** `search?s=startup`  
+**Slug:** `search?s=leadership`  
 **Path:** `(default)/search/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 
@@ -102,7 +114,7 @@ A collection of 8 pre-built page layouts for the Winx template.
 **Path:** `(default)/tag/[slug]/page.tsx`  
 **Layout:** `(default)/layout.tsx`  
 **Layout:** `layout.tsx`  
-**Tier:** Pro
+**Tier:** Free
 
 ---
 

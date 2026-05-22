@@ -31,54 +31,55 @@ const NAVBAR_CONFIG_PATH = join(__dirname, '../src/components/navbar/config.ts')
 const BASE_URL = 'https://winx.gallop.software'
 const CDN_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || ''
 const SCREENSHOT_WIDTH = 1920
-const SCREENSHOT_HEIGHT = 1700 // Tall screenshot for layouts
+const SCREENSHOT_HEIGHT = 2400 // Tall screenshot for layouts
 const LARGE_SIZE = 1400 // Large image size on longest side
-const COLLECTION_PAGE_LIMIT = 3
+const COLLECTION_PAGE_LIMIT = 1
 const BLOG_DATA_PATH = join(__dirname, '../_data/_blog.json')
 
-// Load a sample real slug for dynamic collection routes (category/tag/author),
-// so we can screenshot a page that actually has content.
+// Load sample real slugs from _blog.json for dynamic collection routes
+// (category/tag/author/search/blog) so we can screenshot a page with content.
 let _sampleSlugCache = null
-async function getSampleSlug(collectionName) {
-  if (!_sampleSlugCache) {
-    _sampleSlugCache = {}
-    try {
-      const raw = await readFile(BLOG_DATA_PATH, 'utf8')
-      const data = JSON.parse(raw)
-      const posts = Array.isArray(data) ? data : data.posts || Object.values(data)
-      for (const post of posts) {
-        const m = post?.metadata || {}
-        if (!_sampleSlugCache.category && m.categorySlugs?.[0]) {
-          _sampleSlugCache.category = m.categorySlugs[0]
-        }
-        if (!_sampleSlugCache.tag && m.tagSlugs?.[0]) {
-          _sampleSlugCache.tag = m.tagSlugs[0]
-        }
-        if (!_sampleSlugCache.author) {
-          const a = m.authorSlug || m.authorSlugs?.[0] || m.author
-          if (a) _sampleSlugCache.author = a
-        }
-        if (
-          _sampleSlugCache.category &&
-          _sampleSlugCache.tag &&
-          _sampleSlugCache.author
-        )
-          break
+async function loadSampleSlugs() {
+  if (_sampleSlugCache) return _sampleSlugCache
+  _sampleSlugCache = {}
+  try {
+    const raw = await readFile(BLOG_DATA_PATH, 'utf8')
+    const data = JSON.parse(raw)
+    const posts = Array.isArray(data) ? data : data.posts || Object.values(data)
+    for (const post of posts) {
+      const m = post?.metadata || {}
+      if (!_sampleSlugCache.category && m.categorySlugs?.[0]) {
+        _sampleSlugCache.category = m.categorySlugs[0]
       }
-    } catch {
-      // _blog.json missing — fall back to empty
+      if (!_sampleSlugCache.tag && m.tagSlugs?.[0]) {
+        _sampleSlugCache.tag = m.tagSlugs[0]
+      }
+      if (!_sampleSlugCache.author) {
+        const a = m.authorSlug || m.authorSlugs?.[0] || m.author
+        if (a) _sampleSlugCache.author = a
+      }
+      if (!_sampleSlugCache.blog) {
+        const url = post?.url || post?.permalink
+        if (url) _sampleSlugCache.blog = url.replace(/^\//, '')
+      }
     }
+  } catch {
+    // _blog.json missing — fall back to empty
   }
-  return _sampleSlugCache[collectionName] || null
+  return _sampleSlugCache
 }
 
-// Routes that need a special URL (query string or real dynamic slug) for screenshots.
-async function getSpecialUrlPath(slug) {
-  if (slug === 'search') return 'search?s=startup'
-  if (slug === 'category' || slug === 'tag' || slug === 'author') {
-    const sample = await getSampleSlug(slug)
-    if (sample) return `${slug}/${sample}`
-  }
+// Returns a URL path (relative to BASE_URL) for routes that need a special
+// query string or real dynamic slug to render meaningful content.
+async function getSpecialUrlPath(folderName) {
+  if (folderName === 'search') return 'search?s=leadership'
+  const samples = await loadSampleSlugs()
+  if (folderName === 'category' && samples.category)
+    return `category/${samples.category}`
+  if (folderName === 'tag' && samples.tag) return `tag/${samples.tag}`
+  if (folderName === 'author' && samples.author)
+    return `author/${samples.author}`
+  if (folderName === 'blog' && samples.blog) return samples.blog
   return null
 }
 
@@ -287,6 +288,27 @@ async function findLayoutPages() {
           // No home page in this route group
         }
 
+        // Detect [year]/[month]/[slug]/page.tsx blog-post route and surface
+        // it as a single "blog" layout that screenshots a real post.
+        const blogPostPagePath = join(
+          routeGroupPath,
+          '[year]',
+          '[month]',
+          '[slug]',
+          'page.tsx'
+        )
+        try {
+          await stat(blogPostPagePath)
+          layouts.push({
+            folderName: 'blog',
+            routeGroup: entry.name,
+            pagePath: blogPostPagePath,
+            isHomePage: false,
+          })
+        } catch {
+          // No blog-post route in this group
+        }
+
         for (const item of routeGroupContents) {
           // Skip excluded folders
           if (EXCLUDED_FOLDERS.includes(item.name)) {
@@ -317,14 +339,19 @@ async function findLayoutPages() {
             } catch {
               // No page.tsx here — treat as a "collection" folder and look one level deeper
               const collectionDir = join(routeGroupPath, item.name)
+              let subEntries = []
+              try {
+                subEntries = await readdir(collectionDir, {
+                  withFileTypes: true,
+                })
+              } catch {
+                subEntries = []
+              }
 
-              // Dynamic-only collection (e.g. category/[slug], tag/[slug], author/[slug]):
-              // surface the parent as a single layout and screenshot a real example slug.
-              const dynamicPagePath = join(
-                collectionDir,
-                '[slug]',
-                'page.tsx'
-              )
+              // Dynamic-only collection (e.g. category/[slug], tag/[slug],
+              // author/[slug]): surface the parent as a single layout and
+              // screenshot a real example slug.
+              const dynamicPagePath = join(collectionDir, '[slug]', 'page.tsx')
               try {
                 await stat(dynamicPagePath)
                 layouts.push({
@@ -335,17 +362,9 @@ async function findLayoutPages() {
                 })
                 continue
               } catch {
-                // no [slug]/page.tsx — fall through to generic collection logic below
+                // no [slug]/page.tsx — fall through to static subfolder logic
               }
 
-              let subEntries = []
-              try {
-                subEntries = await readdir(collectionDir, {
-                  withFileTypes: true,
-                })
-              } catch {
-                subEntries = []
-              }
               let added = 0
               for (const sub of subEntries) {
                 if (added >= COLLECTION_PAGE_LIMIT) break
@@ -391,7 +410,7 @@ async function captureScreenshot(browser, slug, outputDir, urlPath) {
     await page.setViewport({
       width: SCREENSHOT_WIDTH,
       height: 1080,
-      deviceScaleFactor: 1.5, // For retina/high-DPI screenshots
+      deviceScaleFactor: 2, // For retina/high-DPI screenshots
     })
 
     // Construct preview URL - layouts are at root level
@@ -486,32 +505,6 @@ async function captureScreenshot(browser, slug, outputDir, urlPath) {
 
     // Additional wait to ensure video frames are rendered
     await new Promise((resolve) => setTimeout(resolve, 5000))
-
-    // Neutralize internal scroll containers (e.g. sticky side sections) so
-    // their full content is visible in the tall crop instead of just their
-    // initial viewport.
-    await page.evaluate(() => {
-      const els = document.querySelectorAll('*')
-      for (const el of els) {
-        const style = getComputedStyle(el)
-        const overflowY = style.overflowY
-        const isScrollable =
-          (overflowY === 'auto' || overflowY === 'scroll') &&
-          el.scrollHeight > el.clientHeight + 1
-        const isSticky = style.position === 'sticky'
-        if (isScrollable || isSticky) {
-          el.style.setProperty('overflow', 'visible', 'important')
-          el.style.setProperty('max-height', 'none', 'important')
-          el.style.setProperty('height', 'auto', 'important')
-          if (isSticky) {
-            el.style.setProperty('position', 'static', 'important')
-          }
-        }
-      }
-    })
-
-    // Brief reflow wait after style overrides
-    await new Promise((resolve) => setTimeout(resolve, 300))
 
     // Take screenshot of the top portion as buffer (tall screenshot)
     const screenshotBuffer = await page.screenshot({
@@ -632,13 +625,13 @@ async function generateLayoutsCatalog(mode = 'smart') {
         layoutPage.isHomePage
       )
 
-      // All layouts in this template are pro
-      const tier = 'pro'
+      // layout-2 and up are pro, everything else is free
+      const tier = /^layout-\d+$/.test(slug) ? 'pro' : 'free'
 
       // Find all layout files that apply to this page
       const layoutFiles = await findLayoutsForPage(layoutPage.pagePath)
 
-      const urlPath = await getSpecialUrlPath(slug)
+      const urlPath = await getSpecialUrlPath(layoutPage.folderName)
 
       layouts.push({
         name,
@@ -806,12 +799,9 @@ function generateReadme(layouts) {
     if (layout.hasScreenshot) {
       readme += `<img src="${CDN_URL}/layouts/${layout.slug}.jpg" alt="${layout.displayName}" width="350">\n\n`
     }
-    // Emit the URL form as Slug for dynamic routes (e.g. category/leadership)
-    // and /search, so downstream consumers build a working previewUrl.
     const displaySlug = layout.urlPath || layout.slug
     readme += `**Slug:** \`${displaySlug}\`  \n`
-    // Path is the literal source file path (keeps [slug] placeholder intact
-    // so the filepath link resolves on disk).
+    // Generate relative path from src/app
     const relativePath = layout.pagePath.replace(/.*\/src\/app\//, '')
     readme += `**Path:** \`${relativePath}\`  \n`
     // Output each layout file path

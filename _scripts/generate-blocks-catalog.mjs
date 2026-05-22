@@ -7,7 +7,6 @@ import {
   unlink,
   access,
 } from 'fs/promises'
-import { existsSync } from 'fs'
 import { join, dirname, relative } from 'path'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
@@ -155,7 +154,7 @@ async function captureScreenshot(browser, slug, outputDir) {
     await page.setViewport({
       width: 1920,
       height: 1080,
-      deviceScaleFactor: 1.5, // For retina/high-DPI screenshots
+      deviceScaleFactor: 2, // For retina/high-DPI screenshots
     })
 
     // Construct preview URL
@@ -171,40 +170,6 @@ async function captureScreenshot(browser, slug, outputDir) {
 
     // Wait a bit for any animations or lazy-loaded content
     await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // Force lazy-loaded images to load: scroll through the page, flip
-    // loading="lazy" → "eager", and wait for all images to finish decoding.
-    await page.evaluate(async () => {
-      // Step through the page so IntersectionObserver-based lazy loaders fire
-      const step = window.innerHeight
-      const total = document.body.scrollHeight
-      for (let y = 0; y < total; y += step) {
-        window.scrollTo(0, y)
-        await new Promise((r) => setTimeout(r, 100))
-      }
-      window.scrollTo(0, 0)
-
-      // Force-eager all images
-      for (const img of document.querySelectorAll('img')) {
-        img.loading = 'eager'
-        if (img.dataset.src && !img.src) img.src = img.dataset.src
-      }
-
-      // Wait for every <img> to either finish or fail
-      await Promise.all(
-        Array.from(document.querySelectorAll('img')).map((img) => {
-          if (img.complete && img.naturalWidth > 0) return Promise.resolve()
-          return new Promise((resolve) => {
-            img.addEventListener('load', resolve, { once: true })
-            img.addEventListener('error', resolve, { once: true })
-            setTimeout(resolve, 8000)
-          })
-        })
-      )
-    })
-
-    // Brief reflow wait after force-load
-    await new Promise((resolve) => setTimeout(resolve, 500))
 
     // Get the actual content height to avoid extra bottom whitespace
     const bodyHeight = await page.evaluate(() => {
@@ -352,7 +317,7 @@ async function generateBlocksCatalog(mode = 'smart', filterBlock = null) {
         blockFile.slug
       )
       const routePrefix = getRoutePrefix(slug)
-      const tier = layoutTiers.get(routePrefix) || 'pro'
+      const tier = layoutTiers.get(routePrefix) || 'free'
 
       allBlocksMap.set(displayName, {
         name,
@@ -540,13 +505,6 @@ async function generateBlockIndex(blockFiles) {
   lines.push('')
   lines.push('export const blockSlugs = Object.keys(blockImports)')
   lines.push('')
-
-  if (!existsSync(dirname(BLOCK_INDEX_PATH))) {
-    console.log(
-      `Skipping block index — ${dirname(BLOCK_INDEX_PATH)} does not exist\n`
-    )
-    return
-  }
 
   await writeFile(BLOCK_INDEX_PATH, lines.join('\n'), 'utf-8')
   console.log(
