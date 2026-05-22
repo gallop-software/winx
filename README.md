@@ -24,18 +24,24 @@ Just chat with AI inside your code editor using our Gallop templates, and you wi
 - 🚀 **Next.js 16.2** with App Router
 - ⚛️ **React 19** for cutting-edge performance
 - 🎨 **Tailwind CSS 4.2** for pixel-perfect design
-- ✍️ **TSX-powered posts** - Write articles as components, no CMS required
+- ✍️ **TSX-powered posts** - Articles authored in WordPress and exported as TSX components for full design control
 - 📚 **Rich blog archives** - Category, tag, author, and year pages built in
-- 🖼️ **Image processing** with automatic optimization
-- 🔍 **Built-in search** powered by FlexSearch
-- 📡 **RSS feed** for subscribers and syndication
-- 💬 **Share counts** powered by Prisma and KV cache
+- 🗺️ **Auto-generated sitemaps** for posts, authors, categories, and tags
+- 🖼️ **Image processing** with automatic optimization via Sharp
+- 🔍 **Built-in search** powered by FlexSearch with Algolia Autocomplete
+- 🔦 **Lightbox galleries** for post images and media
+- 🎞️ **Swiper carousels** for image galleries and sliders
+- 💬 **Share counts** powered by Prisma and Vercel KV cache
+- ❤️ **Post likes & reactions** with persistent storage
+- 📧 **Newsletter subscribe/unsubscribe** API endpoints
+- 📝 **Form submission** API for contact and lead capture
 - 📱 **Fully responsive** and mobile-optimized for readers
 - ⚡ **Lightning-fast** page loads for long-form content
 - 🎭 **Framer Motion** animations
 - 🎯 **SEO and AI optimized** with article structured data
 - 🤖 **AI-friendly** codebase structure
 - 🛡️ **Gallop Canon** - AI guardrails for consistent, reliable code
+- 🎨 **Iconify icons** (Heroicons, Lucide, Material Design, Simple Icons)
 - 📊 **Vercel Analytics** integration
 
 ---
@@ -433,25 +439,26 @@ winx/
 
 Every dependency is battle-tested in production and chosen for stability, performance, and long-term maintainability.
 
-- **Next.js** `16.2.1` - React framework with App Router
-- **React** `19` - UI library
+- **Next.js** `16.2.4` - React framework with App Router
+- **React** `19.2.5` - UI library
 - **Tailwind CSS** `4.2.2` - Utility-first CSS framework
-- **Headless UI** `2.2.9` - Unstyled accessible components
-- **Prisma** - Database ORM for share counts and dynamic data
+- **Headless UI** `2.2.10` - Unstyled accessible components
+- **Prisma** `7.2.0` - Database ORM for share counts and dynamic data
+- **Vercel KV** `3.0.0` - Edge cache for likes and share counts
 - **Valtio** `2.3.1` - State management
-- **Swiper** `12.1.3` - Modern slider/carousel for post galleries
-- **Yet Another React Lightbox** `3.30.1` - Image gallery for post media
+- **Swiper** `12.1.4` - Modern slider/carousel for post galleries
+- **Yet Another React Lightbox** `3.31.0` - Image gallery for post media
 - **FlexSearch** `0.8.212` - Full-text post search
-- **Algolia Autocomplete** `1.19.7` - Search autocomplete
-- **Vimeo Player** `2.30.3` - Embedded video for posts
+- **Algolia Autocomplete** `1.19.8` - Search autocomplete
 - **Framer Motion** `12.38.0` - Animation library
 - **Luxon** `3.7.2` - DateTime library for post dates
 - **React Intersection Observer** `10.0.3` - Scroll-based animations and lazy loading
 - **React Highlight Words** `0.21.0` - Search result highlighting
-- **Iconify Icons** - Icon sets (Heroicons, Lucide, Material Design)
+- **html-react-parser** `6.0.1` - HTML-to-React parsing for rich content
+- **Iconify Icons** - Icon sets (Heroicons, Lucide, Material Design, Simple Icons)
 - **clsx** `2.1.1` - Conditional className utility
 - **Vercel Analytics** `1.6.1` - Analytics integration
-- **Next Third Parties** `16.2.1` - Third-party script optimization
+- **Next Third Parties** `16.2.4` - Third-party script optimization
 
 ### Development
 
@@ -473,7 +480,6 @@ Build-time tools for content and asset generation:
 - **Puppeteer** `24.40.0` - Screenshot generation (featured images)
 - **jsdom** `27.4.0` - DOM parsing for search index generation
 - **@sindresorhus/slugify** `3.0.0` - URL-friendly slugs for posts, tags, and authors
-- **xml2js** `0.6.2` - RSS feed generation
 
 ---
 
