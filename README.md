@@ -1,6 +1,6 @@
 # Winx
 
-[![Winx Theme](public/images/screenshot.jpg)](https://winx.gallop.software)
+[![Winx Theme](public/layouts/index.jpg)](https://winx.gallop.software)
 
 A modern blog and publishing template for writers, journalists, and content creators who want to launch at the speed of thought with AI, publish more polished posts than the competition, and rank #1 on Google.
 
