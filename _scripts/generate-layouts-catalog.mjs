@@ -30,8 +30,8 @@ const README_PATH = join(__dirname, '../src/app/LAYOUTS.md')
 const NAVBAR_CONFIG_PATH = join(__dirname, '../src/components/navbar/config.ts')
 const BASE_URL = 'https://winx.gallop.software'
 const CDN_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || ''
-const SCREENSHOT_WIDTH = 1920
-const SCREENSHOT_HEIGHT = 1700 // Tall screenshot for layouts
+const SCREENSHOT_WIDTH = 2000
+const SCREENSHOT_HEIGHT = 1429 // 1.4:1 crop -> 1400x1000 after downscale
 const LARGE_SIZE = 1400 // Large image size on longest side
 const COLLECTION_PAGE_LIMIT = 1
 const BLOG_DATA_PATH = join(__dirname, '../_data/_blog.json')
@@ -410,8 +410,8 @@ async function captureScreenshot(browser, slug, outputDir, urlPath) {
     // Set viewport to a standard desktop size
     await page.setViewport({
       width: SCREENSHOT_WIDTH,
-      height: 1080,
-      deviceScaleFactor: 1.5, // For retina/high-DPI screenshots
+      height: SCREENSHOT_HEIGHT,
+      deviceScaleFactor: 2, // 2x for sharp/high-DPI screenshots
     })
 
     // Construct preview URL - layouts are at root level
