@@ -2,18 +2,18 @@
 
 [![Winx Theme](public/images/screenshot.jpg)](https://winx.gallop.software)
 
-A modern blog and publishing template for writers, journalists, and content creators who want to launch at the speed of thought with AI, publish more polished posts than the competition, and rank #1 on Google.
+A modern, AI-built blog and publishing template for writers, journalists, and content creators. Keep WordPress as your editor and authoring backend, then ship a blazing-fast headless Next.js front end that publishes at the speed of thought, outshines the competition, and ranks #1 on Google.
 
 **🌐 Demo:** [winx.gallop.software](https://winx.gallop.software)  
 **🎨 Template:** [gallop.software/templates](https://gallop.software/templates)  
 **📦 Repository:** [github.com/gallop-software/winx-pro](https://github.com/gallop-software/winx-pro)  
-**🏷️ Category:** Blog Template
+**🏷️ Category:** Headless WordPress Blog Template
 
 ---
 
 ## Why Use Gallop Templates?
 
-Just chat with AI inside your code editor using our Gallop templates, and you will never want to run a blog on WordPress again. Simply describe the post, layout, or feature you want, and AI writes the code. No CMS, no plugin sprawl, no clunky admin panels, and no design limitations. Just type and watch. Build beautiful article layouts, add smooth reading animations, configure your SEO and AI discoverability instantly, expand endlessly, and get prompting tips from our [Gallop community](https://gallop-software.slack.com/). Go live in minutes.
+Keep the WordPress editor you already know — but escape the slow themes, plugin sprawl, and clunky front end. Winx goes **headless**: WordPress (or the AI editor) handles authoring, and a modern Next.js front end handles the experience your readers actually see. Just chat with AI inside your code editor, describe the post, layout, or feature you want, and AI writes the code. Build beautiful article layouts, add smooth reading animations, configure your SEO and AI discoverability instantly, expand endlessly, and get prompting tips from our [Gallop community](https://gallop-software.slack.com/). Go live in minutes.
 
 [![Watch: Design your blog by chatting with AI](https://img.shields.io/badge/Watch:_Design_your_blog_by_chatting_with_AI-166534?style=for-the-badge)](https://gallop.software/#learn-more)
 
@@ -24,6 +24,7 @@ Just chat with AI inside your code editor using our Gallop templates, and you wi
 - 🚀 **Next.js 16.2** with App Router
 - ⚛️ **React 19** for cutting-edge performance
 - 🎨 **Tailwind CSS 4.2** for pixel-perfect design
+- 🔌 **Headless WordPress** - Keep WordPress as your authoring backend and serve a fast, decoupled Next.js front end
 - ✍️ **TSX-powered posts** - Articles authored in WordPress and exported as TSX components for full design control
 - 📚 **Rich blog archives** - Category, tag, author, and year pages built in
 - 🗺️ **Auto-generated sitemaps** for posts, authors, categories, and tags
@@ -272,6 +273,20 @@ Think of Canon as training wheels that never come off. AI stays within proven pa
 - `npm run check` - Run ESLint and TypeScript checks together
 - `npm run audit` - Audit the codebase for Canon compliance
 - `npm run unused` - Detect unused files and exports with Knip
+
+### Headless WordPress with Gallop WP
+
+Already invested in WordPress? Keep it. Winx pairs with the free [Gallop WP](https://gallop.software/headless-wordpress) plugin to turn your WordPress site into a headless authoring backend for this Next.js front end — so editors keep the admin they know while readers get a fast, modern, decoupled experience.
+
+Gallop WP exposes a purpose-built REST API (`/wp-json/gallop/v1`) shaped for Next.js, so your front end stays simple:
+
+- **One request per page** — resolve a front-end URI straight to a post or category and get the post body, SEO block, and site data back in a single round trip, instead of chaining multiple core WordPress REST calls
+- **Built-in authentication** — cookie-based login, session, and logout endpoints with out-of-the-box brute-force rate limiting, so you can build membership and gated content without wiring up a JWT layer
+- **UI-driven custom post types** — register REST-enabled custom post types from the WordPress admin with no `register_post_type()` boilerplate
+- **Yoast SEO integration** — when Yoast is active, canonical URLs, meta descriptions, OpenGraph fields, and robots flags flow straight into the API response
+- **Optional front-end redirect** — point Gallop at your production Next.js URL and it 301-redirects public WordPress requests to the matching headless path, while leaving the admin, REST API, and previews untouched
+
+Prefer to skip WordPress entirely? You can. Winx also authors posts directly as TSX in `src/blog/` — headless WordPress is an option, not a requirement.
 
 ### Built for SEO and AI Discoverability
 
