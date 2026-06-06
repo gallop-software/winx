@@ -112,6 +112,19 @@ export function getStudioImage(
 
     // Get CDN URL if available
     const cdnUrl = entry.c !== undefined ? cdnUrls[entry.c] : undefined
+
+    // SVGs are vectors — never read from /images thumbnail paths;
+    // always serve the original file under its bare key
+    if (lookupKey.toLowerCase().endsWith('.svg')) {
+      const dims = entry.o || entry.f
+      if (!dims) return undefined
+      return {
+        url: cdnUrl ? `${cdnUrl}${lookupKey}` : url,
+        width: dims.w,
+        height: dims.h,
+      }
+    }
+
     const entryIsProcessed = isProcessed(entry)
 
     // Get the size key
@@ -227,6 +240,12 @@ export function studioUrl(src: string, size: ImageSize = 'large'): string {
 
   // Get CDN URL if available
   const cdnUrl = entry.c !== undefined ? cdnUrls[entry.c] : undefined
+
+  // SVGs are vectors — never read from /images thumbnail paths;
+  // always serve the original file under its bare key
+  if (lookupKey.toLowerCase().endsWith('.svg')) {
+    return cdnUrl ? `${cdnUrl}${lookupKey}` : src
+  }
 
   // Build the correct path
   const entryIsProcessed = isProcessed(entry)
