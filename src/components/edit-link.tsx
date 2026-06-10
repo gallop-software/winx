@@ -5,7 +5,6 @@ import { useRouter, usePathname } from 'next/navigation'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Paragraph } from '@/components/paragraph'
 import pencilSolidIcon from '@iconify/icons-heroicons/pencil-solid'
-import eyeIcon from '@iconify/icons-heroicons/eye'
 import arrowPath20Solid from '@iconify/icons-heroicons/arrow-path-20-solid'
 import { Icon } from '@/components/icon'
 import { state, useSnapshot } from '@/state'
@@ -28,7 +27,7 @@ export default function EditLink({ meta }: EditLinkProps) {
 
   if (!snap.isLoggedIn) return null
 
-  const { databaseId, slug, postType, wpUrl } = meta
+  const { databaseId, wpUrl } = meta
 
   const handleRevalidate = async () => {
     const response = await fetch('/api/revalidate/', {
@@ -65,26 +64,15 @@ export default function EditLink({ meta }: EditLinkProps) {
           <Icon className="w-6 h-6" icon={arrowPath20Solid} />
         </button>
         {databaseId !== 0 && wpUrl && (
-          <>
-            <a
-              href={`${wpUrl}/${postType !== 'page' ? `${postType}/` : ''}${slug !== 'home' ? `${slug}/` : ''}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View on WordPress"
-              className={buttonClass}
-            >
-              <Icon className="w-6 h-6" icon={eyeIcon} />
-            </a>
-            <a
-              href={`${wpUrl}/wp-admin/post.php?post=${databaseId}&action=edit`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Edit in WordPress"
-              className={buttonClass}
-            >
-              <Icon className="w-6 h-6" icon={pencilSolidIcon} />
-            </a>
-          </>
+          <a
+            href={`${wpUrl}/wp-admin/post.php?post=${databaseId}&action=edit`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Edit in WordPress"
+            className={buttonClass}
+          >
+            <Icon className="w-6 h-6" icon={pencilSolidIcon} />
+          </a>
         )}
       </div>
       <Dialog
