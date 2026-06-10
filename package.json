@@ -37,12 +37,7 @@
     "audit:json": "gallop audit --json",
     "search": "./_scripts/generate-search.sh",
     "blog": "node _scripts/generate-blog-metadata.mjs",
-    "blocks": "node _scripts/generate-blocks-catalog.mjs",
-    "blocks:screenshots": "node _scripts/generate-blocks-catalog.mjs --screenshots",
-    "blocks:sort": "node _scripts/generate-blocks-catalog.mjs --sort",
-    "layouts": "node _scripts/generate-layouts-catalog.mjs",
-    "layouts:screenshots": "node _scripts/generate-layouts-catalog.mjs --screenshots",
-    "layouts:sort": "node _scripts/generate-layouts-catalog.mjs --sort",
+    "blocks": "node _scripts/generate-block-index.mjs",
     "bust:kv": "node _scripts/bust-kv-cache.mjs",
     "env": "./_scripts/push-env-to-vercel.sh",
     "env:prod": "./_scripts/push-env-to-vercel.sh production",
@@ -105,8 +100,6 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.2.0",
-    "puppeteer": "^24.42.0",
-    "sharp": "^0.34.5",
     "tailwindcss": "^4.2.2",
     "typescript": "^5"
   }

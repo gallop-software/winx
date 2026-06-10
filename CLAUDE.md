@@ -7,12 +7,9 @@ Winx is a Next.js template for writers, journalists, and content creators built 
 | File | Regenerate With | Triggered By |
 |---|---|---|
 | `_data/_blog.json` | `npm run blog` | Adding/editing posts in src/blog/ |
-| `src/app/BLOCKS.md` | `npm run blocks` | Block additions (tier/order preserved) |
-| `src/app/LAYOUTS.md` | `npm run layouts` | Layout additions |
+| `src/app/(demo)/block/[[...slug]]/_block-index.ts` | `npm run blocks` | Block additions/removals |
 | `_fonts/` | — | Font source files (do not edit) |
 | `public/search-index.json` | `npm run search` | Content changes |
-| `public/blocks/*.jpg` | `npm run blocks:screenshots` | Block visual changes |
-| `public/layouts/*.jpg` | `npm run layouts:screenshots` | Layout visual changes |
 
 ## Build Commands
 
@@ -21,7 +18,7 @@ Winx is a Next.js template for writers, journalists, and content creators built 
 | `npm run dev` | Development server |
 | `npm run build` | Production build (auto-runs npm run blog) |
 | `npm run blog` | Regenerate blog metadata |
-| `npm run blocks` | Regenerate blocks catalog |
+| `npm run blocks` | Regenerate block index for /block demo previews |
 | `npm run search` | Regenerate search index |
 | `npm run lint` | ESLint check (run after edits) |
 | `npm run ts` | TypeScript check |
@@ -70,9 +67,7 @@ src/app/
 ├── metadata.tsx      # Shared metadata
 ├── global-error.tsx
 ├── global-not-found.tsx
-├── robots.ts
-├── BLOCKS.md         # Auto-generated
-└── LAYOUTS.md        # Auto-generated
+└── robots.ts
 ```
 
 - All page routes must be inside a route group (parentheses folder)

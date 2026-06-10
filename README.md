@@ -336,8 +336,6 @@ winx/
 │   │   ├── metadata.tsx       # Site metadata
 │   │   ├── robots.ts          # Robots.txt config
 │   │   ├── *-sitemap.xml      # Generated sitemaps (post, author, category, tag)
-│   │   ├── BLOCKS.md          # Auto-generated blocks catalog
-│   │   ├── LAYOUTS.md         # Auto-generated layouts catalog
 │   │   └── *.png, *.ico       # App icons and favicon
 │   ├── blog/                  # Blog post content (TSX files)
 │   ├── components/            # React components
@@ -413,12 +411,7 @@ winx/
 - **`npm run blog`** - Generate blog post metadata to `_data/_blog.json` → [docs](./_scripts/generate-blog-metadata.md)
 - **`npm run search`** - Build FlexSearch index for site search → [docs](./_scripts/generate-search.md)
 - **`npm run bust:kv`** - Bust the KV cache for likes and share counts
-- **`npm run blocks`** - Generate blocks catalog (`src/app/BLOCKS.md`)
-- **`npm run blocks:screenshots`** - Force regenerate all block screenshots
-- **`npm run blocks:sort`** - Sort the blocks catalog
-- **`npm run layouts`** - Generate layouts catalog (`src/app/LAYOUTS.md`)
-- **`npm run layouts:screenshots`** - Force regenerate all layout screenshots
-- **`npm run layouts:sort`** - Sort the layouts catalog
+- **`npm run blocks`** - Regenerate the block index for `/block` demo previews (`_block-index.ts`)
 
 ### Environment
 
