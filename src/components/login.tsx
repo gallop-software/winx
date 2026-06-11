@@ -7,21 +7,26 @@ import {
   DialogTitle,
   Description,
 } from '@headlessui/react'
+import arrowPathIcon from '@iconify/icons-heroicons/arrow-path'
 import { state, useSnapshot } from '@/state'
 import { useLoggedIn } from '@/hooks/use-logged-in'
 import { Heading } from '@/components/heading'
 import { Paragraph } from '@/components/paragraph'
+import { Icon } from '@/components/icon'
 
 export default function LoginDialog() {
   const [isOpen, setIsOpen] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const snap = useSnapshot(state)
 
   useLoggedIn()
 
   const loginUser = async () => {
+    if (isLoading) return
+    setIsLoading(true)
     try {
       const response = await fetch('/api/is-logged-in/', {
         method: 'POST',
@@ -46,6 +51,8 @@ export default function LoginDialog() {
     } catch (error) {
       console.error('Login error', error)
       setErrorMessage('Login failed.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -118,9 +125,17 @@ export default function LoginDialog() {
             )}
             <button
               onClick={loginUser}
-              className="w-full text-center text-xs rounded-md py-2 px-4 bg-accent text-accent-contrast hover:bg-accent-light cursor-pointer"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center text-center text-xs rounded-md py-2 px-4 bg-accent text-accent-contrast hover:bg-accent-light cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Submit
+              <span>Submit</span>
+              {isLoading && (
+                <Icon
+                  icon={arrowPathIcon}
+                  className="ml-2 h-5 w-5 animate-spin text-accent-contrast"
+                  aria-hidden="true"
+                />
+              )}
             </button>
           </div>
         </DialogPanel>
