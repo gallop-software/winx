@@ -6,7 +6,7 @@ A modern, AI-built blog and publishing template for writers, journalists, and co
 
 **🌐 Demo:** [winx.gallop.software](https://winx.gallop.software)  
 **🎨 Template:** [gallop.software/templates](https://gallop.software/templates)  
-**📦 Repository:** [github.com/gallop-software/winx-pro](https://github.com/gallop-software/winx-pro)  
+**📦 Repository:** [github.com/gallop-software/winx](https://github.com/gallop-software/winx)  
 **🏷️ Category:** Headless WordPress Blog Template
 
 ---
@@ -203,7 +203,7 @@ If you're comfortable with Git:
 
 #### Step 1: Create Your Repository
 
-[![Winx Pro](https://img.shields.io/badge/Winx_Pro-6366F1?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gallop-software/winx-pro/generate)
+[![Winx](https://img.shields.io/badge/Winx-6366F1?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gallop-software/winx/generate)
 
 #### Step 2: Clone Your Repository
 
@@ -226,7 +226,7 @@ Open [http://localhost:3000](http://localhost:3000) to view your blog. Press `Ct
 
 #### Step 3: Deploy to Vercel
 
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy_with_Vercel-2563EB?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?demo-title=Winx&demo-description=A%20modern%20blog%20and%20publishing%20template%20for%20writers%2C%20journalists%2C%20and%20content%20creators%20who%20want%20to%20launch%20at%20the%20speed%20of%20thought%20with%20AI%2C%20publish%20more%20polished%20posts%20than%20the%20competition%2C%20and%20rank%20%231%20on%20Google.&demo-url=https%3A%2F%2Fwinx.gallop.software&demo-image=https%3A%2F%2Fwinx.gallop.software%2Fimages%2Fscreenshot-md.jpg&from=templates&project-name=winx-pro&repository-name=winx-pro&repository-url=https%3A%2F%2Fgithub.com%2Fgallop-software%2Fwinx-pro)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy_with_Vercel-2563EB?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?demo-title=Winx&demo-description=A%20modern%20blog%20and%20publishing%20template%20for%20writers%2C%20journalists%2C%20and%20content%20creators%20who%20want%20to%20launch%20at%20the%20speed%20of%20thought%20with%20AI%2C%20publish%20more%20polished%20posts%20than%20the%20competition%2C%20and%20rank%20%231%20on%20Google.&demo-url=https%3A%2F%2Fwinx.gallop.software&demo-image=https%3A%2F%2Fwinx.gallop.software%2Fimages%2Fscreenshot-md.jpg&from=templates&project-name=winx&repository-name=winx&repository-url=https%3A%2F%2Fgithub.com%2Fgallop-software%2Fwinx)
 
 Select your repository, and Vercel will automatically deploy whenever you push changes.
 
@@ -494,7 +494,7 @@ Build-time tools for content and asset generation:
 ## Support & Community
 
 - **Documentation:** [gallop.software](https://gallop.software)
-- **Issues:** [GitHub Issues](https://github.com/gallop-software/winx-pro/issues)
+- **Issues:** [GitHub Issues](https://github.com/gallop-software/winx/issues)
 - **Slack:** [Join Community](https://join.slack.com/t/gallop-software/shared_invite/zt-358q3rdrp-H6kKvKzpR2qgB5xJviAOcw)
 - **Professional Services:** [Web Plant Media, LLC](https://webplant.media)
 
