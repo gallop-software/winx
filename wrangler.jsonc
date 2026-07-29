@@ -4,12 +4,12 @@
   "name": "winx",
   "compatibility_date": "2026-07-19",
   "compatibility_flags": ["nodejs_compat"],
-  "routes": [
-    {
-      "pattern": "winx-cloudflare.gallop.software",
-      "custom_domain": true,
-    },
-  ],
+  // The winx-cloudflare.gallop.software custom domain is attached to this
+  // Worker at the account level (Workers > Domains). It is intentionally not
+  // declared as a `routes` entry: on every deploy after the first, wrangler
+  // reconciles zone-level workers/routes, and the deploy token lacks that
+  // zone permission (403), which fails the whole deploy. Grant the token
+  // "Workers Routes" on the gallop.software zone to manage it here instead.
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",
