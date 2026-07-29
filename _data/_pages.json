@@ -1,0 +1,27 @@
+[
+  {
+    "slug": "",
+    "modified": "2026-05-20T15:44:44.783Z",
+    "uri": "/"
+  },
+  {
+    "slug": "about",
+    "modified": "2026-05-20T15:44:15.224Z",
+    "uri": "/about"
+  },
+  {
+    "slug": "contact",
+    "modified": "2026-05-20T15:44:21.926Z",
+    "uri": "/contact"
+  },
+  {
+    "slug": "essays",
+    "modified": "2026-05-20T15:44:08.728Z",
+    "uri": "/essays"
+  },
+  {
+    "slug": "search",
+    "modified": "2026-05-20T15:44:48.960Z",
+    "uri": "/search"
+  }
+]

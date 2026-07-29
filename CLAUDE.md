@@ -7,6 +7,7 @@ Winx is a Next.js template for writers, journalists, and content creators built 
 | File | Regenerate With | Triggered By |
 |---|---|---|
 | `_data/_blog.json` | `npm run blog` | Adding/editing posts in src/blog/ |
+| `_data/_pages.json` | `npm run pages` | Adding/removing page routes |
 | `src/app/(demo)/block/[[...slug]]/_block-index.ts` | `npm run blocks` | Block additions/removals |
 | `_fonts/` | — | Font source files (do not edit) |
 | `public/search-index.json` | `npm run search` | Content changes |
@@ -16,8 +17,9 @@ Winx is a Next.js template for writers, journalists, and content creators built 
 | Command | Purpose |
 |---|---|
 | `npm run dev` | Development server |
-| `npm run build` | Production build (auto-runs npm run blog) |
+| `npm run build` | Production build (auto-runs npm run blog and npm run pages) |
 | `npm run blog` | Regenerate blog metadata |
+| `npm run pages` | Regenerate page route metadata for the page sitemap |
 | `npm run blocks` | Regenerate block index for /block demo previews |
 | `npm run search` | Regenerate search index |
 | `npm run lint` | ESLint check (run after edits) |
@@ -96,6 +98,7 @@ src/app/
 - Create new route groups in `src/app/` when new layouts are needed
 - Create new archive content folders (like `blog/`, `portfolio/`) in `/src`
 - Create dotfiles/directories at project root (`.github/`, `.cursor/`, etc.)
+- Import generated `_data/*.json` in runtime code via `@/../_data/*` (bundled at build time)
 - Ask for confirmation if the correct zone is ambiguous
 
 ### DO NOT — What AI Is Forbidden To Do
@@ -107,7 +110,8 @@ src/app/
 - Reorganize or move folders without explicit instruction
 - Invent new organizational conventions
 - Create placeholder or speculative files
-- Import from `_scripts/` or `_data/` in runtime code
+- Import from `_scripts/` in runtime code (Node-only deps: `fs`, `jsdom`, etc.)
+- Read files from disk at runtime (`fs.readFileSync` + `process.cwd()`, `fs.readdirSync`) — there is no filesystem on Cloudflare Workers, so it throws `ENOENT` or silently returns empty; import generated JSON via `@/../_data/*` instead, and add a `_scripts/` generator if the data does not exist yet
 - Manually edit files in `_data/` (generated only)
 
 ## Enforced Patterns (ESLint)
@@ -199,6 +203,7 @@ Available state: `playVideo`, `offsetTop`, `windowHeight`, `lastOffsetTop`, `isS
 - Use gray-*, white, black, slate-* — always map to a semantic token
 - Put text color in className when component has a color prop
 - Manually construct image URLs when a _data/_studio.json metadata entry exists
+- Read generated JSON with fs at runtime - import it instead (no filesystem on Cloudflare Workers)
 - Manually edit files in _data/ (generated only)
 
 ## Post-Edit Verification

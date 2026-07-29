@@ -1,8 +1,10 @@
 import 'server-only'
-import fs from 'fs'
-import path from 'path'
 import FlexSearch from 'flexsearch'
 import blogData from '@/../_data/_blog.json'
+// Bundled at build time. Reading it from disk at runtime silently returns
+// nothing on Cloudflare Workers, which has no filesystem, and search would
+// degrade to the title/description fallback below.
+import searchIndexData from '@/../public/search-index.json'
 
 export interface BlogPost {
   id: number
@@ -51,15 +53,8 @@ let cachedIndex: { index: any; ready: boolean } | null = null
 
 function getFlexIndex() {
   if (cachedIndex) return cachedIndex
-  const file = path.join(process.cwd(), 'public/search-index.json')
-  if (!fs.existsSync(file)) {
-    cachedIndex = { index: null, ready: false }
-    return cachedIndex
-  }
-  let sections: SearchSection[]
-  try {
-    sections = JSON.parse(fs.readFileSync(file, 'utf8')) as SearchSection[]
-  } catch {
+  const sections = searchIndexData as SearchSection[]
+  if (!Array.isArray(sections) || sections.length === 0) {
     cachedIndex = { index: null, ready: false }
     return cachedIndex
   }
