@@ -72,7 +72,10 @@ It was purpose-built for this workflow, whether you're a first-time blogger or a
 
 [![Download Gallop AI Editor](https://img.shields.io/badge/Download_Gallop_AI_Editor-166534?style=for-the-badge)](https://gallop.software/)
 
-Available for Mac and Windows.
+Available for Mac and Windows. Deploys to either host:
+
+[![Deploy to Vercel](https://img.shields.io/badge/Deploy_to_Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](#deploy-to-vercel)
+[![Deploy to Cloudflare Workers](https://img.shields.io/badge/Deploy_to_Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](#deploy-to-cloudflare-workers)
 
 #### Step 1: Install Gallop AI Editor
 
@@ -850,3 +853,7 @@ Built with ❤️ by the team at [Gallop](https://gallop.software)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [React Documentation](https://react.dev)
+- [OpenNext for Cloudflare](https://opennext.js.org/cloudflare) - the adapter behind the `cf:*` scripts
+- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
+- [Wrangler Configuration](https://developers.cloudflare.com/workers/wrangler/configuration/) - every key in `wrangler.jsonc`
+- [OpenNext Caching on Cloudflare](https://opennext.js.org/cloudflare/caching) - how to enable ISR with R2
