@@ -4,6 +4,10 @@
   "name": "winx",
   "compatibility_date": "2026-07-19",
   "compatibility_flags": ["nodejs_compat"],
+  // Serve only from the custom domain. Leaving workers.dev on would expose a
+  // second public host with identical content (duplicate content for crawlers,
+  // and a URL that bypasses the canonical domain).
+  "workers_dev": false,
   // The winx-cloudflare.gallop.software custom domain is attached to this
   // Worker at the account level (Workers > Domains). It is intentionally not
   // declared as a `routes` entry: on every deploy after the first, wrangler
