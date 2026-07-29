@@ -3,6 +3,8 @@ node_modules/
 .next/
 dist/
 build/
+.open-next/
+.wrangler/
 
 # Assets and generated files
 public/

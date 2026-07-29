@@ -25,6 +25,8 @@ export default {
   // Dependencies used by config files or build tools (not direct imports)
   ignoreDependencies: [
     'tailwindcss',
+    // Resolved by `pg` under the workerd build condition, never imported directly
+    'pg-cloudflare',
     'prettier-plugin-organize-imports',
     'prettier-plugin-tailwindcss',
   ],
