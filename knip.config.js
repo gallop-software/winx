@@ -5,7 +5,6 @@ export default {
     'src/app/**/page.tsx',
     'src/app/**/layout.tsx',
     // 'src/components/index.ts', // Removed to detect unused component exports
-    'src/blog/**/*.tsx', // Blog posts are dynamically loaded
     '_scripts/**/*.{js,mjs}', // Build scripts run via npm commands
   ],
 

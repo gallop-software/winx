@@ -6,7 +6,7 @@ Winx is a Next.js template for writers, journalists, and content creators built 
 
 | File | Regenerate With | Triggered By |
 |---|---|---|
-| `_data/_blog.json` | `npm run blog` | Adding/editing posts in src/blog/ |
+| `_data/_blog.json`, `_data/_taxonomies.json` | `npm run blog` | Publishing/editing posts in WordPress |
 | `_data/_pages.json` | `npm run pages` | Adding/removing page routes |
 | `src/app/(demo)/block/[[...slug]]/_block-index.ts` | `npm run blocks` | Block additions/removals |
 | `_fonts/` | — | Font source files (do not edit) |
@@ -187,7 +187,7 @@ Available state: `playVideo`, `offsetTop`, `windowHeight`, `lastOffsetTop`, `isS
 - Use the color prop on typography components (Heading, Paragraph, Label, Span, Accent)
 - Use props (fontSize, margin, fontWeight, textAlign) instead of className when a component prop exists
 - Import icons from @iconify/icons-heroicons/ or @iconify/icons-lucide/
-- Run npm run blog after editing blog posts in src/blog/
+- Run npm run blog after publishing or editing posts in WordPress (fetches into _data/)
 
 ## Do NOT
 
