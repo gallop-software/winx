@@ -4,6 +4,12 @@
   "name": "winx",
   "compatibility_date": "2026-07-19",
   "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "winx-cloudflare.gallop.software",
+      "custom_domain": true,
+    },
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",
