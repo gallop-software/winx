@@ -413,12 +413,6 @@ winx/
 - **`npm run bust:kv`** - Bust the KV cache for likes and share counts
 - **`npm run blocks`** - Regenerate the block index for `/block` demo previews (`_block-index.ts`)
 
-### Environment
-
-- **`npm run env`** - Push `.env.production` to Vercel → [docs](./_scripts/push-env-to-vercel.md)
-- **`npm run env:prod`** - Push to production environment
-- **`npm run env:prev`** - Push to preview environment
-
 ### Package Management
 
 - **`npm run update:check`** - Check for package updates
