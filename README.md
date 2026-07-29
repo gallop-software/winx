@@ -72,10 +72,7 @@ It was purpose-built for this workflow, whether you're a first-time blogger or a
 
 [![Download Gallop AI Editor](https://img.shields.io/badge/Download_Gallop_AI_Editor-166534?style=for-the-badge)](https://gallop.software/)
 
-Available for Mac and Windows. Deploys to either host:
-
-[![Deploy to Vercel](https://img.shields.io/badge/Deploy_to_Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](#deploy-to-vercel)
-[![Deploy to Cloudflare Workers](https://img.shields.io/badge/Deploy_to_Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](#deploy-to-cloudflare-workers)
+Available for Mac and Windows.
 
 #### Step 1: Install Gallop AI Editor
 
@@ -560,9 +557,8 @@ Think of Canon as training wheels that never come off. AI stays within proven pa
 
 **Canon Commands:**
 
-- `npm run check` - Run ESLint and TypeScript checks together
-- `npm run audit` - Audit the codebase for Canon compliance
-- `npm run unused` - Detect unused files and exports with Knip
+- `npm run check` - Run lint and TypeScript checks together
+- `npm run audit` - Audit the project against Canon's architecture patterns
 
 ### Headless WordPress with Gallop WP
 
@@ -712,7 +708,7 @@ winx/
 - **`npm run lint:next`** - Run ESLint with the three strictest Canon rules disabled
 - **`npm run ts`** - TypeScript type checking without emitting
 - **`npm run prettier`** - Format all files with Prettier
-- **`npm run unused`** - Find unused files and exports with knip
+- **`npm run unused`** - Find unused files with knip
 - **`npm run check`** - Run lint and TypeScript together
 
 ### Gallop Canon
