@@ -39,6 +39,13 @@
     "blog": "node _scripts/generate-blog-metadata.mjs",
     "blocks": "node _scripts/generate-block-index.mjs",
     "bust:kv": "node _scripts/bust-kv-cache.mjs",
+    "cf:setup": "cp -n .env.production.sample .env.production 2>/dev/null; echo 'Edit .env.production, then run: npm run cf:secrets (push secrets) and deploy'",
+    "cf:build": "npm run blog && opennextjs-cloudflare build",
+    "cf:preview": "cp .env.production .dev.vars 2>/dev/null; npm run cf:build && opennextjs-cloudflare preview",
+    "cf:deploy": "npm run cf:build && opennextjs-cloudflare deploy",
+    "cf:upload": "npm run cf:build && opennextjs-cloudflare upload",
+    "cf:secrets": "wrangler secret bulk .env.production",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "env": "./_scripts/push-env-to-vercel.sh",
     "env:prod": "./_scripts/push-env-to-vercel.sh production",
     "env:prev": "./_scripts/push-env-to-vercel.sh preview",
@@ -62,6 +69,7 @@
     "@iconify/icons-simple-icons": "^1.2.74",
     "@iconify/types": "^2.0.0",
     "@next/third-parties": "^16.2.4",
+    "@opennextjs/cloudflare": "^1.20.2",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@sindresorhus/slugify": "^3.0.0",
@@ -74,6 +82,7 @@
     "jsdom": "^27.4.0",
     "luxon": "^3.7.2",
     "next": "^16.2.4",
+    "pg-cloudflare": "^1.4.0",
     "react": "^19",
     "react-dom": "^19.2.5",
     "react-highlight-words": "^0.21.0",
@@ -101,6 +110,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.2.0",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.115.0"
   }
 }
