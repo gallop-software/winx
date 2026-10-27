@@ -1,15 +1,13 @@
-import { config } from 'dotenv'
 import { defineConfig } from 'prisma/config'
 
-config({ path: '.env.local' })
-config({ path: '.env' })
-
+// The database is Cloudflare D1, reached through the Worker's DB binding, so
+// Prisma never connects to it. Prisma only generates the client and the
+// migration SQL; wrangler applies it (npm run db:migrate / db:migrate:local).
 export default defineConfig({
   schema: 'prisma/schema.prisma',
-  migrations: {
-    path: 'prisma/migrations',
-  },
+  // Never opened or created. `prisma migrate diff` prints nothing at all
+  // unless a datasource URL is configured.
   datasource: {
-    url: process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL!,
+    url: 'file:./prisma/unused.db',
   },
 })

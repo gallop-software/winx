@@ -28,10 +28,25 @@ function processStructuredData(data: unknown): unknown {
   return data
 }
 
+// One node per @id: a page's own node replaces a site-wide one of the same id.
+function uniqueNodes(nodes: object[]): object[] {
+  const byId = new Map<string, object>()
+  const rest: object[] = []
+  for (const node of nodes) {
+    const id = (node as { '@id'?: unknown })['@id']
+    if (typeof id === 'string') byId.set(id, node)
+    else rest.push(node)
+  }
+  return [...byId.values(), ...rest]
+}
+
 export function PageWrapper({ children, metadata }: PageWrapperProps) {
   const rawStructuredData = {
     '@context': 'https://schema.org',
-    '@graph': [...defaultStructuredData, ...(metadata?.structuredData || [])],
+    '@graph': uniqueNodes([
+      ...defaultStructuredData,
+      ...(metadata?.structuredData || []),
+    ]),
   }
   const structuredData = processStructuredData(rawStructuredData)
 
@@ -43,9 +58,9 @@ export function PageWrapper({ children, metadata }: PageWrapperProps) {
       >
         {JSON.stringify(structuredData)}
       </Script>
-      <main className="[&>.content-wrapper]:px-6 [&>.content-wrapper]:lg:px-8 [&>.content-wrapper]:mx-auto [&>.content-wrapper]:max-w-3xl [&>.aligncontent]:px-6 [&>.aligncontent]:lg:px-8 [&>.aligncontent]:mx-auto [&>.aligncontent]:max-w-3xl [&>*:last-child:not(div):not(section)]:mb-40 [&>*:last-child:is(.content-wrapper)]:mb-40">
+      <div className="[&>.content-wrapper]:px-6 [&>.content-wrapper]:lg:px-8 [&>.content-wrapper]:mx-auto [&>.content-wrapper]:max-w-3xl [&>.aligncontent]:px-6 [&>.aligncontent]:lg:px-8 [&>.aligncontent]:mx-auto [&>.aligncontent]:max-w-3xl [&>*:last-child:not(div):not(section)]:mb-40 [&>*:last-child:is(.content-wrapper)]:mb-40">
         {children}
-      </main>
+      </div>
     </>
   )
 }

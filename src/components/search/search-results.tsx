@@ -1,64 +1,32 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
-import Highlighter from 'react-highlight-words'
 import {
   type AutocompleteApi,
   type AutocompleteCollection,
 } from '@algolia/autocomplete-core'
 
-import { type Result } from './search-client'
+import { MARK_END, MARK_START, type Result } from './search-client'
+import { renderPostTitle } from '@/utils/post-title'
 
-/**
- * Extract context around the search query from content
- * @param content - The full content text
- * @param query - The search query
- * @param contextLength - Number of characters to show on each side
- * @returns Excerpt with query in context, or beginning of content
- */
-function getContextExcerpt(
-  content: string,
-  query: string,
-  contextLength: number = 60
-): string {
-  if (!content || !query) return content?.slice(0, 120) || ''
-
-  // Find the query position (case-insensitive)
-  const lowerContent = content.toLowerCase()
-  const lowerQuery = query.toLowerCase()
-  const index = lowerContent.indexOf(lowerQuery)
-
-  if (index === -1) {
-    // Query not found, return beginning
-    return content.slice(0, 120)
-  }
-
-  // Calculate start and end positions
-  const start = Math.max(0, index - contextLength)
-  const end = Math.min(content.length, index + query.length + contextLength)
-
-  // Extract excerpt
-  let excerpt = content.slice(start, end)
-
-  // Add ellipsis if needed
-  if (start > 0) excerpt = '...' + excerpt
-  if (end < content.length) excerpt = excerpt + '...'
-
-  return excerpt
-}
-
-/**
- * Highlight matching text in a string using react-highlight-words
- */
-function HighlightQuery({ text, query }: { text: string; query: string }) {
-  if (!query) return <>{text}</>
-
+// Shows the part of a page that matched. The server puts the matched words
+// between MARK_START and MARK_END.
+function Snippet({ text }: { text: string }) {
   return (
-    <Highlighter
-      searchWords={[query]}
-      autoEscape={true}
-      textToHighlight={text}
-      highlightClassName="font-bold text-contrast bg-yellow-200"
-    />
+    <>
+      {text.split(MARK_START).map((part, i) => {
+        if (i === 0) return <Fragment key={i}>{part}</Fragment>
+        const end = part.indexOf(MARK_END)
+        if (end === -1) return <Fragment key={i}>{part}</Fragment>
+        return (
+          <Fragment key={i}>
+            <mark className="font-bold text-contrast bg-accent/20">
+              {part.slice(0, end)}
+            </mark>
+            {part.slice(end + 1)}
+          </Fragment>
+        )
+      })}
+    </>
   )
 }
 
@@ -107,13 +75,12 @@ export function SearchResults({
                   className="block font-semibold text-accent text-xs"
                   onClick={onResultClick}
                 >
-                  {result.title}
+                  {renderPostTitle(result.title)}
                 </Link>
               </li>
             )
           }
         const href = result.url
-        const excerpt = getContextExcerpt(result.content || '', query, 60)
 
         // Build breadcrumb hierarchy: Always show pageTitle, then title if it's different (subheading)
         const hierarchy: string[] = []
@@ -142,12 +109,9 @@ export function SearchResults({
               className="block"
               onClick={onResultClick}
             >
-              {/* Context excerpt with highlighted query */}
+              {/* The matching part, with the matched words highlighted */}
               <div className="text-contrast group-aria-selected:text-contrast text-xs line-clamp-2">
-                <HighlightQuery
-                  text={excerpt}
-                  query={query}
-                />
+                <Snippet text={result.content || ''} />
               </div>
 
               {/* Breadcrumb navigation: pageTitle / heading */}

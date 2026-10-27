@@ -1,289 +1,433 @@
 'use client'
 
-import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { DateTime } from 'luxon'
+import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import { flowTraceConfig } from '@/utils/flow-trace-config'
+import type {
+  FtConversion,
+  FtPayload,
+  FtStep,
+  FtUtm,
+} from '@/utils/flow-trace-types'
 
-const DEFAULT_ENDPOINT = '/api/flow-trace'
+// FlowTrace's browser side. The visit (where the visitor came from, the pages
+// they see and how long each is in front of them) is kept here, in
+// localStorage, and nothing is sent while they only read: counting views is
+// Analytics' (src/hooks/page-view.tsx). When they do something that counts
+// (the contact form, a newsletter sign-up, a new account, an email or phone
+// link, a tracked click) the whole visit is sent to /api/flow-trace, which
+// stores it and emails the report. See flow-trace.md.
 
-// storage keys
-const PATH_KEY = 'ft_path'
+const ENDPOINT = '/api/flow-trace/'
+const VISITOR_KEY = 'ft_visitor'
 const FIRST_SEEN_KEY = 'ft_first'
-const SESSION_START_KEY = 'ft_session_start'
-const LAST_INTERACTION_KEY = 'ft_last_interaction'
-const TIME_SPENT_KEY = 'ft_time_spent_ms'
-const SESSION_SOURCE_KEY = 'ft_session_source'
+const VISITS_KEY = 'ft_visits'
+const TOTAL_KEY = 'ft_total_ms'
+const VISIT_KEY = 'ft_visit'
+const UTM_KEYS = ['source', 'medium', 'campaign', 'term', 'content'] as const
+// What the server keeps of a path, a title and a label: sent no longer, so a
+// long visit stays within what a beacon may carry.
+const MAX_PATH = 300
+const MAX_TEXT = 200
+// The same link pressed again within this long is one conversion.
+const REPEAT_MS = 5000
 
-const zone = 'America/Chicago'
+type Visit = {
+  id: string
+  /** Last activity, ms */
+  last: number
+  r: string
+  u: FtUtm
+  /** The arrival that started it, so a reload of that page is not another */
+  a?: string
+  steps: FtStep[]
+}
 
-// Luxon helpers
-const nowDT = () => DateTime.now().setZone(zone)
-const nowIso = () => nowDT().toISO()!
-const nowMs = () => nowDT().toMillis()
+// The time in milliseconds, without loading a date library on every page.
+const nowMs = () => Math.round(performance.timeOrigin + performance.now())
 
-// localStorage helpers
-const safeGet = (key: string): string | null => {
+// Where storage is blocked, the visit lives as long as the page does.
+const memory = new Map<string, string>()
+
+function read(key: string): string | null {
   try {
     return window.localStorage.getItem(key)
   } catch {
-    return null
+    return memory.get(key) ?? null
   }
 }
-const safeSet = (key: string, value: string) => {
+
+function write(key: string, value: string) {
   try {
     window.localStorage.setItem(key, value)
-  } catch {}
+  } catch {
+    memory.set(key, value)
+  }
 }
-const safeGetNumber = (key: string): number => {
-  const v = safeGet(key)
-  const n = v ? Number(v) : 0
+
+function readNumber(key: string): number {
+  const n = Number(read(key))
   return Number.isFinite(n) ? n : 0
 }
 
-// sessionStorage helpers
-const ssGet = (key: string): string | null => {
+function newId(): string {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID()
+  }
+  return `${nowMs().toString(36)}-${Math.random().toString(36).slice(2, 12)}`
+}
+
+/** The visitor's id, made on their first page and kept. */
+function visitorId(): string {
+  let id = read(VISITOR_KEY)
+  if (!id) {
+    id = newId()
+    write(VISITOR_KEY, id)
+    write(FIRST_SEEN_KEY, String(nowMs()))
+  }
+  return id
+}
+
+function readVisit(): Visit | null {
   try {
-    return window.sessionStorage.getItem(key)
+    const visit = JSON.parse(read(VISIT_KEY) ?? 'null') as Visit | null
+    return visit?.id &&
+      typeof visit.last === 'number' &&
+      Array.isArray(visit.steps)
+      ? visit
+      : null
   } catch {
     return null
   }
 }
-const ssSet = (key: string, value: string) => {
-  try {
-    window.sessionStorage.setItem(key, value)
-  } catch {}
+
+function isConversion(step: FtStep): boolean {
+  return step.t !== 'pageview'
 }
 
-// write-once markers
-const ensureFirstSeen = (ts?: string) => {
-  const existing = safeGet(FIRST_SEEN_KEY)
-  if (!existing) safeSet(FIRST_SEEN_KEY, ts || nowIso())
-}
-
-const ensureSessionStart = (ts?: string) => {
-  const iso = ts || nowIso()
-  if (!ssGet(SESSION_START_KEY)) ssSet(SESSION_START_KEY, iso)
-  if (!ssGet(LAST_INTERACTION_KEY)) ssSet(LAST_INTERACTION_KEY, iso)
-}
-
-// interaction delta accounting (Luxon)
-// returns ms since last interaction; updates last interaction; increments total
-const takeInteractionDelta = (): number => {
-  const lastIso = ssGet(LAST_INTERACTION_KEY)
-  const current = nowDT()
-
-  let delta = 0
-  if (lastIso) {
-    const lastDT = DateTime.fromISO(lastIso).setZone(zone)
-    if (lastDT.isValid)
-      delta = Math.max(0, current.diff(lastDT).as('milliseconds'))
+function saveVisit(visit: Visit) {
+  visit.last = nowMs()
+  // Too long a visit loses its oldest pages first; its conversions stay.
+  while (visit.steps.length > flowTraceConfig.maxSteps) {
+    const page = visit.steps.findIndex((step) => !isConversion(step))
+    visit.steps.splice(page === -1 ? 0 : page, 1)
   }
+  write(VISIT_KEY, JSON.stringify(visit))
+}
 
-  // move the interaction pointer
-  ssSet(LAST_INTERACTION_KEY, current.toISO()!)
+type Page = { path: string; visibleSince: number | null }
 
-  // increment global total
-  if (delta > 0) {
-    const prev = safeGetNumber(TIME_SPENT_KEY)
-    safeSet(TIME_SPENT_KEY, String(prev + Math.round(delta)))
+// The page in front of the visitor, shared by the component and
+// trackConversion, so a conversion carries the time spent on it so far.
+let page: Page | null = null
+
+/**
+ * Whether the visit has ended: nothing done for visitIdleMinutes. A page
+ * that has stayed in front of the visitor all that time is reading, not
+ * idleness: half an hour on one page and then a call is still one visit.
+ * Only the page in front of them since before the visit's last activity
+ * counts: a page loaded or shown again later is not the same reading, even
+ * where the visit saw that address before (else a visit never ended for
+ * anyone who came back to a page they had seen).
+ */
+function isExpired(visit: Visit | null): boolean {
+  if (!visit) return true
+  const reading =
+    page?.visibleSince != null &&
+    page.visibleSince <= visit.last &&
+    visit.steps.some((step) => step.t === 'pageview' && step.p === page?.path)
+  if (reading) return false
+  return nowMs() - visit.last > flowTraceConfig.visitIdleMinutes * 60000
+}
+
+type Arrival = { r: string; u: FtUtm; key: string }
+
+/**
+ * The visit under way, or a new one when the last expired, or when `arrival`
+ * says they have just come from elsewhere (and it is not the same arrival
+ * again, as a reload or the back button gives).
+ */
+function currentVisit(arrival?: Arrival): Visit {
+  const saved = readVisit()
+  if (saved && !isExpired(saved) && (!arrival || saved.a === arrival.key)) {
+    return saved
   }
-
-  return Math.round(delta)
-}
-
-// path utils
-type PathEntry = {
-  path: string
-  ts: string
-  spentMs: number
-  source?: string | undefined
-}
-
-const readPath = (): PathEntry[] => {
-  const prev = safeGet(PATH_KEY)
-  try {
-    return prev ? JSON.parse(prev) : []
-  } catch {
-    return []
-  }
-}
-
-const writePath = (arr: PathEntry[], max: number) => {
-  const trimmed = arr.slice(-max)
-  safeSet(PATH_KEY, JSON.stringify(trimmed))
-}
-
-const addDeltaToLastPathEntry = (deltaMs: number) => {
-  if (deltaMs <= 0) return
-  const arr = readPath()
-  if (arr.length === 0) return
-  const lastEntry = arr[arr.length - 1]
-  if (lastEntry) {
-    lastEntry.spentMs = (lastEntry.spentMs ?? 0) + deltaMs
-  }
-  safeSet(PATH_KEY, JSON.stringify(arr))
-}
-
-const pickRawSource = (
-  utms: Record<string, string>,
-  ref: string | null
-): string => {
-  if (ref && ref.length > 0) return ref
-  if (utms.utm_source) return utms.utm_source
-  return 'direct'
-}
-
-const recordPageView = (maxPath: number) => {
-  const tsIso = nowIso()
-  ensureFirstSeen(tsIso)
-  ensureSessionStart(tsIso)
-
-  const utms = Object.fromEntries(
-    Array.from(new URLSearchParams(location.search)).filter(([key]) =>
-      key.startsWith('utm_')
-    )
-  )
-  const ref = document.referrer || ''
-  const freshSource = pickRawSource(utms, ref)
-
-  const hasParams = Object.keys(utms).length > 0
-  const refHost = safeHostname(ref)
-  const isExternalRef = !!refHost && refHost !== location.hostname
-  const isNewExternalArrival = hasParams || isExternalRef
-
-  const isValidExternal = (s?: string) => {
-    if (!s) return false
-    const v = s.toLowerCase()
-    return (
-      v !== 'direct' &&
-      !v.includes('localhost') &&
-      (!process.env.NEXT_PUBLIC_PRODUCTION_URL ||
-        !v.includes(process.env.NEXT_PUBLIC_PRODUCTION_URL))
-    )
-  }
-
-  const sessionSource = sessionStorage.getItem(SESSION_SOURCE_KEY)
-  const isFirstExternalThisSession =
-    isNewExternalArrival && !sessionSource && isValidExternal(freshSource)
-
-  // Attribute time to the previous page
-  addDeltaToLastPathEntry(takeInteractionDelta())
-
-  const currentPath = location.pathname + location.search + location.hash
-  const arr: PathEntry[] = readPath()
-  const last = arr[arr.length - 1]
-
-  // Avoid duplicate consecutive entries
-  if (last?.path === currentPath) {
-    writePath(arr, maxPath)
-    return
-  }
-
-  const entry: PathEntry = {
-    path: currentPath,
-    ts: tsIso,
-    spentMs: 0,
-    source: isFirstExternalThisSession ? freshSource : undefined,
-  }
-
-  if (entry.source) sessionStorage.setItem(SESSION_SOURCE_KEY, entry.source)
-
-  arr.push(entry)
-  writePath(arr, maxPath)
-}
-
-// — helpers —
-function safeHostname(url?: string | null): string | null {
-  try {
-    return url ? new URL(url).hostname : null
-  } catch {
-    return null // ignore bad referrer
-  }
-}
-
-// sendBeacon wrapper
-const sendNonBlocking = (url: string, payload: any) => {
-  const blob = new Blob([JSON.stringify(payload)], {
-    type: 'application/json',
-  })
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(url, blob)
-  } else {
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json' },
-      keepalive: true,
-    }).catch(() => {})
-  }
-}
-
-// payload (includes per-visit spentMs + source + total)
-const buildPayload = () => {
-  const path = readPath()
-  const firstSeen = safeGet(FIRST_SEEN_KEY) || undefined
-  const sessionStart = ssGet(SESSION_START_KEY) || undefined
-  const timeSpentTotalMs = safeGetNumber(TIME_SPENT_KEY)
-
+  visitorId()
+  write(VISITS_KEY, String(readNumber(VISITS_KEY) + 1))
   return {
-    firstSeen,
-    sessionStart,
-    timeSpentTotalMs,
-    page: { url: location.href, title: document.title },
-    path,
+    id: newId(),
+    last: nowMs(),
+    r: arrival?.r ?? '',
+    u: arrival?.u ?? {},
+    ...(arrival ? { a: arrival.key } : {}),
+    steps: [],
   }
 }
 
-// click interaction (.ft-tracking)
-// attribute delta to the **last** entry (current page visit) and send payload
-const attachDelegatedClick = (endpoint: string) => {
-  const onClick = (e: MouseEvent) => {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    const el = target.closest('.ft-tracking') as HTMLElement | null
-    if (!el) return
+function isIgnored(path: string): boolean {
+  return flowTraceConfig.ignoredPaths.some(
+    (ignored) => path === ignored || path.startsWith(`${ignored}/`)
+  )
+}
 
-    // simple per-element debounce
-    const key = '_ft_last_click_ts'
-    const t = nowMs()
-    const lastTs = (el as any)[key] as number | undefined
-    if (lastTs && t - lastTs < 5000) return
-    ;(el as any)[key] = t
+// The query keys a page's address keeps: the page of a list, a search and
+// campaign tags. Anything else (a signed link's token, a reset key) never
+// leaves the browser.
+const KEPT_PARAMS = /^(page|q|s|utm_[a-z]+)$/
 
-    // attribute elapsed time to the current (last) entry
-    const delta = takeInteractionDelta()
-    addDeltaToLastPathEntry(delta)
+function keptSearch(): string {
+  const kept = new URLSearchParams()
+  for (const [key, value] of new URLSearchParams(location.search)) {
+    if (KEPT_PARAMS.test(key)) kept.append(key, value)
+  }
+  const search = kept.toString()
+  return search ? `?${search}` : ''
+}
 
-    const payload = {
-      element: {
-        href: (el as HTMLAnchorElement).href || undefined,
-        innerText: el.innerText?.trim() || undefined,
-        id: el?.id || undefined,
-      },
-      context: buildPayload(),
+function currentPath(): string {
+  return (location.pathname + keptSearch()).slice(0, MAX_PATH)
+}
+
+// Where a visitor came from, without the query string another site put in
+// its own address.
+function referrerOf(value: string): string {
+  try {
+    const url = new URL(value)
+    return `${url.origin}${url.pathname}`.slice(0, MAX_PATH)
+  } catch {
+    return ''
+  }
+}
+
+function pageTitle(): string {
+  return document.title.slice(0, MAX_TEXT)
+}
+
+/** Adds time on a page to its latest view in the visit, and to the total. */
+function addEngagement(visit: Visit, path: string, ms: number) {
+  if (ms <= 0) return
+  const step = [...visit.steps]
+    .reverse()
+    .find((entry) => entry.t === 'pageview' && entry.p === path)
+  if (step) step.ms = Math.round((step.ms ?? 0) + ms)
+  write(TOTAL_KEY, String(Math.round(readNumber(TOTAL_KEY) + ms)))
+}
+
+// A beacon outlives the page, so a call that opens the dialer is not lost.
+// As text/plain it needs no preflight.
+function send(payload: FtPayload) {
+  const body = JSON.stringify(payload)
+  if (navigator.sendBeacon?.(ENDPOINT, body)) return
+  fetch(ENDPOINT, {
+    method: 'POST',
+    body,
+    keepalive: true,
+    headers: { 'Content-Type': 'text/plain' },
+  }).catch(() => {})
+}
+
+/** Moves the time the current page has been visible into the visit. */
+function settlePage(visit: Visit) {
+  if (!page || page.visibleSince === null) return
+  const now = nowMs()
+  addEngagement(visit, page.path, now - page.visibleSince)
+  page.visibleSince = document.visibilityState === 'visible' ? now : null
+}
+
+/**
+ * Records a conversion from the site's own code, such as a form that was
+ * sent, and sends the visit. Clicks on phone and email links and on
+ * `.ft-tracking` or `[data-ft]` elements are recorded without it. The
+ * contact form, the newsletter forms and a new account call it.
+ */
+export function trackConversion(type: FtConversion, label = '', href = '') {
+  if (typeof window === 'undefined' || isIgnored(location.pathname)) return
+  const expired = isExpired(readVisit())
+  const visit = currentVisit()
+  if (expired) {
+    // Back after the visit expired: the page they are on starts the new one,
+    // and the time before does not belong to it
+    visit.steps.push({
+      t: 'pageview',
+      p: currentPath(),
+      ti: pageTitle(),
+      at: nowMs(),
+      ms: 0,
+    })
+    if (page) {
+      page.visibleSince =
+        document.visibilityState === 'visible' ? nowMs() : null
     }
-
-    sendNonBlocking(endpoint, payload)
+  } else {
+    settlePage(visit)
   }
-
-  document.addEventListener('click', onClick, { passive: true, capture: true })
-  return () =>
-    document.removeEventListener('click', onClick, { capture: true } as any)
+  visit.steps.push({
+    t: type,
+    p: currentPath(),
+    at: nowMs(),
+    l: label.slice(0, MAX_TEXT),
+    href: href.slice(0, MAX_PATH),
+  })
+  saveVisit(visit)
+  send({
+    v: visitorId(),
+    s: visit.id,
+    n: Math.max(1, readNumber(VISITS_KEY)),
+    fs: readNumber(FIRST_SEEN_KEY),
+    tt: readNumber(TOTAL_KEY),
+    r: visit.r,
+    u: visit.u,
+    now: nowMs(),
+    steps: visit.steps,
+  })
 }
 
+// The first page of a load is the only one whose document.referrer says where
+// the visitor came from; later client-side navigations keep the same value.
+let firstPageOfLoad = true
+let lastView = { path: '', at: 0 }
+
+/** Where they came from, when this load is an arrival from elsewhere. */
+function arrival(): Arrival | undefined {
+  const params = new URLSearchParams(location.search)
+  const u = Object.fromEntries(
+    UTM_KEYS.map((key) => [key, (params.get(`utm_${key}`) ?? '').slice(0, 100)])
+  ) as FtUtm
+  const hasUtm = UTM_KEYS.some((key) => u[key])
+  let external = false
+  try {
+    external =
+      !!document.referrer && new URL(document.referrer).host !== location.host
+  } catch {
+    // An unreadable referrer is no arrival
+  }
+  if (!hasUtm && !external) return undefined
+  const r = external ? referrerOf(document.referrer) : ''
+  return { r, u, key: `${r}|${currentPath()}` }
+}
+
+function recordPageview(path: string, force = false) {
+  // The same page again within a second is one view: React runs effects
+  // twice in development, and a re-render can repeat the route effect.
+  const now = nowMs()
+  const repeat = !force && lastView.path === path && now - lastView.at < 1000
+  page = {
+    path,
+    visibleSince: document.visibilityState === 'visible' ? now : null,
+  }
+  if (repeat) return
+  lastView = { path, at: now }
+
+  // Decided once per load, before anything else can change it
+  const first = firstPageOfLoad
+  firstPageOfLoad = false
+  const visit = currentVisit(first ? arrival() : undefined)
+  visit.steps.push({ t: 'pageview', p: path, ti: pageTitle(), at: now, ms: 0 })
+  saveVisit(visit)
+
+  // Next.js sets the new title just after the route changes
+  window.setTimeout(() => {
+    const saved = readVisit()
+    const step = saved?.steps.find(
+      (entry) => entry.t === 'pageview' && entry.at === now
+    )
+    if (saved && step) {
+      step.ti = pageTitle()
+      write(VISIT_KEY, JSON.stringify(saved))
+    }
+  }, 150)
+}
+
+/** Moves the current page's time into the visit, if it is still going. */
+function settleVisit() {
+  const visit = readVisit()
+  if (visit && !isExpired(visit)) {
+    settlePage(visit)
+    saveVisit(visit)
+  }
+}
+
+/** A link's address part, decoded where it can be: `tel:%2B1…` reads +1… */
+function decoded(value: string): string {
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    return value
+  }
+}
+
+// Watches the path only, as the page-view hook does: reading the query here
+// would make every page render this part on the client. Rendered in the root
+// layout; it draws nothing, so the page's HTML is the same for everyone.
 export function FlowTrace() {
-  const maxPath = 100
   const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const listening = useRef(false)
 
   useEffect(() => {
-    recordPageView(maxPath)
+    settleVisit()
+    page = null
+    if (isIgnored(pathname)) return
+    recordPageview(currentPath())
+  }, [pathname])
 
-    const detachClicks = attachDelegatedClick(DEFAULT_ENDPOINT)
-    return () => {
-      detachClicks()
+  useEffect(() => {
+    if (listening.current) return
+    listening.current = true
+
+    const onVisibility = () => {
+      if (!page) return
+      if (document.visibilityState === 'hidden') {
+        settleVisit()
+        page.visibleSince = null
+        return
+      }
+      // Back after the visit expired: the same page starts a new visit
+      if (isExpired(readVisit())) recordPageview(page.path, true)
+      else page.visibleSince = nowMs()
     }
-  }, [pathname, searchParams])
+
+    const lastClick = new Map<string, number>()
+    const onClick = (e: MouseEvent) => {
+      const target = e.target instanceof Element ? e.target : null
+      if (!target || isIgnored(location.pathname)) return
+      const link = target.closest<HTMLAnchorElement>('a[href]')
+      const tracked = target.closest<HTMLElement>('.ft-tracking, [data-ft]')
+      const href = link?.getAttribute('href') ?? ''
+
+      let type: FtConversion | null = null
+      let label = ''
+      if (href.startsWith('tel:')) {
+        type = 'call'
+        label = decoded(href.slice(4))
+      } else if (href.startsWith('mailto:')) {
+        type = 'email'
+        label = decoded(href.slice(7).split('?')[0] ?? '')
+      } else if (tracked) {
+        type = 'click'
+        label =
+          tracked.dataset.ft || tracked.innerText?.trim().slice(0, 100) || ''
+      }
+      if (!type) return
+
+      const key = `${type}|${label}`
+      const now = nowMs()
+      if (now - (lastClick.get(key) ?? 0) < REPEAT_MS) return
+      lastClick.set(key, now)
+      trackConversion(type, label, link?.href ?? '')
+    }
+
+    document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('pagehide', settleVisit)
+    document.addEventListener('click', onClick, { capture: true })
+    return () => {
+      listening.current = false
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('pagehide', settleVisit)
+      document.removeEventListener('click', onClick, { capture: true })
+    }
+  }, [])
 
   return null
 }
+
+export default FlowTrace

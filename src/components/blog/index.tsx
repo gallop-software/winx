@@ -14,7 +14,7 @@ export async function Blog({
   // We forward exclude as names (case-insensitive); include is unused here
   void categoriesInclude
 
-  const result = filterPosts({
+  const result = await filterPosts({
     perPage,
     page: 1,
     ...(categoriesExclude?.length ? { categoriesExclude } : {}),

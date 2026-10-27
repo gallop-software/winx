@@ -4,8 +4,16 @@ import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { state } from '@/state'
 
+// How far below the top of the window a heading lands: clear of the admin
+// toolbar, when there is one.
+const offsetNow = (): number => {
+  const bar = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue('--admin-bar')
+  )
+  return 40 + (Number.isFinite(bar) ? bar : 0)
+}
+
 const SmoothScroll = () => {
-  const offset = 40
   const pathname = usePathname()
 
   useEffect(() => {
@@ -44,7 +52,7 @@ const SmoothScroll = () => {
 
         const tagName = targetElement.tagName.toLowerCase()
         const scrollOffset =
-          tagName === 'div' || tagName === 'section' ? 0 : offset
+          tagName === 'div' || tagName === 'section' ? 0 : offsetNow()
 
         const container = getScrollContainer(targetElement)
         if (container instanceof Window) {

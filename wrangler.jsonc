@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
+  // worker.ts passes requests to the worker OpenNext builds
+  // (.open-next/worker.js) and adds the queue handler below.
+  "main": "worker.ts",
   "name": "winx",
   "compatibility_date": "2026-07-19",
   "compatibility_flags": ["nodejs_compat"],
@@ -14,6 +16,10 @@
   // reconciles zone-level workers/routes, and the deploy token lacks that
   // zone permission (403), which fails the whole deploy. Grant the token
   // "Workers Routes" on the gallop.software zone to manage it here instead.
+  "vars": {
+    // The one host the site is served at; see worker.ts.
+    "SITE_HOST": "winx-cloudflare.gallop.software",
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",
@@ -26,6 +32,54 @@
   ],
   "images": {
     "binding": "IMAGES",
+  },
+  // Likes and share counts, read through Prisma in src/utils/prisma.ts, and
+  // the content index, comment and login limits, and marketing email, read
+  // through src/utils/d1.ts. Migrations: npm run db:migrate / db:migrate:local.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "winx",
+      "database_id": "00b58031-e899-4987-ade0-0b4d8c391310",
+      "migrations_dir": "prisma/migrations",
+    },
+  ],
+  // WordPress post data, so post pages and link prefetches do not reach
+  // WordPress on every request. Read and written in src/utils/post-cache.ts.
+  "kv_namespaces": [
+    {
+      "binding": "POST_CACHE",
+      "id": "77cc8c85d87642348e56265da9ccd28c",
+    },
+  ],
+  // Contact form mail and marketing email, sent in src/utils/send-email.ts
+  // from the address in EMAIL_FROM, on a domain enabled for sending. Not marked remote, so `next dev`
+  // logs the message instead of sending it.
+  "send_email": [
+    {
+      "name": "EMAIL",
+    },
+  ],
+  // What became of each email sent: delivered, bounced, marked as spam.
+  // Cloudflare Email Sending publishes these to the queue, which is subscribed
+  // to the sending domain's events, and worker.ts writes them to the campaign
+  // reports. Create and subscribe the queue once, before the first deploy:
+  // see "Marketing email" in README.md.
+  "queues": {
+    "consumers": [
+      {
+        "queue": "winx-email-events",
+        "max_batch_size": 25,
+        "max_batch_timeout": 10,
+        "max_retries": 5,
+      },
+    ],
+  },
+  // FlowTrace's scheduled job (worker.ts): report emails that failed are
+  // sent again, and the daily and weekly summaries go out at 8am Central.
+  // The deploy creates the trigger.
+  "triggers": {
+    "crons": ["*/10 * * * *"],
   },
   "observability": {
     "enabled": true,

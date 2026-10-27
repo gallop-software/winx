@@ -1,5 +1,11 @@
 import { getStudioImage } from '@/utils/studio-helpers'
-import { socialLinks } from '@/components/footer/config'
+import {
+  editorBio,
+  editorImage,
+  editorName,
+  publisher,
+  socialLinks,
+} from '@/components/footer/config'
 
 const socialSameAs = socialLinks
   .map((l) => l.href)
@@ -8,31 +14,49 @@ const socialSameAs = socialLinks
 export const baseURL =
   process.env.NEXT_PUBLIC_PRODUCTION_URL || 'http://localhost:3000'
 
-const logoImageData = getStudioImage('/logo.png', 'large')
+// A dev host carries the same posts as the live site, so it is kept out of
+// search engines. Turns itself off once the production URL is the real domain.
+export const noIndex = new URL(baseURL).hostname.startsWith('dev.')
+
+// The site's name, as it ends every title and labels every share card.
+export const siteName = 'Founder Notes'
+
+export const siteTagline = 'Essays on product, fundraising, hiring, and building a startup'
 
 export const defaultDescription =
   'Founder Notes is an independent publication on product strategy, fundraising, hiring, and the unglamorous work of building a startup that lasts.'
 
+export const twitterHandle = '@winx'
+
+const logoImageData = getStudioImage('/logo.png', 'large')
+
+// The picture a link preview shows when a page has none of its own.
+const shareImageData = getStudioImage('/logo.png', 'large')
+
 export const defaultOGImage = {
-  url: logoImageData?.url || '',
-  width: logoImageData?.width || 0,
-  height: logoImageData?.height || 0,
+  url: shareImageData?.url || '',
+  width: shareImageData?.width || 0,
+  height: shareImageData?.height || 0,
+}
+
+// What search engines may do with a page that is meant to be found. A page
+// that is not passes its own to generatePageMetadata.
+export const indexRobots = {
+  index: true,
+  follow: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    'max-video-preview': -1,
+    'max-image-preview': 'large' as const,
+    'max-snippet': -1,
+  },
 }
 
 export const defaultSEOConfig = {
-  creator: 'Founder Notes',
-  publisher: 'Founder Notes',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': 30,
-      'max-image-preview': 'large' as const,
-      'max-snippet': 160,
-    },
-  },
+  creator: editorName,
+  publisher,
+  robots: noIndex ? { index: false, follow: false } : indexRobots,
 }
 
 const siteUrl = baseURL
@@ -41,105 +65,107 @@ function absoluteUrl(path: string) {
   return path.startsWith('http') ? path : `${siteUrl}${path}`
 }
 
+// The ids other nodes point at. Every page's structured data carries the
+// nodes below, so a page only ever refers to them.
+export const schemaIds = {
+  website: `${siteUrl}/#website`,
+  organization: `${siteUrl}/#organization`,
+  author: `${siteUrl}/#author`,
+  blog: `${siteUrl}/#blog`,
+  logo: `${siteUrl}/#logo`,
+}
+
 const logoImageUrl = absoluteUrl(logoImageData?.url || '/logo.png')
 
 const logoImageObject = {
   '@type': 'ImageObject',
-  '@id': `${siteUrl}/#logo`,
+  '@id': schemaIds.logo,
   url: logoImageUrl,
   contentUrl: logoImageUrl,
-  width: logoImageData?.width || 0,
-  height: logoImageData?.height || 0,
-  caption: 'Founder Notes',
+  ...(logoImageData
+    ? { width: logoImageData.width, height: logoImageData.height }
+    : {}),
+  caption: siteName,
   inLanguage: 'en-US',
 }
 
-const personImageData = getStudioImage('/headshot.jpg', 'large')
-const personImageUrl = absoluteUrl(personImageData?.url || '/headshot.jpg')
+const personImageData = getStudioImage(editorImage.src, 'large')
 
-const personImageObject = {
-  '@type': 'ImageObject',
-  '@id': `${siteUrl}/#authorimage`,
-  url: personImageUrl,
-  contentUrl: personImageUrl,
-  ...(personImageData?.width ? { width: personImageData.width } : {}),
-  ...(personImageData?.height ? { height: personImageData.height } : {}),
-  caption: 'Founder Notes author',
-  inLanguage: 'en-US',
-}
+const personImageObject = personImageData
+  ? {
+      '@type': 'ImageObject',
+      '@id': `${siteUrl}/#authorimage`,
+      url: absoluteUrl(personImageData.url),
+      contentUrl: absoluteUrl(personImageData.url),
+      width: personImageData.width,
+      height: personImageData.height,
+      caption: editorName,
+      inLanguage: 'en-US',
+    }
+  : null
+
+const topics = [
+  'Startup founders',
+  'Product strategy',
+  'Fundraising',
+  'Hiring',
+  'Go-to-market',
+  'Leadership',
+]
 
 // Global structured data that appears on every page
 export const defaultStructuredData = [
   logoImageObject,
-  personImageObject,
+  ...(personImageObject ? [personImageObject] : []),
   {
     '@type': 'Organization',
-    '@id': `${siteUrl}/#organization`,
-    name: 'Founder Notes',
-    url: siteUrl,
-    logo: { '@id': `${siteUrl}/#logo` },
-    image: { '@id': `${siteUrl}/#logo` },
-    description: defaultDescription,
-    sameAs: socialSameAs,
+    '@id': schemaIds.organization,
+    name: publisher,
+    url: `${siteUrl}/`,
+    logo: { '@id': schemaIds.logo },
+    image: { '@id': schemaIds.logo },
   },
   {
     '@type': 'Person',
-    '@id': `${siteUrl}/#author`,
-    name: 'Founder Notes',
-    url: `${siteUrl}/about`,
-    image: { '@id': `${siteUrl}/#authorimage` },
+    '@id': schemaIds.author,
+    name: editorName,
+    url: `${siteUrl}/about/`,
+    ...(personImageObject
+      ? { image: { '@id': `${siteUrl}/#authorimage` } }
+      : {}),
     jobTitle: 'Writer & Operator',
-    description:
-      'Independent writer and operator covering product strategy, fundraising, hiring, and the day-to-day work of building an early-stage company.',
-    worksFor: { '@id': `${siteUrl}/#organization` },
-    knowsAbout: [
-      'Startup founders',
-      'Product strategy',
-      'Fundraising',
-      'Hiring',
-      'Go-to-market',
-      'Leadership',
-      'Startup operations',
-      'Company building',
-      'Product-market fit',
-    ],
+    description: editorBio,
+    knowsAbout: topics,
     sameAs: socialSameAs,
   },
   {
     '@type': 'WebSite',
-    '@id': `${siteUrl}/#website`,
-    url: siteUrl,
-    name: 'Founder Notes',
-    description: defaultDescription,
+    '@id': schemaIds.website,
+    url: `${siteUrl}/`,
+    name: siteName,
+    description: siteTagline,
     inLanguage: 'en-US',
-    publisher: { '@id': `${siteUrl}/#organization` },
+    publisher: { '@id': schemaIds.organization },
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/search?s={search_term_string}`,
+        urlTemplate: `${siteUrl}/search/?s={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
   },
   {
     '@type': 'Blog',
-    '@id': `${siteUrl}/#blog`,
-    name: 'Founder Notes',
-    url: siteUrl,
+    '@id': schemaIds.blog,
+    name: siteName,
+    url: `${siteUrl}/`,
     description: defaultDescription,
-    image: { '@id': `${siteUrl}/#logo` },
+    image: { '@id': schemaIds.logo },
     inLanguage: 'en-US',
-    isPartOf: { '@id': `${siteUrl}/#website` },
-    author: { '@id': `${siteUrl}/#author` },
-    publisher: { '@id': `${siteUrl}/#organization` },
-    about: [
-      'Startup Founders',
-      'Product Strategy',
-      'Fundraising',
-      'Hiring & Team',
-      'Go-to-Market',
-      'Leadership',
-    ],
+    isPartOf: { '@id': schemaIds.website },
+    author: { '@id': schemaIds.author },
+    publisher: { '@id': schemaIds.organization },
+    about: topics,
   },
 ]

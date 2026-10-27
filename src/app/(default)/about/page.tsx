@@ -1,6 +1,6 @@
 import { PageWrapper } from '@/components/page-wrapper'
 import { generatePageMetadata, type PageMetadata } from '@/utils/page-helpers'
-import { baseURL } from '@/app/metadata'
+import { schemaIds } from '@/app/metadata'
 import { buildPageSchema } from '@/utils/structured-data'
 
 import Hero from './_blocks/hero'
@@ -13,36 +13,16 @@ const description =
 const metadata: PageMetadata = {
   title,
   description,
-  slug: 'about',
-  alternates: {
-    canonical: '/about',
-  },
-  authors: [{ name: 'Founder Notes' }],
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: `${baseURL}/about`,
-    siteName: 'Founder Notes',
-    title,
-    description,
-    image: {
-      url: '/banner.jpg',
-      alt: 'About Founder Notes',
-    },
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title,
-    description,
-    image: '/banner.jpg',
-  },
+  alternates: { canonical: '/about/' },
   structuredData: buildPageSchema({
-    url: `${baseURL}/about`,
+    url: '/about/',
     title,
     description,
+    type: 'AboutPage',
+    mainEntity: schemaIds.author,
     breadcrumbs: [
       { name: 'Home', href: '/' },
-      { name: 'About', href: '/about' },
+      { name: 'About', href: '/about/' },
     ],
   }),
 }

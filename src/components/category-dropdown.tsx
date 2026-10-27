@@ -1,7 +1,7 @@
 'use client'
 
 import { Dropdown, type DropdownItem } from '@/components/dropdown'
-import { getAllCategories } from '@/utils/taxonomies'
+import { useCategories } from '@/hooks/use-categories'
 import type { ComponentProps } from 'react'
 
 type Forwarded = Pick<
@@ -28,8 +28,8 @@ export function CategoryDropdown({
   searchable = true,
   ...rest
 }: CategoryDropdownProps) {
-  const categories = getAllCategories()
-    .filter((c) => (hideEmpty ? (c.count ?? 0) > 0 : true))
+  const categories = useCategories()
+    .filter((c) => (hideEmpty ? c.count > 0 : true))
     .sort((a, b) => a.name.localeCompare(b.name))
 
   const items: DropdownItem[] = categories.map((c) => ({

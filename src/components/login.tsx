@@ -1,145 +1,169 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Description,
-} from '@headlessui/react'
-import arrowPathIcon from '@iconify/icons-heroicons/arrow-path'
-import { state, useSnapshot } from '@/state'
-import { useLoggedIn } from '@/hooks/use-logged-in'
-import { Heading } from '@/components/heading'
+import { Form, FormButton, FormFirstName, FormInput, FormLastName } from '@/components/form'
+import { Modal } from '@/components/modal'
+import { QuietButton } from '@/components/quiet-button'
 import { Paragraph } from '@/components/paragraph'
-import { Icon } from '@/components/icon'
+import { Span } from '@/components/span'
+import { state, useSnapshot } from '@/state'
+import type { Member } from '@/utils/member-types'
 
+type Mode = 'login' | 'forgot' | 'signup'
+
+// The login dialog. Opened from the sidebar's Log in button, or from
+// anywhere through state.loginOpen.
 export default function LoginDialog() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const snap = useSnapshot(state)
+  const [mode, setMode] = useState<Mode>('login')
 
-  useLoggedIn()
-
-  const loginUser = async () => {
-    if (isLoading) return
-    setIsLoading(true)
-    try {
-      const response = await fetch('/api/is-logged-in/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      })
-      const json = await response.json()
-
-      if (response.ok && json?.user) {
-        localStorage.setItem('wpToken', '1')
-        state.isLoggedIn = true
-        setIsOpen(false)
-        setErrorMessage('')
-        return
-      }
-
-      if (response.status === 429) {
-        setErrorMessage('Too many attempts. Try again later.')
-      } else {
-        setErrorMessage('Login failed.')
-      }
-    } catch (error) {
-      console.error('Login error', error)
-      setErrorMessage('Login failed.')
-    } finally {
-      setIsLoading(false)
-    }
+  const close = () => {
+    state.loginOpen = false
+    setMode('login')
   }
 
-  if (snap.isLoggedIn) {
-    return (
-      <button
-        onClick={() => {
-          localStorage.removeItem('wpToken')
-          state.isLoggedIn = false
-        }}
-        className="text-xs font-normal text-contrast cursor-pointer hover:text-contrast-light"
-      >
-        Log Out
-      </button>
-    )
+  const loggedIn = (data: Record<string, unknown>) => {
+    const member = data.member as Member | undefined
+    if (member) state.member = member
+    close()
   }
 
   return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="text-xs font-normal text-contrast cursor-pointer hover:text-contrast-light"
-      >
-        Log In
-      </button>
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        className="relative z-50"
-      >
-        <DialogPanel className="fixed inset-0 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-overlay/25"
-            onClick={() => setIsOpen(false)}
+    <Modal
+      open={snap.loginOpen}
+      onClose={close}
+      title={
+        mode === 'login'
+          ? 'Log in'
+          : mode === 'forgot'
+            ? 'Forgot your password?'
+            : 'Create an account'
+      }
+    >
+      {mode === 'login' ? (
+        <Form
+          key="login"
+          gap="gap-3"
+          action="/api/account/login/"
+          onSuccess={loggedIn}
+          resetOnSuccess={false}
+        >
+          <label htmlFor="login-name" className="sr-only">
+            Email address or username
+          </label>
+          <FormInput
+            id="login-name"
+            name="login"
+            placeholder="Email address or username"
+            label="Login"
+            autoComplete="username"
+            required
           />
-          <div className="relative bg-body p-7 rounded-lg shadow-lg flex flex-col gap-4 w-full max-w-sm">
-            <DialogTitle as="div">
-              <Heading as="h3" margin="mb-0">
-                Login
-              </Heading>
-            </DialogTitle>
-            <Description as="div">
-              <Paragraph margin="mb-0">
-                Enter your username and password to log in.
-              </Paragraph>
-            </Description>
-            <div className="flex flex-col gap-2">
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full rounded-md bg-body2 px-3 py-2 text-xs text-contrast font-medium border border-contrast/40 outline-none transition placeholder:text-contrast/50 focus:border-contrast focus:ring-0"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && loginUser()}
-                className="w-full rounded-md bg-body2 px-3 py-2 text-xs text-contrast font-medium border border-contrast/40 outline-none transition placeholder:text-contrast/50 focus:border-contrast focus:ring-0"
-              />
-            </div>
-            {errorMessage && (
-              <Paragraph fontSize="text-xs" color="text-accent" margin="mb-0">
-                {errorMessage}
-              </Paragraph>
-            )}
-            <button
-              onClick={loginUser}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center text-center text-xs rounded-md py-2 px-4 bg-accent text-accent-contrast hover:bg-accent-light cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              <span>Submit</span>
-              {isLoading && (
-                <Icon
-                  icon={arrowPathIcon}
-                  className="ml-2 h-5 w-5 animate-spin text-accent-contrast"
-                  aria-hidden="true"
-                />
-              )}
-            </button>
+          <label htmlFor="login-password" className="sr-only">
+            Password
+          </label>
+          <FormInput
+            id="login-password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            label="Password"
+            autoComplete="current-password"
+            required
+          />
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              name="remember"
+              value="1"
+              defaultChecked
+              data-label="Remember me"
+              className="h-4 w-4 appearance-none rounded border border-accent checked:bg-accent checked:border-accent focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
+            />
+            <Span fontSize="text-xs">Remember me on this device</Span>
+          </label>
+          <FormButton
+            name="submit"
+            label="Log in"
+            submitMessage="Logged in."
+            className="!text-xs !px-4 !py-2"
+          />
+          <div className="flex flex-col gap-3">
+            <QuietButton onClick={() => setMode('forgot')}>
+              Forgot your password?
+            </QuietButton>
+            <QuietButton onClick={() => setMode('signup')}>
+              Create an account
+            </QuietButton>
           </div>
-        </DialogPanel>
-      </Dialog>
-    </>
+        </Form>
+      ) : mode === 'signup' ? (
+        <Form
+          key="signup"
+          gap="gap-3"
+          honeypot
+          action="/api/account/subscribe/"
+          resetOnSuccess={false}
+        >
+          <Paragraph fontSize="text-xs" margin="mb-1">
+            An account lets you comment under your own name. We will email you a
+            link to confirm your address; nothing is created until you open it and
+            choose a password.
+          </Paragraph>
+          <FormFirstName name="firstName" placeholder="First name" label="First name" />
+          <FormLastName name="lastName" placeholder="Last name" label="Last name" />
+          <label htmlFor="signup-email" className="sr-only">
+            Email address
+          </label>
+          <FormInput
+            id="signup-email"
+            name="email"
+            type="email"
+            placeholder="Email address"
+            label="Email"
+            autoComplete="email"
+            required
+          />
+          <FormButton
+            name="submit"
+            label="Create my account"
+            submitMessage="Check your email for a link to confirm your address."
+            className="!text-xs !px-4 !py-2"
+          />
+          <QuietButton onClick={() => setMode('login')}>Back to log in</QuietButton>
+        </Form>
+      ) : (
+        <Form
+          key="forgot"
+          gap="gap-3"
+          honeypot
+          action="/api/account/forgot/"
+          resetOnSuccess={false}
+        >
+          <Paragraph fontSize="text-xs" margin="mb-1">
+            Enter your email address or username and we will send you a link to
+            choose a new password.
+          </Paragraph>
+          <label htmlFor="forgot-login" className="sr-only">
+            Email address or username
+          </label>
+          <FormInput
+            id="forgot-login"
+            name="login"
+            placeholder="Email address or username"
+            label="Login"
+            autoComplete="username"
+            required
+          />
+          <FormButton
+            name="submit"
+            label="Send the link"
+            submitMessage="Check your email."
+            className="!text-xs !px-4 !py-2"
+          />
+          <QuietButton onClick={() => setMode('login')}>Back to log in</QuietButton>
+        </Form>
+      )}
+    </Modal>
   )
 }

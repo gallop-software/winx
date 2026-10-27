@@ -1,17 +1,22 @@
 import { baseURL } from '@/app/metadata'
-import { getCategorySlugs } from '@/tools/get-category-slugs'
-import { buildSitemapXml, xmlResponse } from '@/utils/sitemap-xml'
+import { getSitemapTerms } from '@/utils/content-index'
+import { buildSitemapXml, sitemapDate, xmlResponse } from '@/utils/sitemap-xml'
 
-export const dynamic = 'force-static'
-export const revalidate = 86400
+// Built on each request from the content index, so a new term is listed as
+// soon as enough posts that use it have been synced.
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const { categorySlugs } = await getCategorySlugs()
+  const terms = await getSitemapTerms('category')
 
   const xml = buildSitemapXml(
-    categorySlugs.map((item) => ({
-      url: `${baseURL}${item.uri}`,
-    }))
+    terms.map((term) => {
+      const lastmod = sitemapDate(term.modified)
+      return {
+        url: `${baseURL}/category/${term.slug}`,
+        ...(lastmod ? { lastmod } : {}),
+      }
+    })
   )
 
   return xmlResponse(xml)

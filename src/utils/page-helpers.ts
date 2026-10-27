@@ -1,5 +1,13 @@
 import type { Metadata } from 'next'
-import { baseURL, defaultOGImage, defaultSEOConfig } from '@/app/metadata'
+import {
+  baseURL,
+  defaultDescription,
+  defaultOGImage,
+  defaultSEOConfig,
+  noIndex,
+  siteName,
+  twitterHandle,
+} from '@/app/metadata'
 import { getStudioImage } from '@/utils/studio-helpers'
 
 export interface PageMetadata {
@@ -7,23 +15,17 @@ export interface PageMetadata {
   description?: string
   keywords?: string[]
   slug?: string
-  featuredImage?: string
-  focusKeyword?: string | string[]
-  readingTimeMinutes?: number
-  date?: string
-  categories?: string[]
-  publishDate?: string
-  modifiedDate?: string
+  // A path on this site ("/about/") or a whole URL.
   alternates?: { canonical?: string }
   authors?: { name: string; url?: string }[]
   category?: string
-  applicationName?: string
-  referrer?: string
+  // For a page search engines should leave out or not follow. Left unset, the
+  // page is indexed.
+  robots?: { index: boolean; follow: boolean }
   openGraph?: {
-    type?: 'website' | 'article'
+    type?: 'website' | 'article' | 'profile'
     locale?: string
     url?: string
-    siteName?: string
     title?: string
     description?: string
     image?: {
@@ -32,108 +34,115 @@ export interface PageMetadata {
       width?: number
       height?: number
     }
+    // Articles only.
+    publishedTime?: string
+    modifiedTime?: string
+    authors?: string[]
+    section?: string
+    tags?: string[]
   }
   twitter?: {
-    card?: 'summary' | 'summary_large_image' | 'app' | 'player'
-    site?: string
-    creator?: string
+    card?: 'summary' | 'summary_large_image'
     title?: string
     description?: string
-    image?: string
   }
-  other?: Record<string, string>
   structuredData?: object[]
+}
+
+function absolute(url: string) {
+  return /^https?:\/\//i.test(url) ? url : `${baseURL}${url}`
 }
 
 export function generatePageMetadata(
   metadata: PageMetadata,
   slug?: string[]
 ): Metadata {
-  const ogImageInput = metadata?.openGraph?.image
+  const og = metadata.openGraph
+  const ogImageInput = og?.image
   const isExternalUrl = ogImageInput?.url
     ? /^https?:\/\//i.test(ogImageInput.url)
     : false
-  const openGraphImageData = ogImageInput
+  // A picture on another host is used as given, sizes included only when
+  // known. One of this site's is looked up in Studio.
+  const ogImage = ogImageInput
     ? isExternalUrl
       ? {
           url: ogImageInput.url,
-          width: ogImageInput.width || 0,
-          height: ogImageInput.height || 0,
+          ...(ogImageInput.width ? { width: ogImageInput.width } : {}),
+          ...(ogImageInput.height ? { height: ogImageInput.height } : {}),
         }
       : getStudioImage(ogImageInput.url, 'large')
     : null
 
-  const twitterImageData = metadata?.twitter?.image
-    ? getStudioImage(metadata.twitter.image, 'large')
-    : null
+  const description = metadata.description || defaultDescription
+  const canonical = metadata.alternates?.canonical
+    ? absolute(metadata.alternates.canonical)
+    : undefined
+  const url =
+    og?.url ||
+    canonical ||
+    `${baseURL}${slug ? `/${slug.join('/')}` : ''}/`
+  const ogTitle = og?.title || metadata.title || siteName
+  const ogDescription = og?.description || description
+  const isArticle = og?.type === 'article'
+
+  // The dev host is never indexed, whatever the page asks for.
+  const robots = noIndex
+    ? defaultSEOConfig.robots
+    : metadata.robots
+      ? {
+          ...metadata.robots,
+          googleBot: {
+            ...metadata.robots,
+            'max-video-preview': -1,
+            'max-image-preview': 'large' as const,
+            'max-snippet': -1,
+          },
+        }
+      : defaultSEOConfig.robots
 
   return {
-    title: metadata?.title || 'Page',
-    description: metadata?.description || 'A page on our website',
-    keywords: metadata?.keywords || undefined,
-    other: {
-      ...(metadata?.publishDate && {
-        'article:published_time': metadata.publishDate,
-      }),
-      ...(metadata?.modifiedDate && {
-        'article:modified_time': metadata.modifiedDate,
-      }),
-      ...metadata?.other,
+    ...(metadata.title ? { title: metadata.title } : {}),
+    description,
+    keywords: metadata.keywords?.length ? metadata.keywords : undefined,
+    // The feed is repeated here: a page's alternates replace the layout's.
+    alternates: {
+      ...(canonical ? { canonical } : {}),
+      types: { 'application/rss+xml': [{ url: '/feed/', title: siteName }] },
     },
-    alternates: metadata?.alternates?.canonical
-      ? { canonical: `${baseURL}${metadata.alternates.canonical}` }
-      : undefined,
-    authors: metadata?.authors || undefined,
+    authors: metadata.authors || undefined,
     creator: defaultSEOConfig.creator,
     publisher: defaultSEOConfig.publisher,
-    category: metadata?.category || undefined,
-    applicationName: metadata?.applicationName || undefined,
+    category: metadata.category || undefined,
     referrer: 'origin-when-cross-origin',
-    robots: defaultSEOConfig.robots,
+    robots,
     openGraph: {
-      type: metadata?.openGraph?.type || 'website',
-      locale: metadata?.openGraph?.locale || 'en_US',
-      url:
-        metadata?.openGraph?.url ||
-        `${baseURL}${slug ? `/${slug.join('/')}` : ''}`,
-      siteName: metadata?.openGraph?.siteName || '',
-      title: metadata?.openGraph?.title || metadata?.title || '',
-      description:
-        metadata?.openGraph?.description ||
-        metadata?.description ||
-        'A page on our website',
-      images:
-        metadata?.openGraph?.image && openGraphImageData
-          ? [
-              {
-                url: openGraphImageData.url,
-                width: openGraphImageData.width,
-                height: openGraphImageData.height,
-                ...(metadata.openGraph.image.alt && {
-                  alt: metadata.openGraph.image.alt,
-                }),
-              },
-            ]
-          : [defaultOGImage],
+      type: og?.type || 'website',
+      locale: og?.locale || 'en_US',
+      url,
+      siteName,
+      title: ogTitle,
+      description: ogDescription,
+      images: ogImage
+        ? [{ ...ogImage, ...(ogImageInput?.alt ? { alt: ogImageInput.alt } : {}) }]
+        : [defaultOGImage],
+      ...(isArticle
+        ? {
+            ...(og?.publishedTime ? { publishedTime: og.publishedTime } : {}),
+            ...(og?.modifiedTime ? { modifiedTime: og.modifiedTime } : {}),
+            ...(og?.authors?.length ? { authors: og.authors } : {}),
+            ...(og?.section ? { section: og.section } : {}),
+            ...(og?.tags?.length ? { tags: og.tags } : {}),
+          }
+        : {}),
     },
+    // The picture is left out: Next fills it in from Open Graph.
     twitter: {
-      card: metadata?.twitter?.card || 'summary_large_image',
-      site: metadata?.twitter?.site || undefined,
-      creator: metadata?.twitter?.creator || undefined,
-      title:
-        metadata?.twitter?.title ||
-        metadata?.openGraph?.title ||
-        metadata?.title ||
-        'Page',
-      description:
-        metadata?.twitter?.description ||
-        metadata?.openGraph?.description ||
-        metadata?.description ||
-        'A page on our website',
-      images:
-        metadata?.twitter?.image && twitterImageData
-          ? [twitterImageData.url]
-          : undefined,
+      card: metadata.twitter?.card || 'summary_large_image',
+      site: twitterHandle,
+      creator: twitterHandle,
+      title: metadata.twitter?.title || ogTitle,
+      description: metadata.twitter?.description || ogDescription,
     },
   }
 }

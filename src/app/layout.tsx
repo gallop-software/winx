@@ -6,43 +6,45 @@ import { heading3Font } from '@/fonts/heading3'
 import { accentFont } from '@/fonts/accent'
 import type { Metadata } from 'next'
 import SmoothScroll from '@/hooks/smooth-scroll'
+import LoginDialog from '@/components/login'
 import IframeHeight from '@/hooks/use-iframe-height'
-import { baseURL } from './metadata'
+import PageView from '@/hooks/page-view'
+import FlowTrace from '@/hooks/flow-trace'
+import {
+  baseURL,
+  defaultDescription,
+  defaultOGImage,
+  defaultSEOConfig,
+  siteName,
+  siteTagline,
+  twitterHandle,
+} from './metadata'
 import GoogleAds from '@/hooks/google-ads'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { Analytics } from '@vercel/analytics/react'
 
 export const revalidate = 86400
 
 export const metadata: Metadata = {
   metadataBase: new URL(String(baseURL)),
-  robots: {
-    index: true,
-    follow: true,
-    nocache: false,
-    googleBot: {
-      index: true,
-      follow: true,
-      noimageindex: false,
-      'max-video-preview': 30,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
+  robots: defaultSEOConfig.robots,
   title: {
-    default:
-      'Founder Notes | Essays on Building Companies That Matter',
-    template: '%s | Founder Notes',
+    default: `${siteName} | ${siteTagline}`,
+    template: `%s | ${siteName}`,
   },
-  icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
+  description: defaultDescription,
+  alternates: {
+    types: { 'application/rss+xml': [{ url: '/feed/', title: siteName }] },
   },
   openGraph: {
-    siteName: 'Founder Notes',
+    siteName,
     locale: 'en_US',
     type: 'website',
+    images: [defaultOGImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: twitterHandle,
+    creator: twitterHandle,
   },
 }
 
@@ -67,8 +69,10 @@ export default function RootLayout({
       <body className="bg-body font-body text-base font-medium leading-normal text-contrast antialiased">
         <div>{children}</div>
         <SmoothScroll />
+        <LoginDialog />
         <IframeHeight />
-        {process.env.VERCEL === '1' && <Analytics />}
+        <PageView />
+        <FlowTrace />
       </body>
       {process.env.NODE_ENV === 'production' &&
         process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (

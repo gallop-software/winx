@@ -1,64 +1,60 @@
-import FlexSearch from 'flexsearch'
-
-let sectionIndex: any = null
-let searchData: any[] = []
-
-async function loadSearchData(): Promise<any[]> {
-  if (searchData.length === 0) {
-    const response = await fetch('/search-index.json')
-    searchData = await response.json()
-  }
-  return searchData
-}
-
-async function getIndex(): Promise<any> {
-  if (!sectionIndex) {
-    const data = await loadSearchData()
-
-    sectionIndex = new FlexSearch.Document({
-      tokenize: 'full',
-      document: {
-        id: 'url',
-        index: 'content',
-        store: ['title', 'pageTitle', 'content'],
-      },
-      context: { resolution: 9, depth: 2, bidirectional: true },
-    })
-
-    // Add all data to the index
-    for (let item of data) {
-      sectionIndex.add({
-        url: item.url,
-        title: item.title,
-        content: item.content,
-        pageTitle: item.pageTitle || '',
-      })
-    }
-  }
-  return sectionIndex
-}
-
 export interface Result {
   url: string
   title: string
   pageTitle?: string
+  // The part of the page that matched, with the matched words between
+  // MARK_START and MARK_END.
   content?: string
   isViewAll?: boolean
   [key: string]: any
 }
 
+export const MARK_START = '\u0002'
+export const MARK_END = '\u0003'
+
+// How long typing has to pause before the search is sent.
+const DEBOUNCE_MS = 150
+
+let latest: AbortController | null = null
+
+// Searches the content index through /api/search. Each call cancels the one
+// before it, so only what was typed last is answered; a cancelled call
+// resolves to nothing.
 export async function search(
   query: string,
   options: { limit?: number } = {}
 ): Promise<Result[]> {
-  const index = await getIndex()
-  const result = index.search(query, { ...options, enrich: true })
-  if (result.length === 0) return []
+  latest?.abort()
+  const current = new AbortController()
+  latest = current
 
-  return result[0].result.map((r: any) => ({
-    url: r.id,
-    title: r.doc.title,
-    pageTitle: r.doc.pageTitle,
-    content: r.doc.content || '',
-  }))
+  await new Promise((resolve) => setTimeout(resolve, DEBOUNCE_MS))
+  if (current.signal.aborted) return []
+
+  try {
+    const params = new URLSearchParams({
+      q: query,
+      limit: String(options.limit ?? 20),
+    })
+    const response = await fetch(`/api/search/?${params}`, {
+      signal: current.signal,
+    })
+    if (!response.ok) return []
+
+    const json = await response.json()
+    const results: { url: string; title: string; snippet: string }[] =
+      Array.isArray(json?.results) ? json.results : []
+
+    return results.map((r) => ({
+      url: r.url,
+      title: r.title,
+      pageTitle: r.title,
+      content: r.snippet,
+    }))
+  } catch (error) {
+    if ((error as Error).name !== 'AbortError') {
+      console.error('Search failed', error)
+    }
+    return []
+  }
 }

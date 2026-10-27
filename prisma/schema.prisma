@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model BlogLike {
@@ -12,17 +12,6 @@ model BlogLike {
 
   @@id([post_id, anon_id])
   @@map("blog_likes")
-}
-
-model Subscriber {
-  email      String   @id
-  first_name String?
-  last_name  String?
-  subscribed Boolean  @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-
-  @@map("subscribers")
 }
 
 model BlogShareIntent {

@@ -21,7 +21,7 @@ import { Icon } from '@/components/icon'
 import { Image } from '@/components/image'
 import { Search } from '@/components/search'
 import { SideSection } from '@/components/side-section'
-import { getAllCategories } from '@/utils/taxonomies'
+import { useCategories } from '@/hooks/use-categories'
 import chevronDownIcon from '@iconify/icons-heroicons/chevron-down'
 import { resetBlogScroll } from '@/components/blog/blog-client'
 import magnifyingGlassIcon from '@iconify/icons-heroicons/magnifying-glass'
@@ -38,6 +38,7 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
   const { pageBackButtonOutOfView } = useSnapshot(state)
+  const categories = useCategories()
 
   const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     resetBlogScroll()
@@ -60,9 +61,17 @@ export function Navigation() {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [isSearching])
-  const menuItems: { label: string; href: string; icon: IconifyIcon }[] = [
+  // Every menu page is prefetched as soon as the menu shows, as the blog
+  // list's post links are, so a click swaps it in from the browser with no
+  // request. The payloads come from the page cache, and the router keeps
+  // each one five minutes, so a visitor fetches the set once as they browse.
+  const menuItems: {
+    label: string
+    href: string
+    icon: IconifyIcon
+  }[] = [
     { label: 'Home', href: '/', icon: homeIcon },
-    { label: 'Essays', href: '/essays', icon: newspaperIcon },
+    { label: 'Essays', href: '/essays/', icon: newspaperIcon },
     {
       label: 'About',
       href: '/about',
@@ -73,8 +82,10 @@ export function Navigation() {
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href)
   const buttonClass =
-    'flex items-center justify-center xl:justify-start gap-4 rounded-md p-2 w-fit xl:w-full text-contrast hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium cursor-pointer'
+    'flex items-center justify-center xl:justify-start gap-4 rounded-md p-2 w-fit xl:w-full hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium cursor-pointer'
+  // The icon takes the color of its link, so the two always match.
   const activeClass = 'bg-accent/10 text-accent'
+  const inactiveClass = 'text-contrast'
 
   const navBackButton = (
     <Button
@@ -91,7 +102,7 @@ export function Navigation() {
     <Link
       href="/"
       onClick={handleHomeClick}
-      className="flex items-center justify-center xl:justify-start w-fit xl:w-full md:mb-8"
+      className="flex items-center justify-center xl:justify-start w-fit min-w-0 shrink xl:w-full md:mb-8"
       aria-label="Founder Notes"
     >
       <div className="w-11 h-11 shrink-0 overflow-hidden xl:hidden">
@@ -117,8 +128,10 @@ export function Navigation() {
     <>
       {/* Mobile bar (<md) */}
       <aside className="md:hidden flex flex-row items-center bg-body rounded-md px-7 py-5 border-b border-contrast-light/15">
+        {pageBackButtonOutOfView && (
+          <div className="mr-3 shrink-0">{navBackButton}</div>
+        )}
         {brand}
-        {pageBackButtonOutOfView && <div className="ml-3">{navBackButton}</div>}
         <button
           type="button"
           onClick={() => setIsMenuOpen(true)}
@@ -136,7 +149,7 @@ export function Navigation() {
       <aside className="hidden md:flex flex-col items-center xl:items-start bg-body rounded-md pr-7 pl-7 xl:pl-9 pt-7 pb-5 border-b border-contrast-light/15 h-full overflow-y-auto scrollbar-hide">
         <div
           className={clsx(
-            'grid overflow-hidden origin-top transition-all duration-[350ms] ease-out xl:w-full',
+            'grid overflow-hidden origin-top shrink-0 transition-all duration-[350ms] ease-out xl:w-full',
             pageBackButtonOutOfView
               ? 'grid-rows-[1fr] opacity-100 mb-8 scale-y-100'
               : 'grid-rows-[0fr] opacity-0 mb-0 scale-y-95'
@@ -148,36 +161,43 @@ export function Navigation() {
         <nav className="flex flex-col gap-4 xl:w-full">
           {menuItems.map((item) => {
             const active = isActive(item.href)
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={(e) => {
-                  if (item.href === '/') handleHomeClick(e)
-                }}
-                className={clsx(buttonClass, active && activeClass)}
-              >
+            const className = clsx(
+              buttonClass,
+              active ? activeClass : inactiveClass
+            )
+            const inside = (
+              <>
                 <Icon
                   icon={item.icon}
-                  className={clsx(
-                    'w-7 h-7 shrink-0',
-                    active ? 'text-accent' : 'text-contrast'
-                  )}
+                  className="w-7 h-7 shrink-0"
                 />
                 <span className="leading-none hidden xl:inline">
                   {item.label}
                 </span>
+              </>
+            )
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                prefetch={true}
+                onClick={(e) => {
+                  if (item.href === '/') handleHomeClick(e)
+                }}
+                className={className}
+              >
+                {inside}
               </Link>
             )
           })}
           <button
             type="button"
             onClick={() => setIsSearching(true)}
-            className={buttonClass}
+            className={clsx(buttonClass, inactiveClass)}
           >
             <Icon
               icon={magnifyingGlassIcon}
-              className="w-7 h-7 shrink-0 text-contrast"
+              className="w-7 h-7 shrink-0"
             />
             <span className="leading-none hidden xl:inline">Search</span>
           </button>
@@ -220,23 +240,33 @@ export function Navigation() {
                 </div>
 
                 <nav className="flex flex-col gap-2 mb-6">
-                  {menuItems.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={(e) => {
-                        setIsMenuOpen(false)
-                        if (item.href === '/') handleHomeClick(e)
-                      }}
-                      className="flex items-center gap-4 rounded-md p-2 text-contrast hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium"
-                    >
-                      <Icon
-                        icon={item.icon}
-                        className="w-7 h-7 shrink-0 text-contrast"
-                      />
-                      <span className="leading-none">{item.label}</span>
-                    </Link>
-                  ))}
+                  {menuItems.map((item) => {
+                    const className =
+                      'flex items-center gap-4 rounded-md p-2 text-contrast hover:bg-accent/10 hover:text-accent transition-colors text-xs font-medium'
+                    const inside = (
+                      <>
+                        <Icon
+                          icon={item.icon}
+                          className="w-7 h-7 shrink-0"
+                        />
+                        <span className="leading-none">{item.label}</span>
+                      </>
+                    )
+                    return (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        prefetch={true}
+                        onClick={(e) => {
+                          setIsMenuOpen(false)
+                          if (item.href === '/') handleHomeClick(e)
+                        }}
+                        className={className}
+                      >
+                        {inside}
+                      </Link>
+                    )
+                  })}
                   <button
                     type="button"
                     onClick={() => {
@@ -247,7 +277,7 @@ export function Navigation() {
                   >
                     <Icon
                       icon={magnifyingGlassIcon}
-                      className="w-7 h-7 shrink-0 text-contrast"
+                      className="w-7 h-7 shrink-0"
                     />
                     <span className="leading-none">Search</span>
                   </button>
@@ -258,15 +288,15 @@ export function Navigation() {
                           <Icon
                             icon={chevronDownIcon}
                             className={clsx(
-                              'w-7 h-7 shrink-0 text-contrast transition-transform duration-200',
+                              'w-7 h-7 shrink-0 transition-transform duration-200',
                               open && 'rotate-180'
                             )}
                           />
                           <span className="leading-none">Categories</span>
                         </DisclosureButton>
                         <DisclosurePanel className="flex flex-col gap-1 pl-11 pr-2 mt-1 mb-1">
-                          {getAllCategories()
-                            .filter((c) => (c.count ?? 0) > 0)
+                          {categories
+                            .filter((c) => c.count > 0)
                             .sort((a, b) => a.name.localeCompare(b.name))
                             .map((c) => (
                               <Link
@@ -288,6 +318,7 @@ export function Navigation() {
                   noPadding
                   hideSearch
                   hideCategories
+                  onNavigate={() => setIsMenuOpen(false)}
                 />
               </div>
             </DialogPanel>

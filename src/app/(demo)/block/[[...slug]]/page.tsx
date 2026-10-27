@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { LightboxWrapper } from '@/components/lightbox-wrapper'
-import { blockImports, blockSlugs } from './_block-index'
+import { blockImports } from './_block-index'
 
 interface PageProps {
   params: Promise<{
@@ -19,11 +19,9 @@ function getSlugPath(slug?: string[]): string | null {
   return normalizedSlug.join('/')
 }
 
-export async function generateStaticParams() {
-  return blockSlugs.map((slug) => ({
-    slug: slug.split('/'),
-  }))
-}
+// Rendered on each visit: some blocks read the content index, which is only
+// there inside a request.
+export const dynamic = 'force-dynamic'
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params

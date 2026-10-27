@@ -7,6 +7,8 @@ import { shareTargets } from '@/utils/share-targets'
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import heartIcon from '@iconify/icons-heroicons/heart'
 import heartSolidIcon from '@iconify/icons-heroicons/heart-solid'
+import commentIcon from '@iconify/icons-heroicons/chat-bubble-left'
+import commentSolidIcon from '@iconify/icons-heroicons/chat-bubble-left-solid'
 import shareIcon from '@iconify/icons-heroicons/arrow-up-tray'
 import linkIcon from '@iconify/icons-mdi/link'
 import checkIcon from '@iconify/icons-mdi/check'
@@ -41,6 +43,10 @@ interface PostActionsProps {
   size?: 'sm' | 'md'
   className?: string
   skipBackfill?: boolean
+  // How many comments the post has, and where they are. Without a count the
+  // toolbar shows nothing about comments.
+  commentCount?: number
+  commentsHref?: string
 }
 
 export function PostActions({
@@ -51,6 +57,8 @@ export function PostActions({
   size = 'sm',
   className,
   skipBackfill = false,
+  commentCount: givenCommentCount,
+  commentsHref = '#comments',
 }: PostActionsProps) {
   const iconSize = size === 'md' ? 'w-6 h-6' : 'w-5 h-5'
   const fontSize = size === 'md' ? 'text-base' : 'text-xs'
@@ -61,6 +69,13 @@ export function PostActions({
   const shareCount = slug ? snap.shareCounts[slug] : undefined
   const liked = typeof postId === 'number' ? !!snap.liked[postId] : false
   const countsHydrated = likeCount !== undefined && shareCount !== undefined
+  // The comments section knows a newer number once it has loaded.
+  const commentCount =
+    givenCommentCount === undefined
+      ? undefined
+      : ((typeof postId === 'number'
+          ? snap.commentCounts[postId]
+          : undefined) ?? givenCommentCount)
   const [pending, setPending] = useState(false)
 
   useEffect(() => {
@@ -70,7 +85,7 @@ export function PostActions({
 
     let cancelled = false
     const anonId = getOrCreateAnonId()
-    fetch(`/api/blog-likes?postIds=${postId}&anonId=${encodeURIComponent(anonId)}`)
+    fetch(`/api/blog-likes/?postIds=${postId}&anonId=${encodeURIComponent(anonId)}`)
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return
@@ -92,7 +107,7 @@ export function PostActions({
     if (state.shareCounts[slug] !== undefined) return
 
     let cancelled = false
-    fetch(`/api/share-count?slug=${encodeURIComponent(slug)}`)
+    fetch(`/api/share-count/?slug=${encodeURIComponent(slug)}`)
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return
@@ -119,7 +134,7 @@ export function PostActions({
     state.likeCounts[slug] = prevCount + (nextLiked ? 1 : -1)
 
     try {
-      const res = await fetch('/api/blog-likes', {
+      const res = await fetch('/api/blog-likes/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -179,6 +194,33 @@ export function PostActions({
             {countsHydrated ? formatCompactCount(likeCount ?? 0) : '0'}
           </Span>
         </button>
+      )}
+
+      {commentCount !== undefined && (
+        <a
+          href={commentsHref}
+          aria-label={
+            commentCount === 1 ? '1 comment' : `${commentCount} comments`
+          }
+          className={clsx(
+            'inline-flex items-center gap-1.5 transition-colors duration-200 no-underline! p-2 -m-2',
+            // Filled and in the accent once there is a conversation, as the
+            // heart is once it is liked.
+            commentCount > 0 ? 'text-accent' : 'text-contrast/60 hover:text-accent'
+          )}
+        >
+          <Icon
+            icon={commentCount > 0 ? commentSolidIcon : commentIcon}
+            className={clsx(iconSize, 'shrink-0')}
+          />
+          <Span
+            fontSize={fontSize}
+            lineHeight={lineHeight}
+            className="inline-block min-w-[3ch] text-left"
+          >
+            {formatCompactCount(commentCount)}
+          </Span>
+        </a>
       )}
 
       <Popover className="relative inline-flex">

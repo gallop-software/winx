@@ -15,7 +15,7 @@ npm run blocks
 
 ## What It Does
 
-1. **Scans block files** — recursively reads every `.tsx` file in `src/app/**/_blocks/`
+1. **Scans block files** — recursively reads every `.tsx` file in `src/app/**/_blocks/`, leaving out dynamic routes (`[...path]`), whose blocks take what the route loaded and have nothing to preview on their own
 2. **Derives slugs** — converts each route path to a URL slug (stripping route-group parentheses) and deduplicates shared blocks
 3. **Writes the index** — generates `src/app/(demo)/block/[[...slug]]/_block-index.ts`, a `blockImports` map (slug → dynamic `import()`) plus a `blockSlugs` array
 

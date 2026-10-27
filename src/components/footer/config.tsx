@@ -10,14 +10,15 @@ export interface SocialLink {
   icon: { body: string; width?: number; height?: number }
 }
 
-export interface TrademarkLink {
+export interface FooterLink {
   label: string
   href: string
 }
 
-export const phone = {
-  display: '555.123.4567',
-  href: 'tel:555.123.4567',
+export interface ExternalLink {
+  label: string
+  href: string
+  description?: string
 }
 
 export const socialLinks: SocialLink[] = [
@@ -25,7 +26,7 @@ export const socialLinks: SocialLink[] = [
   { name: 'LinkedIn', href: 'https://linkedin.com/winx', icon: linkedinIcon },
   { name: 'Instagram', href: 'https://instagram.com/winx', icon: instagramIcon },
   { name: 'Facebook', href: 'https://facebook.com/winx', icon: facebookIcon },
-  { name: 'Email', href: 'mailto:me@your-company.com', icon: emailIcon },
+  { name: 'Email', href: 'mailto:hello@example.com', icon: emailIcon },
 ]
 
 export const editorHeading = 'About the Editor'
@@ -46,8 +47,7 @@ export const editorImage = {
   alt: 'Founder Notes editor',
 }
 
-export const subscribeHeading =
-  'One founder essay. Every Sunday.'
+export const subscribeHeading = 'One founder essay. Every Sunday.'
 
 export const subscribeIntro = (
   <>
@@ -57,22 +57,27 @@ export const subscribeIntro = (
   </>
 )
 
-export const subscribeSubheading =
-  'Subscribe for the weekly read'
+export const subscribeSubheading = 'Subscribe for the weekly read'
 
 export const subscribeDescription =
   'Long-form thinking on the decisions that actually shape a company — from the first hire to the Series A and everything that breaks along the way.'
 
-export const subscribeAction = '/api/subscribe/'
+// Joins the mailing list. An account, to comment, is made from the login
+// dialog instead.
+export const subscribeAction = '/api/newsletter/subscribe/'
 
-export const trademarkLinks: TrademarkLink[] = [
+export const footerLinks: FooterLink[] = [
+  { label: 'Home', href: '/' },
   { label: 'Essays', href: '/essays' },
-  { label: 'Newsletter', href: '/#newsletter' },
   { label: 'About', href: '/about' },
 ]
 
-export const businessAddress =
-  'Founder Notes — Essays on building companies that matter.'
+export const externalLinksHeading = 'External links'
+
+// Shown in the sidebar under externalLinksHeading. Empty: no card.
+export const externalLinks: ExternalLink[] = []
+
+export const publisher = 'Founder Notes'
 
 export const copyrightYears = '2020–2026'
 export const copyrightName = 'Founder Notes'
@@ -80,4 +85,9 @@ export const copyrightName = 'Founder Notes'
 export const webmaster = {
   label: 'webplant.media',
   href: 'https://webplant.media',
+}
+
+export const template = {
+  label: 'Winx',
+  href: 'https://gallop.software/code/winx',
 }

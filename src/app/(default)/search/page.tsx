@@ -1,19 +1,30 @@
-import type { Metadata } from 'next'
 import { Label } from '@/components/label'
 import { PageWrapper } from '@/components/page-wrapper'
 import { Section } from '@/components/section'
-import { type PageMetadata } from '@/utils/page-helpers'
+import { generatePageMetadata, type PageMetadata } from '@/utils/page-helpers'
+import { buildPageSchema } from '@/utils/structured-data'
 import { SearchResultsClient } from '@/components/search-results-client'
 
-export const generateMetadata = (): Metadata => ({
-  title: 'Search',
-  robots: { index: false, follow: true },
-})
+const title = 'Search'
+const description =
+  'Search every essay on Founder Notes: product strategy, fundraising, hiring, and building a startup.'
 
+// Search results are no page of their own: search engines follow the links
+// on them but list none of them.
 const pageMetadata: PageMetadata = {
-  title: 'Search',
-  slug: 'search',
+  title,
+  description,
+  alternates: { canonical: '/search/' },
+  robots: { index: false, follow: true },
+  structuredData: buildPageSchema({
+    url: '/search/',
+    title,
+    description,
+    type: 'SearchResultsPage',
+  }),
 }
+
+export const generateMetadata = () => generatePageMetadata(pageMetadata)
 
 export default function SearchPage() {
   return (

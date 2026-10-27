@@ -11,6 +11,8 @@ export type FormButtonProps = {
   label: string
   name: string
   isLoading?: boolean
+  /** Stops the button being pressed, for a form that must not be sent twice */
+  disabled?: boolean
   submitMessage?: string
   className?: string
 }
@@ -18,6 +20,7 @@ export type FormButtonProps = {
 export function FormButton({
   label,
   isLoading,
+  disabled,
   submitMessage = 'Message sent. Thank you.',
   className,
 }: FormButtonProps) {
@@ -25,6 +28,7 @@ export function FormButton({
     <Button
       className={clsx(isLoading && 'opacity-70 cursor-not-allowed', className)}
       type="submit"
+      {...(disabled ? { disabled: true } : {})}
       data-message={submitMessage}
     >
       <span>{label}</span>

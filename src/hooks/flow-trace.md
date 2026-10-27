@@ -1,136 +1,73 @@
 # Flow Trace
 
-A client-side analytics hook that tracks user navigation paths, time spent on pages, and interaction events with support for session management and traffic source attribution.
+FlowTrace reports each visit that converts (the contact form, a newsletter sign-up, a new account, an email or phone link, a tracked click): where the visitor came from, every page they saw, how long each page was in front of them, and what they did. The visit is kept in the visitor's browser while they read; when they convert, the whole visit is sent at once, stored in the site's D1 database, and emailed. Visits that never convert never leave the browser. Counting views and visits stays Analytics' (`src/hooks/page-view.tsx`, `src/utils/page-views.ts`); FlowTrace only ever stores visits that converted.
 
-**Tier:** Pro  
-**File:** `src/hooks/flow-trace.tsx`  
-**File:** `src/app/api/flow-trace/route.ts`
+**File:** `src/hooks/flow-trace.tsx` (browser)
+**File:** `src/app/api/flow-trace/route.ts` (endpoint)
+**File:** `src/utils/flow-trace-*.ts` (config, store, emails, scheduled jobs)
 
 ## Usage
 
-```tsx
-import { FlowTrace } from '@/hooks/flow-trace'
-
-export default function Layout() {
-  return (
-    <>
-      <Suspense>
-        <FlowTrace />
-      </Suspense>
-      {/* Your content */}
-    </>
-  )
-}
-```
-
-## Features
-
-- **Path Tracking**: Records complete navigation history with timestamps
-- **Time Measurement**: Tracks time spent on each page using Luxon with timezone support (America/Chicago)
-- **Session Management**: Distinguishes first-time vs returning visitors
-- **Traffic Source Attribution**: Captures UTM parameters and referrer information
-- **Interaction Tracking**: Monitors clicks on elements with `.ft-tracking` class
-- **Non-blocking Telemetry**: Uses `sendBeacon` or `fetch` with keepalive for reliable data transmission
-- **Storage Management**: Uses localStorage for persistent data and sessionStorage for session-specific data
-
-## Storage Keys
-
-### localStorage
-
-- `ft_path`: Navigation path history (JSON array)
-- `ft_first`: First seen timestamp
-- `ft_time_spent_ms`: Total time spent across all sessions
-- `ft_session_source`: Source attribution for current session
-
-### sessionStorage
-
-- `ft_session_start`: Current session start timestamp
-- `ft_last_interaction`: Last interaction timestamp
-
-## How it Works
-
-1. **Page Views**: Automatically recorded on route changes (Next.js pathname/searchParams)
-2. **Time Attribution**: Calculates time delta between interactions using Luxon DateTime
-3. **Source Detection**: Identifies traffic source from UTM parameters or referrer
-4. **Session Attribution**: Marks first external arrival in each session
-5. **Click Tracking**: Listens for clicks on `.ft-tracking` elements with 5-second debounce
-6. **Data Transmission**: Sends analytics payload to `/api/flow-trace` endpoint
-
-## Payload Structure
-
-```ts
-{
-  firstSeen: string,              // ISO timestamp of first visit
-  sessionStart: string,           // ISO timestamp of session start
-  timeSpentTotalMs: number,       // Total time spent (all sessions)
-  page: {
-    url: string,                  // Current page URL
-    title: string                 // Page title
-  },
-  path: [
-    {
-      path: string,               // Full path with query & hash
-      ts: string,                 // ISO timestamp
-      spentMs: number,            // Time spent on this page
-      source?: string             // Traffic source (if new arrival)
-    }
-  ]
-}
-```
-
-## Interaction Tracking
-
-Add the `ft-tracking` class to elements you want to track:
+Mounted once, in `src/app/layout.tsx`:
 
 ```tsx
-<a
-  href="/contact"
-  className="ft-tracking"
->
-  Contact Us
-</a>
+import FlowTrace from '@/hooks/flow-trace'
 
-<button
-  className="ft-tracking"
-  id="newsletter-signup"
->
-  Subscribe
-</button>
+<FlowTrace />
 ```
 
-Click payloads include:
+It watches the path only, as the page-view hook does, so it adds nothing to the server-rendered page.
 
-- `element.href`: Link destination (if anchor)
-- `element.innerText`: Element text content
-- `element.id`: Element ID
-- `context`: Complete analytics payload
+## What is recorded
+
+| Step | When |
+|---|---|
+| `pageview` | Each route change, including client-side navigation, with the time the page was visible |
+| `form` | `trackConversion('form', label)`, called by the Form component when the contact form is sent |
+| `newsletter` | `trackConversion('newsletter', …)`, called by the Form component when a newsletter form succeeds |
+| `signup` | `trackConversion('signup', …)`, called by the Form component when `/api/account/confirm` succeeds: the account exists once its password is chosen from the emailed link |
+| `email` | A click on a `mailto:` link |
+| `call` | A click on a `tel:` link |
+| `click` | A click on an element with `.ft-tracking` or `data-ft="Label"` |
+
+Pages are only kept in the browser. Each conversion sends the visit, whole.
+
+Track anything else from code:
+
+```tsx
+import { trackConversion } from '@/hooks/flow-trace'
+
+trackConversion('click', 'Downloaded the guide')
+```
+
+Or mark an element; `data-ft` names it in reports, otherwise its text is used:
+
+```tsx
+<a href="/guide.pdf" data-ft="Guide download">Download</a>
+```
+
+## How a visit is kept
+
+All in `localStorage`:
+
+- `ft_visitor`: the visitor id, and `ft_first`, when it was made.
+- `ft_visits` and `ft_total_ms`: how many visits, and the time on the site over all of them.
+- `ft_visit`: the visit under way: its id, referrer and campaign, and its steps (at most `maxSteps`; the oldest pages go first, conversions stay).
+
+A new visit starts after `visitIdleMinutes` with nothing done, or when the visitor arrives from another site or with `utm_` parameters. A page that stays in front of the visitor counts as activity, so a long read and then a sign-up is one visit; a reload or the back button on the page they arrived at is not a new arrival. Where storage is blocked, the visit is kept in memory for as long as the page is open.
+
+The same link pressed again within 5 seconds is one conversion. Paths, titles and labels are cut to what the server keeps before sending.
+
+The visit goes out by `sendBeacon` as `text/plain`, so it is not lost when a phone link opens the dialer. Paths in `ignoredPaths` (`/api`, `/block`) are never traced.
+
+## What the server adds
+
+`/api/flow-trace` accepts only same-origin requests of at most 64 KB holding a conversion, with every path a path on this site; drops bots and administrators (their `gallop_member` cookie); stores at most 30 visits an hour from one address; and adds the country, region and city from Cloudflare's request data, the device, browser and system from the user agent, and the IP address. Nothing is sent to any other service. The visitor's clock may be wrong, so step times are laid back from the server's time of arrival. It answers at once, then stores the visit and emails the report.
 
 ## Configuration
 
-- **Default Endpoint**: `/api/flow-trace`
-- **Max Path Length**: 100 entries (FIFO)
-- **Click Debounce**: 5000ms per element
-- **Timezone**: America/Chicago (configurable via `zone` constant)
-
-## Source Attribution
-
-Traffic sources are determined in priority order:
-
-1. UTM source parameter (`utm_source`)
-2. Document referrer
-3. "direct" (default)
-
-External sources are validated to exclude:
-
-- "direct"
-- localhost
-- Current production URL (from `NEXT_PUBLIC_PRODUCTION_URL`)
-
-## Implementation
-
-The component is used in `src/app/layout.tsx` to enable flow tracking throughout the application.
+All in `src/utils/flow-trace-config.ts`: the time zone, visit idle time, the most steps kept, the summary hour and weekday, the hourly report limits, the retry time, the default email setting, the ignored paths, and the names of the conversions. Who is emailed is `FLOWTRACE_EMAILS` (comma-separated), or `EMAIL_TO` when it is not set.
 
 ## Dependencies
 
-- `next/navigation` for route change detection
-- `luxon` for timezone-aware datetime handling
+- `next/navigation` for route changes

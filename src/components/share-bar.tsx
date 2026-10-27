@@ -21,7 +21,7 @@ export function ShareBar({ title, slug, url }: ShareBarProps) {
 
   useEffect(() => {
     if (state.shareCounts[slug] !== undefined) return
-    fetch(`/api/share-count?slug=${encodeURIComponent(slug)}`)
+    fetch(`/api/share-count/?slug=${encodeURIComponent(slug)}`)
       .then((res) => res.json())
       .then((data) => {
         if (state.shareCounts[slug] === undefined) {

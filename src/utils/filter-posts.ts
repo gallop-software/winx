@@ -1,32 +1,17 @@
 import 'server-only'
-import FlexSearch from 'flexsearch'
-import blogData from '@/../_data/_blog.json'
-// Bundled at build time. Reading it from disk at runtime silently returns
-// nothing on Cloudflare Workers, which has no filesystem, and search would
-// degrade to the title/description fallback below.
-import searchIndexData from '@/../public/search-index.json'
+import { getDb } from '@/utils/d1'
+import {
+  buildFtsQuery,
+  NEWEST_FIRST,
+  POST_SELECT,
+  toBlogPost,
+  type BlogPost,
+  type PostRow,
+} from '@/utils/content-index'
+import { normalizeSlug } from '@/utils/post-url'
+import { DateTime } from 'luxon'
 
-export interface BlogPost {
-  id: number
-  slug: string
-  url: string
-  metadata: {
-    title?: string
-    description?: string
-    date?: string
-    categories?: string[]
-    categorySlugs?: string[]
-    tags?: string[]
-    tagSlugs?: string[]
-    featuredImage?: string
-    featuredImageWidth?: number
-    featuredImageHeight?: number
-    author?: string
-    authorSlug?: string
-  }
-}
-
-const posts = blogData as BlogPost[]
+export type { BlogPost }
 
 export interface FilterPostsParams {
   categorySlug?: string
@@ -34,73 +19,12 @@ export interface FilterPostsParams {
   authorSlug?: string
   categoriesExclude?: string[]
   search?: string
+  // A year ('2026'), and within it a month ('10'), as they appear in a post's
+  // address. The month is ignored without the year.
+  year?: string
+  month?: string
   page?: number
   perPage?: number
-}
-
-interface SearchSection {
-  url: string
-  title?: string
-  content?: string
-  pageTitle?: string
-}
-
-function normalizeUrl(u: string): string {
-  return (u.split('#')[0] || '').split('?')[0]?.replace(/\/+$/, '') || ''
-}
-
-let cachedIndex: { index: any; ready: boolean } | null = null
-
-function getFlexIndex() {
-  if (cachedIndex) return cachedIndex
-  const sections = searchIndexData as SearchSection[]
-  if (!Array.isArray(sections) || sections.length === 0) {
-    cachedIndex = { index: null, ready: false }
-    return cachedIndex
-  }
-  const index = new FlexSearch.Document({
-    tokenize: 'full',
-    document: {
-      id: 'url',
-      index: 'content',
-      store: ['title', 'pageTitle', 'content'],
-    },
-    context: { resolution: 9, depth: 2, bidirectional: true },
-  })
-  for (const item of sections) {
-    index.add({
-      url: item.url,
-      title: item.title || '',
-      content: item.content || '',
-      pageTitle: item.pageTitle || '',
-    })
-  }
-  cachedIndex = { index, ready: true }
-  return cachedIndex
-}
-
-function searchUrls(query: string): Set<string> | null {
-  const { index, ready } = getFlexIndex()
-  if (!ready || !index) {
-    // Fallback: substring on title/description
-    const needle = query.toLowerCase()
-    const urls = new Set<string>()
-    for (const p of posts) {
-      const hay =
-        `${p.metadata.title || ''} ${p.metadata.description || ''}`.toLowerCase()
-      if (hay.includes(needle)) urls.add(normalizeUrl(p.url))
-    }
-    return urls
-  }
-  const results = index.search(query, { limit: 1000, enrich: false })
-  const urls = new Set<string>()
-  for (const group of results) {
-    for (const id of group.result || []) {
-      const u = normalizeUrl(String(id))
-      if (u) urls.add(u)
-    }
-  }
-  return urls
 }
 
 export interface FilterResult {
@@ -111,51 +35,111 @@ export interface FilterResult {
   perPage: number
 }
 
-export function filterPosts(params: FilterPostsParams = {}): FilterResult {
+const HAS_TERM = `EXISTS (SELECT 1 FROM post_terms pt
+  WHERE pt.post_id = p.id AND pt.term_id =
+    (SELECT id FROM terms WHERE taxonomy = ? AND slug = ?))`
+
+// Categories are excluded by name, in any case.
+const NOT_IN_CATEGORIES = `NOT EXISTS (SELECT 1 FROM post_terms pt
+  JOIN terms t ON t.id = pt.term_id
+  WHERE pt.post_id = p.id AND t.taxonomy = 'category'
+    AND lower(t.name) IN (SELECT lower(value) FROM json_each(?)))`
+
+// The first day of the year or month and of the one after it, as the start of
+// a post's date text, so the posts between can be found by string comparison.
+// Null when the year or month is not one.
+export function dateRange(
+  year: string,
+  month?: string
+): { from: string; to: string } | null {
+  if (!/^\d{4}$/.test(year)) return null
+  if (month !== undefined && !/^(0[1-9]|1[0-2])$/.test(month)) return null
+  const from = DateTime.fromObject({
+    year: Number(year),
+    month: month ? Number(month) : 1,
+  })
+  const to = from.plus(month ? { months: 1 } : { years: 1 })
+  return { from: from.toFormat('yyyy-MM-dd'), to: to.toFormat('yyyy-MM-dd') }
+}
+
+// One page of posts from the content index, newest first, or best match first
+// when searching.
+export async function filterPosts(
+  params: FilterPostsParams = {}
+): Promise<FilterResult> {
   const {
     categorySlug,
     tagSlug,
     authorSlug,
     categoriesExclude,
     search,
+    year,
+    month,
     page = 1,
     perPage = 9,
   } = params
 
-  let out = posts
+  const empty = { posts: [], total: 0, totalPages: 1, page, perPage }
 
-  if (categorySlug) {
-    out = out.filter((p) =>
-      (p.metadata.categorySlugs || []).includes(categorySlug)
-    )
-  }
-  if (tagSlug) {
-    out = out.filter((p) => (p.metadata.tagSlugs || []).includes(tagSlug))
-  }
-  if (authorSlug) {
-    out = out.filter((p) => p.metadata.authorSlug === authorSlug)
-  }
-  if (categoriesExclude?.length) {
-    const excludeSet = new Set(categoriesExclude.map((s) => s.toLowerCase()))
-    out = out.filter(
-      (p) =>
-        !(p.metadata.categories || []).some((c) =>
-          excludeSet.has(c.toLowerCase())
-        )
-    )
-  }
+  const conditions: string[] = []
+  const values: unknown[] = []
+  let join = ''
+  let order = NEWEST_FIRST
 
   if (search && search.trim()) {
-    const matchUrls = searchUrls(search.trim())
-    if (matchUrls) {
-      out = out.filter((p) => matchUrls.has(normalizeUrl(p.url)))
-    }
+    const match = buildFtsQuery(search)
+    if (!match) return empty
+    join = 'JOIN posts_fts ON posts_fts.rowid = p.id'
+    conditions.push('posts_fts MATCH ?')
+    values.push(match)
+    order = 'ORDER BY posts_fts.rank, p.date DESC, p.id DESC'
+  }
+  if (categorySlug) {
+    conditions.push(HAS_TERM)
+    values.push('category', normalizeSlug(categorySlug))
+  }
+  if (tagSlug) {
+    conditions.push(HAS_TERM)
+    values.push('post_tag', normalizeSlug(tagSlug))
+  }
+  if (authorSlug) {
+    conditions.push('a.slug = ?')
+    values.push(normalizeSlug(authorSlug))
+  }
+  if (categoriesExclude?.length) {
+    conditions.push(NOT_IN_CATEGORIES)
+    values.push(JSON.stringify(categoriesExclude))
+  }
+  if (year) {
+    const range = dateRange(year, month)
+    if (!range) return empty
+    conditions.push('p.date >= ? AND p.date < ?')
+    values.push(range.from, range.to)
   }
 
-  const total = out.length
-  const totalPages = Math.max(1, Math.ceil(total / perPage))
-  const start = (page - 1) * perPage
-  const slice = out.slice(start, start + perPage)
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const db = getDb()
 
-  return { posts: slice, total, totalPages, page, perPage }
+  const [list, count] = await db.batch<PostRow | { total: number }>([
+    db
+      .prepare(`${POST_SELECT} ${join} ${where} ${order} LIMIT ? OFFSET ?`)
+      .bind(...values, perPage, (page - 1) * perPage),
+    db
+      .prepare(
+        `SELECT COUNT(*) AS total
+          FROM posts p LEFT JOIN authors a ON a.id = p.author_id
+          ${join} ${where}`
+      )
+      .bind(...values),
+  ])
+
+  const total = (count?.results[0] as { total: number } | undefined)?.total ?? 0
+
+  return {
+    posts: ((list?.results ?? []) as PostRow[]).map(toBlogPost),
+    total,
+    totalPages: Math.max(1, Math.ceil(total / perPage)),
+    page,
+    perPage,
+  }
 }

@@ -1,9 +1,5 @@
-import { prisma } from '@/utils/prisma'
-import {
-  getLikeCountFromDb,
-  getLikesBatch,
-  invalidateLike,
-} from '@/utils/blog-likes'
+import { getPrisma } from '@/utils/prisma'
+import { getLikeCountFromDb, getLikesBatch } from '@/utils/blog-likes'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -22,17 +18,18 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === 'like') {
-      await prisma.blogLike.createMany({
-        data: [{ post_id: id, anon_id: anonId }],
-        skipDuplicates: true,
+      // Liking twice is a no-op. SQLite has no createMany skipDuplicates.
+      await getPrisma().blogLike.upsert({
+        where: { post_id_anon_id: { post_id: id, anon_id: anonId } },
+        create: { post_id: id, anon_id: anonId },
+        update: {},
       })
     } else {
-      await prisma.blogLike.deleteMany({
+      await getPrisma().blogLike.deleteMany({
         where: { post_id: id, anon_id: anonId },
       })
     }
 
-    await invalidateLike(id)
     const count = await getLikeCountFromDb(id)
 
     return NextResponse.json({

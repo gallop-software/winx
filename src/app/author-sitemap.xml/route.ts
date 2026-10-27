@@ -1,17 +1,21 @@
 import { baseURL } from '@/app/metadata'
-import { getAuthorSlugs } from '@/tools/get-author-slugs'
-import { buildSitemapXml, xmlResponse } from '@/utils/sitemap-xml'
+import { getSitemapAuthors } from '@/utils/content-index'
+import { buildSitemapXml, sitemapDate, xmlResponse } from '@/utils/sitemap-xml'
 
-export const dynamic = 'force-static'
-export const revalidate = 86400
+// Built on each request from the content index.
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const { authorSlugs } = await getAuthorSlugs()
+  const authors = await getSitemapAuthors()
 
   const xml = buildSitemapXml(
-    authorSlugs.map((item) => ({
-      url: `${baseURL}${item.uri}`,
-    }))
+    authors.map((author) => {
+      const lastmod = sitemapDate(author.modified)
+      return {
+        url: `${baseURL}/author/${author.slug}`,
+        ...(lastmod ? { lastmod } : {}),
+      }
+    })
   )
 
   return xmlResponse(xml)

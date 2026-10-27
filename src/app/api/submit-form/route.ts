@@ -1,16 +1,12 @@
+import { isSameOrigin, visitorIp } from '@/utils/comment-guard'
+import { allowAttempt, hashAddress } from '@/utils/member-guard'
+import { readJsonObject } from '@/utils/read-body'
+import { getBccAddress, isEmail, sendEmail } from '@/utils/send-email'
+import { absoluteUrl, SITE_NAME } from '@/utils/email-template'
 import { studioUrl } from '@/utils/studio-helpers'
 import { NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
-
-function encodeFormData(data: Record<string, any>) {
-  const fd = new FormData()
-  for (const [k, v] of Object.entries(data)) {
-    if (Array.isArray(v)) for (const item of v) fd.append(k, item as any)
-    else if (v !== undefined && v !== null) fd.append(k, v as any)
-  }
-  return fd
-}
 
 function escapeHtml(s: string) {
   return s
@@ -95,7 +91,7 @@ function renderEmailHtml(payload: Record<string, any>) {
     <body>
       <div class="container">
         <div class="content">
-          <img class="logo" src="${studioUrl('/images/logo.png')}" alt="Logo" />
+          <img class="logo" src="${absoluteUrl(studioUrl('/logo.png', 'medium'))}" alt="${escapeHtml(SITE_NAME)}" />
           ${rows.join('')}
         </div>
       </div>
@@ -103,18 +99,89 @@ function renderEmailHtml(payload: Record<string, any>) {
     </html>`
 }
 
+function renderEmailText(payload: Record<string, any>) {
+  const lines: string[] = []
+
+  for (const [key, val] of Object.entries(payload)) {
+    if (key === 'files') {
+      if (Array.isArray(val) && val.length) {
+        const names = val.map((f) => f?.name || 'attachment').join(', ')
+        lines.push(`${val[0]?.label ?? key}: ${names}`)
+      }
+      continue
+    }
+
+    const isField = typeof val === 'object' && val
+    const label = isField ? ((val as any).label ?? key) : key
+    const value =
+      isField && (val as any).value !== undefined ? (val as any).value : val
+
+    lines.push(
+      `${label}: ${
+        Array.isArray(value)
+          ? value.join(', ')
+          : typeof value === 'string'
+            ? value.trim()
+            : JSON.stringify(value ?? '')
+      }`
+    )
+  }
+
+  return lines.join('\n\n')
+}
+
+// Attachments come as data URLs, a third larger than the files.
+const MAX_BODY_BYTES = 12 * 1024 * 1024
+
+const NO_STORE = { 'Cache-Control': 'no-store' }
+
+function refuse(message: string, status: number, retryAfter?: number) {
+  return NextResponse.json(
+    { message },
+    {
+      status,
+      headers: {
+        ...NO_STORE,
+        ...(retryAfter ? { 'Retry-After': String(retryAfter) } : {}),
+      },
+    }
+  )
+}
+
+// Emails a message to the site's own inbox (EMAIL_TO, and EMAIL_BCC), and to
+// nobody else: the address a visitor types is only the one replies go to,
+// never a recipient, so the form cannot be used to send mail to anyone.
 export async function POST(req: Request) {
-  const payload = (await req.json().catch(() => ({}))) as Record<string, any>
+  if (!isSameOrigin(req)) return refuse('Not from this site', 403)
+
+  const input = await readJsonObject(req, MAX_BODY_BYTES)
+  if (input === 'too_large') return refuse('That is too much to send.', 413)
+  if (input === null) return refuse('The message could not be read.', 400)
+  const payload = input as Record<string, any>
+
+  const allowed = await allowAttempt({
+    kind: 'contact',
+    ipHash: await hashAddress(visitorIp(req)),
+  })
+  if (!allowed.ok) {
+    return refuse(
+      'Too many messages. Try again later.',
+      429,
+      allowed.retryAfter
+    )
+  }
 
   const emailSubjectValue = payload.emailSubject?.value
     ? String(payload.emailSubject.value)
     : 'Form Submission'
   const displayPayload = { ...payload }
   delete (displayPayload as any).emailSubject
+  // How long the form took to fill in: the form's own check, not the message.
+  delete (displayPayload as any)._submissionTime
 
   const html = renderEmailHtml(displayPayload)
+  const text = renderEmailText(displayPayload)
 
-  const isDevelopment = process.env.NODE_ENV === 'development'
   const productionUrlClean = process.env.NEXT_PUBLIC_PRODUCTION_URL?.replace(
     /^https?:\/\//,
     ''
@@ -126,59 +193,40 @@ export async function POST(req: Request) {
     payload.name?.value ||
     ''
   const last = payload.lastName?.value || payload.lastname?.value || ''
-  const email = payload.email?.value || payload.contactEmail?.value || undefined
+  const emailValue = payload.email?.value || payload.contactEmail?.value
+  // A malformed address would fail the whole send, so it is left out instead.
+  const email = isEmail(emailValue) ? emailValue : undefined
   const displayName = [first, last].filter(Boolean).join(' ') || first || email
 
   const subject = displayName
     ? `${displayName}: ${emailSubjectValue} ${productionUrlClean}`
     : `${emailSubjectValue} ${productionUrlClean}`
 
-  const body: Record<string, any> = {
-    from: `${process.env.MAILGUN_FROM_NAME} <contact@${process.env.MAILGUN_DOMAIN_NAME}>`,
-    to: isDevelopment
-      ? `${process.env.MAILGUN_DEV_NAME} <${process.env.MAILGUN_DEV_MAIL}>`
-      : `${process.env.MAILGUN_FROM_NAME} <${process.env.MAILGUN_SMTP_MAIL}>`,
-    ...(!isDevelopment && {
-      bcc: [
-        `${process.env.MAILGUN_DEV_NAME} <${process.env.MAILGUN_DEV_MAIL}>`,
-        ...(email ? [`${displayName} <${email}>`] : []),
-      ],
-    }),
-    ...(email ? { 'h:Reply-To': `${displayName} <${email}>` } : {}),
+  const visitor = email ? { name: String(displayName), email } : undefined
+  const bcc = getBccAddress()
+
+  // The client sends each file as a data URL; Cloudflare wants bare base64.
+  const files = Array.isArray(payload.files) ? payload.files : []
+  const attachments = files
+    .filter((file: any) => typeof file?.base64 === 'string')
+    .map((file: any) => ({
+      content: file.base64.split(',')[1] ?? '',
+      filename: String(file.name || 'attachment'),
+      type: String(file.type || 'application/octet-stream'),
+      disposition: 'attachment' as const,
+    }))
+
+  const ok = await sendEmail({
+    ...(bcc ? { bcc: [bcc] } : {}),
+    ...(visitor ? { replyTo: visitor } : {}),
     subject,
     html,
-  }
-
-  // Attach files from base64 (client already encodes)
-  const files = Array.isArray(payload.files) ? payload.files : []
-  if (files.length) {
-    body.attachment = files.map((file: any) => {
-      const buffer = Buffer.from(file.base64.split(',')[1], 'base64')
-      return new File([buffer], file.name, { type: file.type })
-    })
-  }
-
-  const resp = await fetch(
-    `https://api.mailgun.net/v3/${process.env.MAILGUN_DOMAIN_NAME}/messages`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
-      },
-      body: encodeFormData(body),
-    }
-  )
-
-  const text = await resp.text()
-  let ok = false
-  try {
-    ok = text !== 'Forbidden' && Boolean(JSON.parse(text).id)
-  } catch {
-    ok = false
-  }
+    text,
+    attachments,
+  })
 
   return NextResponse.json(
     { message: ok ? 'Message sent. Thank you.' : 'An error occurred.' },
-    { status: ok ? 200 : 500 }
+    { status: ok ? 200 : 500, headers: NO_STORE }
   )
 }

@@ -8,6 +8,8 @@ import { Paragraph } from '@/components/paragraph'
 import { Span } from '@/components/span'
 import { PostActions } from '@/components/post-actions'
 import { baseURL } from '@/app/metadata'
+import { renderPostTitle } from '@/utils/post-title'
+import { htmlToText } from '@/utils/html-text'
 import {
   SidebarStackProvider,
   useSidebarStack,
@@ -19,6 +21,11 @@ import Link from 'next/link'
 import { ParseBlocks } from '@/utils/parse-blocks'
 import { state } from '@/state'
 import { getOrCreateAnonId } from '@/utils/anon-id'
+import { DateTime } from 'luxon'
+
+// How wide a post's image is shown: the full column, which stops growing at
+// 600px. Below that it is the screen less the page's side padding.
+const IMAGE_SIZES = '(min-width: 656px) 600px, calc(100vw - 56px)'
 
 interface BlogPost {
   id: number
@@ -32,6 +39,9 @@ interface BlogPost {
     featuredImage?: string
     featuredImageWidth?: number
     featuredImageHeight?: number
+    featuredImageSrcSet?: string
+    commentCount?: number
+    commentsOpen?: boolean
   }
 }
 
@@ -41,6 +51,8 @@ export interface BlogQuery {
   tagSlug?: string
   categoriesExclude?: string[]
   search?: string
+  year?: string
+  month?: string
 }
 
 const blogContentLoader: ContentLoader = async (
@@ -77,20 +89,25 @@ export function resetBlogScroll() {
   for (const entry of blogCache.values()) entry.scrollY = 0
 }
 
-const getCacheKey = (query: BlogQuery) =>
+const getCacheKey = (query: BlogQuery, firstPage: number) =>
   JSON.stringify({
+    p: firstPage,
     a: query.authorSlug ?? '',
     c: query.categorySlug ?? '',
     t: query.tagSlug ?? '',
     e: query.categoriesExclude ?? [],
     s: query.search ?? '',
+    y: query.year ?? '',
+    m: query.month ?? '',
   })
 
 interface BlogClientInnerProps {
   initialPosts: BlogPost[]
   initialTotalPages: number
+  initialPage: number
   perPage: number
   query: BlogQuery
+  pagePath?: string
   loader?: (page: number, perPage: number) => Promise<PageResult>
 }
 
@@ -98,18 +115,31 @@ interface BlogClientInnerProps {
 function BlogClientInner({
   initialPosts,
   initialTotalPages,
+  initialPage,
   perPage,
   query,
+  pagePath,
   loader,
 }: BlogClientInnerProps) {
-  const cacheKey = getCacheKey(query)
+  const cacheKey = getCacheKey(query, initialPage)
   const cached =
     typeof window !== 'undefined' ? blogCache.get(cacheKey) : undefined
   const [posts, setPosts] = useState<BlogPost[]>(cached?.posts ?? initialPosts)
-  const [page, setPage] = useState(cached?.page ?? 1)
+  const [page, setPage] = useState(cached?.page ?? initialPage)
   const [totalPages, setTotalPages] = useState(
     cached?.totalPages ?? initialTotalPages
   )
+  // When the server sends a new list for the same page, after the admin
+  // bar's refresh, it replaces what was kept, including the pages scrolled
+  // to since.
+  const [adopted, setAdopted] = useState(initialPosts)
+  if (adopted !== initialPosts) {
+    setAdopted(initialPosts)
+    setPosts(initialPosts)
+    setPage(initialPage)
+    setTotalPages(initialTotalPages)
+    blogCache.delete(cacheKey)
+  }
 
   useEffect(() => {
     blogCache.set(cacheKey, {
@@ -143,7 +173,7 @@ function BlogClientInner({
         postIds: missingPostIds.join(','),
         anonId,
       })
-      fetch(`/api/blog-likes?${params.toString()}`)
+      fetch(`/api/blog-likes/?${params.toString()}`)
         .then((r) => r.json())
         .then((data) => {
           if (cancelled) return
@@ -162,7 +192,7 @@ function BlogClientInner({
 
     if (missingShareSlugs.length > 0) {
       const params = new URLSearchParams({ slugs: missingShareSlugs.join(',') })
-      fetch(`/api/share-count?${params.toString()}`)
+      fetch(`/api/share-count/?${params.toString()}`)
         .then((r) => r.json())
         .then((data) => {
           if (cancelled) return
@@ -313,6 +343,8 @@ function BlogClientInner({
       if (query.categoriesExclude?.length)
         params.set('exclude_categories', query.categoriesExclude.join(','))
       if (query.search) params.set('search', query.search)
+      if (query.year) params.set('year', query.year)
+      if (query.month) params.set('month', query.month)
 
       const res = await fetch(`/api/posts?${params.toString()}`)
       if (!res.ok) return null
@@ -399,8 +431,42 @@ function BlogClientInner({
                   as="h2"
                   margin="mb-0"
                 >
-                  {post.metadata.title}
+                  {renderPostTitle(post.metadata.title ?? '')}
                 </Heading>
+                {post.metadata.date && (
+                  <Paragraph
+                    margin="mb-0"
+                    fontSize="text-[0.9rem]"
+                    color="text-contrast/60"
+                    className="italic"
+                  >
+                    <time dateTime={post.metadata.date.slice(0, 10)}>
+                      {DateTime.fromISO(post.metadata.date).toFormat(
+                        'LLLL d, yyyy'
+                      )}
+                    </time>
+                  </Paragraph>
+                )}
+                {post.metadata.featuredImage && (
+                  <div className="block w-full overflow-hidden rounded-sm mt-2">
+                    <Image
+                      src={post.metadata.featuredImage}
+                      alt={htmlToText(post.metadata.title!)}
+                      size="large"
+                      width={post.metadata.featuredImageWidth}
+                      height={post.metadata.featuredImageHeight}
+                      {...(post.metadata.featuredImageSrcSet
+                        ? {
+                            srcSet: post.metadata.featuredImageSrcSet,
+                            sizes: IMAGE_SIZES,
+                          }
+                        : {})}
+                      className="w-full h-auto block"
+                      rounded="rounded-none"
+                      lazy={index > 0}
+                    />
+                  </div>
+                )}
                 {post.metadata.description && (
                   <Paragraph
                     margin="mb-0"
@@ -409,26 +475,20 @@ function BlogClientInner({
                     {post.metadata.description}
                   </Paragraph>
                 )}
-                {post.metadata.featuredImage && (
-                  <div className="block w-full overflow-hidden rounded-sm mt-2">
-                    <Image
-                      src={post.metadata.featuredImage}
-                      alt={post.metadata.title!}
-                      size="large"
-                      width={post.metadata.featuredImageWidth}
-                      height={post.metadata.featuredImageHeight}
-                      className="w-full h-auto block"
-                      rounded="rounded-none"
-                    />
-                  </div>
-                )}
               </Link>
               <PostActions
                 postId={post.id}
-                title={post.metadata.title || ''}
+                title={htmlToText(post.metadata.title || '')}
                 url={`${baseURL}${post.url}/`}
                 slug={post.slug}
                 skipBackfill
+                {...(post.metadata.commentCount !== undefined &&
+                (post.metadata.commentsOpen || post.metadata.commentCount > 0)
+                  ? {
+                      commentCount: post.metadata.commentCount,
+                      commentsHref: `${post.url}/#comments`,
+                    }
+                  : {})}
                 className="mt-2"
               />
             </article>
@@ -453,23 +513,64 @@ function BlogClientInner({
         </div>
       )}
 
+      {pagePath && (initialPage > 1 || hasMore) && (
+        <nav
+          aria-label="More posts"
+          className="w-full max-w-4xl mx-auto mt-8 flex justify-between gap-4"
+        >
+          {/* Plain links to the pages either side, for a visitor without
+              JavaScript and for search engines, which do not scroll. */}
+          <Paragraph margin="mb-0">
+            {initialPage > 1 && (
+              <Link
+                href={pageHref(pagePath, initialPage - 1)}
+                rel="prev"
+              >
+                Newer posts
+              </Link>
+            )}
+          </Paragraph>
+          <Paragraph margin="mb-0">
+            {hasMore && (
+              <Link
+                href={pageHref(pagePath, page + 1)}
+                rel="next"
+              >
+                Older posts
+              </Link>
+            )}
+          </Paragraph>
+        </nav>
+      )}
+
       <AsyncSidebarRenderer />
     </>
   )
+}
+
+// A listing's address at one of its pages: the first has no number.
+function pageHref(path: string, page: number) {
+  return page <= 1 ? path : `${path}?page=${page}`
 }
 
 // Main exported component with provider wrapper
 export function BlogClient({
   initialPosts = [],
   initialTotalPages = 1,
+  initialPage = 1,
   perPage = 15,
   query = {},
+  pagePath,
   loader,
 }: {
   initialPosts?: BlogPost[]
   initialTotalPages?: number
+  // The page of the listing initialPosts is, when the address asked for one.
+  initialPage?: number
   perPage?: number
   query?: BlogQuery
+  // The listing's own address ("/category/hiring/"), for links to its pages.
+  pagePath?: string
   loader?: (
     page: number,
     perPage: number
@@ -480,8 +581,10 @@ export function BlogClient({
       <BlogClientInner
         initialPosts={initialPosts}
         initialTotalPages={initialTotalPages}
+        initialPage={initialPage}
         perPage={perPage}
         query={query}
+        {...(pagePath ? { pagePath } : {})}
         {...(loader ? { loader } : {})}
       />
     </SidebarStackProvider>

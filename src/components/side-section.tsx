@@ -9,10 +9,13 @@ import { Icon } from '@/components/icon'
 import { Button } from '@/components/button'
 import { Form, FormFirstName, FormLastName, FormInput, FormButton } from '@/components/form'
 import { Image } from '@/components/image'
+import { List, Li } from '@/components/list'
+import { Span } from '@/components/span'
 import { Search } from '@/components/search'
 import { CategoryDropdown } from '@/components/category-dropdown'
 import { Legal } from '@/components/legal'
-import LoginDialog from '@/components/login'
+import { MemberCard } from '@/components/member-card'
+import { useMember } from '@/hooks/use-member'
 import magnifyingGlassIcon from '@iconify/icons-heroicons/magnifying-glass-solid'
 import {
   editorHeading,
@@ -28,10 +31,17 @@ import {
   subscribeDescription,
   subscribeAction,
   socialLinks,
+  externalLinksHeading,
+  externalLinks,
 } from '@/components/footer/config'
 import arrowRightIcon from '@iconify/icons-heroicons/arrow-right'
 
-function IntroBlock() {
+// Every block takes `onNavigate`, called when a link inside it is followed,
+// so a drawer holding the sidebar can close itself. Links that open a new tab
+// leave it alone.
+type BlockProps = { onNavigate?: (() => void) | undefined }
+
+function IntroBlock({ onNavigate }: BlockProps) {
   return (
     <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
       <Heading as="h2" margin="mb-2">
@@ -45,18 +55,32 @@ function IntroBlock() {
         work, not above it. One carefully edited essay, every Sunday.{' '}
         <Link
           href="/essays"
+          onClick={() => onNavigate?.()}
           className="text-accent underline"
         >
           Browse the full archive
         </Link>
         .
       </Paragraph>
-      <Button href="/#favorite-articles" className="w-full">Read the Latest Essays</Button>
+      <Button
+        href="/#favorite-articles"
+        className="w-full"
+        // The router skips a link to the address already showing, so a second
+        // click would do nothing once the hash is set.
+        onClick={() => {
+          onNavigate?.()
+          document
+            .getElementById('favorite-articles')
+            ?.scrollIntoView({ behavior: 'smooth' })
+        }}
+      >
+        Read the Latest Essays
+      </Button>
     </div>
   )
 }
 
-function EditorBlock() {
+function EditorBlock({ onNavigate }: BlockProps) {
   return (
     <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
       <Heading as="h2" margin="mb-2">{editorHeading}</Heading>
@@ -78,15 +102,18 @@ function EditorBlock() {
         </div>
       </div>
       <Paragraph margin="mt-4 mb-8">{editorBio}</Paragraph>
-      <Button
-        href={editorLinkHref}
-        variant="outline"
-        icon={arrowRightIcon}
-        iconPlacement="after"
-        className="w-full"
-      >
-        {editorLinkLabel}
-      </Button>
+      <div className="flex flex-col gap-3">
+        <Button
+          href={editorLinkHref}
+          onClick={() => onNavigate?.()}
+          variant="outline"
+          icon={arrowRightIcon}
+          iconPlacement="after"
+          className="w-full"
+        >
+          {editorLinkLabel}
+        </Button>
+      </div>
       <div className="flex flex-wrap items-center gap-5 mt-5">
         {socialLinks.map((s) => (
           <a
@@ -105,9 +132,16 @@ function EditorBlock() {
   )
 }
 
-function SubscribeBlock() {
+function SubscribeBlock({ onNavigate }: BlockProps) {
+  const { member, openLogin } = useMember()
+  // What the site answered once the form went through. The form is then
+  // replaced by it, so nobody sends it twice wondering whether it worked.
+  const [sent, setSent] = useState('')
+  // A member subscribes with one click on their card instead.
+  if (member) return null
+
   return (
-    <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
+    <div id="subscribe" className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
       <Heading as="h2" margin="mb-2">
         {subscribeHeading}
       </Heading>
@@ -116,27 +150,89 @@ function SubscribeBlock() {
         {subscribeSubheading}
       </Heading>
       <Paragraph margin="mt-4 mb-8">{subscribeDescription}</Paragraph>
-      <Form gap="gap-3" honeypot action={subscribeAction}>
-        <FormFirstName
-          name="firstName"
-          placeholder="First name"
-          label="First name"        />
-        <FormLastName
-          name="lastName"
-          placeholder="Last name"
-          label="Last name"        />
-        <FormInput
-          name="email"
-          type="email"
-          placeholder="Your email address"
-          label="Email"        />
-        <FormButton
-          name="submit"
-          label="Subscribe for Insights"
-          submitMessage="Subscribed successfully."
-          className="!text-xs !px-4 !py-2"
-        />
-      </Form>
+      {sent ? (
+        <div role="status" className="rounded-md bg-accent px-4 py-3">
+          <Paragraph margin="mb-0" color="text-accent-contrast">
+            {sent}
+          </Paragraph>
+        </div>
+      ) : (
+        <Form
+          gap="gap-3"
+          honeypot
+          action={subscribeAction}
+          onSuccess={(data) =>
+            setSent(
+              typeof data.message === 'string'
+                ? data.message
+                : 'Check your email for a link to confirm your subscription.'
+            )
+          }
+        >
+          <FormFirstName
+            name="firstName"
+            placeholder="First name"
+            label="First name"        />
+          <FormLastName
+            name="lastName"
+            placeholder="Last name"
+            label="Last name"        />
+          <FormInput
+            name="email"
+            type="email"
+            placeholder="Your email address"
+            label="Email"
+            autoComplete="email"
+            required
+          />
+          <FormButton
+            name="submit"
+            label="Subscribe"
+            submitMessage="Check your email for a link to confirm your subscription."
+            className="!text-xs !px-4 !py-2"
+          />
+        </Form>
+      )}
+      <Paragraph fontSize="text-xs" margin="mt-3 mb-0" color="text-contrast-light">
+        No account needed. To comment under your own name,{' '}
+        <button
+          type="button"
+          onClick={() => {
+            onNavigate?.()
+            openLogin()
+          }}
+          className="font-medium text-accent underline cursor-pointer"
+        >
+          log in or create an account
+        </button>
+        .
+      </Paragraph>
+    </div>
+  )
+}
+
+function ExternalLinksBlock() {
+  if (!externalLinks.length) return null
+  return (
+    <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body">
+      <Heading as="h2" margin="mb-2">
+        {externalLinksHeading}
+      </Heading>
+      <List variant="unstyled" spacing="normal" margin="mt-4 mb-0">
+        {externalLinks.map((l) => (
+          <Li key={l.href}>
+            <Link href={l.href} target="_blank" rel="noopener noreferrer">
+              {l.label}
+            </Link>
+            {l.description && (
+              <Span color="text-contrast-light" fontSize="text-xs">
+                {' '}
+                » {l.description}
+              </Span>
+            )}
+          </Li>
+        ))}
+      </List>
     </div>
   )
 }
@@ -145,12 +241,14 @@ export function SideSection({
   noPadding = false,
   hideSearch = false,
   hideCategories = false,
-  onCategorySelect,
+  onNavigate,
 }: {
   noPadding?: boolean
   hideSearch?: boolean
   hideCategories?: boolean
-  onCategorySelect?: () => void
+  // Called when a link in the sidebar is followed, or a dialog opened from
+  // it, so a drawer holding the sidebar can close itself.
+  onNavigate?: () => void
 } = {}) {
   const [isSearching, setIsSearching] = useState(false)
 
@@ -179,18 +277,17 @@ export function SideSection({
         )}
         {!hideCategories && (
           <CategoryDropdown
-            {...(onCategorySelect ? { onSelect: () => onCategorySelect() } : {})}
+            {...(onNavigate ? { onSelect: () => onNavigate() } : {})}
           />
         )}
-        <IntroBlock />
-        <EditorBlock />
-        <SubscribeBlock />
+        <IntroBlock onNavigate={onNavigate} />
+        <EditorBlock onNavigate={onNavigate} />
+        <SubscribeBlock onNavigate={onNavigate} />
+        <ExternalLinksBlock />
         <div className="border border-accent5 shadow-sm rounded-md p-5 bg-body text-left">
-          <Legal />
-          <div className="mt-3">
-            <LoginDialog />
-          </div>
+          <Legal onNavigate={onNavigate} />
         </div>
+        <MemberCard onNavigate={onNavigate} />
       </div>
       <Search isOpen={isSearching} setIsOpen={setIsSearching} />
     </aside>

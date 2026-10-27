@@ -20,7 +20,13 @@ async function findBlocksDirs(dir) {
   for (const entry of entries) {
     if (entry.name === '_blocks' && entry.isDirectory()) {
       results.push(join(dir, entry.name))
-    } else if (entry.isDirectory() && !entry.name.startsWith('.')) {
+    } else if (
+      entry.isDirectory() &&
+      !entry.name.startsWith('.') &&
+      // A dynamic route's blocks take what the route loaded (a post, a
+      // page, an archive), so there is nothing to preview on their own.
+      !entry.name.startsWith('[')
+    ) {
       results.push(...(await findBlocksDirs(join(dir, entry.name))))
     }
   }

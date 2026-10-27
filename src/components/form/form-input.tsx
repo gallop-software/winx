@@ -1,6 +1,7 @@
 import { inputBaseStyles } from './utils'
 import { DatePickerInput } from './date-picker'
 import { TimePickerInput } from './time-picker'
+import { FormPassword } from './form-password'
 
 // ============================================================================
 // FormInput Component
@@ -80,6 +81,21 @@ export function FormInput({
         maxMinute={maxMinute}
         interval={interval}
         timezone={timezone}
+      />
+    )
+  }
+
+  // A password comes with a button to read what was typed
+  if (type === 'password' && !hidden) {
+    return (
+      <FormPassword
+        id={id ?? name}
+        name={name}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        required={required}
+        label={label}
+        className={className}
       />
     )
   }

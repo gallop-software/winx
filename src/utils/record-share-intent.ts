@@ -5,7 +5,7 @@ import { state } from '@/state'
 export function recordShareIntent(slug: string, target: string): void {
   const prevCount = state.shareCounts[slug]
   state.shareCounts[slug] = (prevCount ?? 0) + 1
-  fetch('/api/share-count', {
+  fetch('/api/share-count/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ slug, target }),

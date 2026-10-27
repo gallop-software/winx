@@ -91,10 +91,26 @@ html::-webkit-scrollbar {
   --color-accent5-contrast: #0b1833;
 
   --color-caption: #6b7592;
+
+  /* ── Admin toolbar ── */
+  --color-toolbar: #000000;
+}
+
+/* The admin toolbar, fixed across the top for an administrator. The browser
+   sets data-admin-bar on <html> once it knows who is logged in, and the page
+   moves down to make room; the HTML itself is the same for everyone. */
+html {
+  --admin-bar: 0px;
+}
+html[data-admin-bar] {
+  --admin-bar: 3rem;
+}
+html[data-admin-bar] body {
+  padding-top: var(--admin-bar);
 }
 
 * {
-  scroll-margin-top: 40px !important;
+  scroll-margin-top: calc(40px + var(--admin-bar)) !important;
 }
 
 /* Hide scrollbars while keeping scroll functionality */

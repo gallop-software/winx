@@ -3,80 +3,87 @@ import { BlogClient } from '@/components/blog/blog-client'
 import { Heading } from '@/components/heading'
 import { Label } from '@/components/label'
 import { PageWrapper } from '@/components/page-wrapper'
+import { Paragraph } from '@/components/paragraph'
 import { Section } from '@/components/section'
 import { generatePageMetadata, type PageMetadata } from '@/utils/page-helpers'
 import { filterPosts } from '@/utils/filter-posts'
-import { getAllCategories, getCategoryBySlug } from '@/utils/taxonomies'
-import { baseURL, defaultDescription } from '@/app/metadata'
-import { buildPageSchema } from '@/utils/structured-data'
+import { getCategoryBySlug } from '@/utils/taxonomies'
+import {
+  archiveLabel,
+  archiveMetadata,
+  archivePath,
+  archiveSchema,
+  readPageParam,
+  type Archive,
+} from '@/utils/archive-seo'
 
 const PER_PAGE = 15
 
 interface PageProps {
   params: Promise<{ slug?: string }>
+  searchParams: Promise<{ page?: string | string[] }>
 }
 
-export function generateStaticParams() {
-  return getAllCategories().map((cat) => ({ slug: cat.slug }))
+// Rendered on each visit from the content index, so a post shows here as soon
+// as it has been synced.
+export const dynamic = 'force-dynamic'
+
+const notFoundMetadata = {
+  title: 'Category Not Found',
+  robots: { index: false, follow: false },
 }
 
-export async function generateMetadata({ params }: PageProps) {
-  const { slug } = await params
-  if (!slug) return { title: 'Category Not Found' }
-  const cat = getCategoryBySlug(slug)
-  if (!cat) return { title: 'Category Not Found' }
-
-  const metadata: PageMetadata = {
-    title: cat.name,
-    slug: `category/${slug}`,
-    alternates: { canonical: `/category/${slug}/` },
-    description: cat.description || defaultDescription,
-  }
-  return generatePageMetadata(metadata, ['category', slug])
+async function getArchive(slug: string | undefined): Promise<Archive | null> {
+  if (!slug) return null
+  const found = await getCategoryBySlug(slug)
+  return found ? { ...found, kind: 'category' } : null
 }
 
-export default async function Page({ params }: PageProps) {
-  const { slug } = await params
-  if (!slug) notFound()
-  const cat = getCategoryBySlug(slug)
-  if (!cat) notFound()
+export async function generateMetadata({ params, searchParams }: PageProps) {
+  const archive = await getArchive((await params).slug)
+  const page = readPageParam((await searchParams).page)
+  if (!archive || !page) return notFoundMetadata
 
-  const result = filterPosts({
-    categorySlug: cat.slug,
-    page: 1,
+  return generatePageMetadata(archiveMetadata(archive, page))
+}
+
+export default async function Page({ params, searchParams }: PageProps) {
+  const archive = await getArchive((await params).slug)
+  const page = readPageParam((await searchParams).page)
+  if (!archive || !page) notFound()
+
+  const result = await filterPosts({
+    categorySlug: archive.slug,
+    page,
     perPage: PER_PAGE,
   })
-  const initialPosts = result.posts
+  // A page past the last one is not a page.
+  if (page > 1 && result.posts.length === 0) notFound()
 
-  const url = `${baseURL}/category/${slug}/`
   const metadata: PageMetadata = {
-    title: cat.name,
-    structuredData: buildPageSchema({
-      url,
-      title: cat.name,
-      description: cat.description || defaultDescription,
-      breadcrumbs: [
-        { name: 'Home', href: '/' },
-        { name: cat.name, href: `/category/${slug}/` },
-      ],
-    }),
+    structuredData: archiveSchema(archive, page, result.posts),
   }
 
   return (
     <PageWrapper metadata={metadata}>
       <Section className="pt-7 pb-10">
-        <Label margin="mb-2">Category</Label>
+        <Label margin="mb-2">{archiveLabel(archive.kind)}</Label>
         <Heading
           as="h1"
           margin="mb-10"
         >
-          {cat.name}
+          {archive.name}
         </Heading>
+        {result.posts.length === 0 && (
+          <Paragraph>There are no articles here yet.</Paragraph>
+        )}
         <BlogClient
-          initialPosts={initialPosts}
+          initialPosts={result.posts}
           initialTotalPages={result.totalPages}
+          initialPage={page}
           perPage={PER_PAGE}
-          query={{ categorySlug: cat.slug }}
+          query={{ categorySlug: archive.slug }}
+          pagePath={archivePath(archive)}
         />
       </Section>
     </PageWrapper>

@@ -56,7 +56,7 @@ export function FloatingSideButton() {
                     <Icon icon={xMarkIcon} className="h-6 w-6" />
                   </button>
                 </div>
-                <SideSection noPadding onCategorySelect={() => setIsOpen(false)} />
+                <SideSection noPadding onNavigate={() => setIsOpen(false)} />
               </div>
             </DialogPanel>
           </div>

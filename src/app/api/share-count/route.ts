@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import blogData from '@/../_data/_blog.json'
+import { getPostIdsBySlugs } from '@/utils/content-index'
 import {
   getShareCount,
   getShareCounts,
@@ -11,24 +11,18 @@ export const dynamic = 'force-dynamic'
 
 const validTargets = new Set(shareTargets.map((t) => t.id))
 
-function findPost(slug: string) {
-  return (blogData as { id: number; slug: string }[]).find(
-    (p) => p.slug === slug
-  )
-}
-
 export async function GET(request: NextRequest) {
   const slugsParam = request.nextUrl.searchParams.get('slugs')
   if (slugsParam !== null) {
     const slugs = slugsParam.split(',').map((s) => s.trim()).filter(Boolean)
-    const posts = (blogData as { id: number; slug: string }[]).filter((p) =>
-      slugs.includes(p.slug)
-    )
+    const ids = await getPostIdsBySlugs(slugs)
     const counts: Record<string, number> = {}
     for (const slug of slugs) counts[slug] = 0
-    if (posts.length > 0) {
-      const totals = await getShareCounts(posts.map((p) => p.id))
-      for (const post of posts) counts[post.slug] = totals[post.id] ?? 0
+    if (Object.keys(ids).length > 0) {
+      const totals = await getShareCounts(Object.values(ids))
+      for (const [slug, id] of Object.entries(ids)) {
+        counts[slug] = totals[id] ?? 0
+      }
     }
     return NextResponse.json(
       { counts },
@@ -41,12 +35,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing slug' }, { status: 400 })
   }
 
-  const post = findPost(slug)
-  if (!post) {
+  const postId = (await getPostIdsBySlugs([slug]))[slug]
+  if (postId === undefined) {
     return NextResponse.json({ count: 0 })
   }
 
-  const count = await getShareCount(post.id)
+  const count = await getShareCount(postId)
   return NextResponse.json(
     { count },
     { headers: { 'Cache-Control': 'no-store' } }
@@ -72,11 +66,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid target' }, { status: 400 })
   }
 
-  const post = findPost(slug)
-  if (!post) {
+  const postId = (await getPostIdsBySlugs([slug]))[slug]
+  if (postId === undefined) {
     return NextResponse.json({ error: 'Unknown slug' }, { status: 404 })
   }
 
-  const count = await recordShareIntent(post.id, target)
+  const count = await recordShareIntent(postId, target)
   return NextResponse.json({ count })
 }

@@ -29,12 +29,12 @@ Keep the WordPress editor you already know — but escape the slow themes, plugi
 - 📚 **Rich blog archives** - Category, tag, author, and year pages built in
 - 🗺️ **Auto-generated sitemaps** for pages, posts, authors, categories, and tags
 - 🖼️ **Image processing** with automatic optimization
-- 🔍 **Built-in search** powered by FlexSearch with Algolia Autocomplete
+- 🔍 **Built-in search** over the full text of every post, with Algolia Autocomplete
 - 🔦 **Lightbox galleries** for post images and media
 - 🎞️ **Swiper carousels** for image galleries and sliders
-- 💬 **Share counts** powered by Prisma and Vercel KV cache
+- 💬 **Share counts** powered by Prisma and Cloudflare D1
 - ❤️ **Post likes & reactions** with persistent storage
-- 📧 **Newsletter subscribe/unsubscribe** API endpoints
+- 👤 **Member accounts** backed by WordPress: log in, sign up with email confirmation, password reset, profiles, subscribe to new posts
 - 📝 **Form submission** API for contact and lead capture
 - 📱 **Fully responsive** and mobile-optimized for readers
 - ⚡ **Lightning-fast** page loads for long-form content
@@ -43,8 +43,7 @@ Keep the WordPress editor you already know — but escape the slow themes, plugi
 - 🤖 **AI-friendly** codebase structure
 - 🛡️ **Gallop Canon** - AI guardrails for consistent, reliable code
 - 🎨 **Iconify icons** (Heroicons, Lucide, Material Design, Simple Icons)
-- ☁️ **Deploys to Vercel or Cloudflare Workers**
-- 📊 **Vercel Analytics** integration
+- ☁️ **Deploys to Cloudflare Workers**
 
 ---
 
@@ -68,7 +67,7 @@ It was purpose-built for this workflow, whether you're a first-time blogger or a
 | **SEO Audit** | Analyze SEO & Structured Data |
 | **Git** | Git UI with modal diff viewer |
 | **Node.js** | Built-in installer and version manager |
-| **Deployment** | Connect Vercel or Cloudflare, then let AI deploy for you |
+| **Deployment** | Connect Cloudflare, then let AI deploy for you |
 
 [![Download Gallop AI Editor](https://img.shields.io/badge/Download_Gallop_AI_Editor-166534?style=for-the-badge)](https://gallop.software/)
 
@@ -127,7 +126,14 @@ The play icon in the left rail turns **green with a dot** while your blog is run
 
 #### Step 4: Connect Your WordPress Content
 
-Winx pulls posts, categories, tags, and authors from WordPress at build time. Point it at your WordPress site by setting `NEXT_PUBLIC_WORDPRESS_URL` in `.env.local` (copy `.env.local.sample` to start), then run `npm run blog` to fetch your content into `_data/`.
+Winx keeps a copy of your WordPress posts, categories, tags, and authors in its database, the content index. To fill it:
+
+1. Copy `.env.local.sample` to `.env.local` and set `NEXT_PUBLIC_WORDPRESS_URL` to your WordPress site.
+2. On that WordPress site, install the [Gallop WP](#headless-wordpress-with-gallop-wp) plugin. Under **Gallop → Settings → Front-end connection**, create a key, tick **Manage members** (and **Submit comments**), and put the key in `.env.local` as `GALLOP_WP_API_KEY`. Without it there is no **Log in** button and no admin toolbar.
+3. Run `npm run db:migrate:local` to create the local database.
+4. Log in on the site as a WordPress **administrator**: the admin toolbar appears across the top. Press **Rebuild** to fetch your content.
+
+See [The Content Index](#the-content-index). The toolbar's demo for visitors (`NEXT_PUBLIC_ADMIN_DEMO`) stays off unless you turn it on; see [The admin toolbar demo](#the-admin-toolbar-demo).
 
 Or just ask the AI:
 
@@ -135,7 +141,7 @@ Or just ask the AI:
 Connect this blog to my WordPress site at example.com and pull in my posts
 ```
 
-See [Headless WordPress with Gallop WP](#headless-wordpress-with-gallop-wp) for what the WordPress side needs. Without a WordPress URL the blog still builds — it just renders with no posts.
+See [Headless WordPress with Gallop WP](#headless-wordpress-with-gallop-wp) for what the WordPress side needs. Before the first Rebuild the blog still runs — it just renders with no posts.
 
 #### Step 5: Chat with AI
 
@@ -193,7 +199,7 @@ Everything below is how you actually build your blog day to day. The left rail s
 | `<>` | **Editor** | `Cmd+3` | The code editor, with autocomplete and go-to-definition. `Cmd+B` toggles the file explorer. |
 | 🖼 | **Studio** | `Cmd+4` | Your images and fonts — see below. |
 | 🌐 | **SEO** | `Cmd+5` | Scan any page for SEO and structured-data problems. |
-| 🚀 | **Publish** | `Cmd+6` | Connect Cloudflare, Vercel, and Mailgun so AI can deploy for you. |
+| 🚀 | **Publish** | `Cmd+6` | Connect Cloudflare and Mailgun so AI can deploy for you. |
 
 `Cmd+K` cycles forward through views if you'd rather not remember numbers.
 
@@ -307,9 +313,9 @@ Connect with other Gallop users on Discord or Slack. Share your progress, swap A
 
 ## Put Your Blog Online
 
-Your code is already on GitHub — you're signed in inside the editor, and your repository was created when you started the project. All that's left is a hosting account: either [Vercel](https://vercel.com/pricing) or [Cloudflare](https://www.cloudflare.com/plans/developer-platform/). Check their current plans before you pick — pricing and what each tier allows change over time.
+Your code is already on GitHub — you're signed in inside the editor, and your repository was created when you started the project. All that's left is a [Cloudflare](https://www.cloudflare.com/plans/developer-platform/) account. Check the current plans — pricing and what each tier allows change over time.
 
-Winx also expects a Postgres database and a Redis/KV store for post likes and share counts, plus Mailgun for the contact form. Those are covered by the environment variables in `.env.production.sample`; the AI can walk you through provisioning them.
+Post likes and share counts are stored in a Cloudflare D1 database bound to the Worker in `wrangler.jsonc`, so there is no database connection string to manage. The contact form sends through Cloudflare Email Sending using the `EMAIL` binding in `wrangler.jsonc`, so there is no mail API key either. Its addresses are listed in `.env.production.sample`.
 
 ### The Easy Way: Let AI Deploy It
 
@@ -318,7 +324,6 @@ Press `Cmd+6` (the rocket icon) to open the **Publish** view. It has a tab for e
 | Tab | What it's for |
 |---|---|
 | **Cloudflare** | Deploy to Cloudflare Workers |
-| **Vercel** | Deploy to Vercel |
 | **Mailgun** | Sends the email from your contact form |
 
 Each tab links straight to the page where you generate the token, with the right permissions preselected — you paste it in, click **Connect** to verify it, then **Save**.
@@ -335,34 +340,13 @@ Push my latest changes to GitHub and deploy this blog
 
 The AI will walk you through every step. When you're done, your blog will be live with a URL you can share.
 
-Already know which host you want? Use the ready-made prompt for [Vercel](#deploy-to-vercel) or [Cloudflare](#deploy-to-cloudflare-workers).
-
-### Deploy to Vercel
-
-Connect your Vercel account in the Gallop AI Editor, then paste this into the AI chat:
-
-```
-Deploy this blog to Vercel. My Vercel account is already connected.
-
-Please:
-1. Push my latest changes to GitHub
-2. Link this project to Vercel and deploy it to production
-3. Ask me for my WordPress URL, database, KV, and Mailgun values, then add
-   them as environment variables (see .env.production.sample for the full list)
-4. Tell me the live URL when it's done
-
-Never commit .env.production — it holds real secrets.
-```
-
-Vercel redeploys automatically every time you push, so from here on your changes go live by asking the AI to push them.
-
-**Environment variables, without the busywork.** The Vercel tab in the Publish view can push and pull your `.env` files against your Vercel project directly. Change a value locally, push it up; pull production values down to check them. It shows you a full diff before anything is written, and backs up your local file before a pull.
-
-Congratulations! Your blog is now live to the world. Share your new URL and start growing your readership. Ready for a custom domain? See [Vercel's domain setup guide](https://vercel.com/docs/projects/domains).
+The ready-made prompt is under [Deploy to Cloudflare Workers](#deploy-to-cloudflare-workers).
 
 ### Deploy to Cloudflare Workers
 
-Prefer Cloudflare? Winx also runs on Cloudflare Workers via the [OpenNext](https://opennext.js.org/cloudflare) adapter. See it live: **[winx-cloudflare.gallop.software](https://winx-cloudflare.gallop.software/)** — the same template, deployed exactly the way this section describes.
+This site runs on Cloudflare Workers via the [OpenNext](https://opennext.js.org/cloudflare) adapter, as the Worker `winx` at **[winx-cloudflare.gallop.software](https://winx-cloudflare.gallop.software/)**. Plain `http://` and any other host the Worker is attached to redirect there, in `worker.ts`. Content comes from WordPress at `winx-wp.gallop.software`.
+
+The custom domain is attached to the Worker at the account level (Workers → Domains) rather than as a `routes` entry in `wrangler.jsonc`; see the comment there. `SITE_HOST` in `wrangler.jsonc` is the one address the site answers at. If your site moved here from WordPress, the addresses WordPress served (`/page/N/`, `/category/x/page/N/`, a post with the day in its path, the feed flavours, `?s=` on the home page, `/wp-content/`, `/wp-admin/`, `/wp-login.php`, `/wp-json/`) redirect in `next.config.mjs`; `?p=N` and `?page_id=N` are answered by the home page from the content index.
 
 **Step 1 — Connect Cloudflare in the Publish view** (`Cmd+6`). Once saved, the editor puts your Cloudflare credentials (`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`) into the terminal environment and makes them available to the AI chat. Wrangler reads those variables automatically, which means **nobody has to run `npx wrangler login`, and no token is ever pasted into a file.**
 
@@ -374,12 +358,23 @@ connected, so CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are in the
 terminal environment — do not run `wrangler login`.
 
 Please:
-1. Run `npm run cf:setup` to create .env.production from the sample
-2. Ask me for my production URL, WordPress URL, database, KV, and Mailgun
-   values, then fill in .env.production
-3. Run `npm run cf:deploy` to build and create the Worker
-4. Run `npm run cf:secrets` to upload the secrets
-5. Tell me the live URL when it's done
+1. Create this site's own Cloudflare resources if they don't exist yet:
+   a D1 database (`npx wrangler d1 create <name>`), a KV namespace
+   (`npx wrangler kv namespace create <name>-post-cache`) and the email
+   events queue (`npx wrangler queues create <name>-email-events`). Put
+   their ids and names in wrangler.jsonc (`name`, `database_name`,
+   `database_id`, the KV `id`, the queue in `queues.consumers`), and the
+   database name in the `db:migrate` scripts in package.json
+2. Ask me for the site's address and set SITE_HOST in wrangler.jsonc to
+   it, then attach that domain to the Worker after the first deploy
+   (Workers → Domains); until then set `workers_dev` to true to get a
+   workers.dev address
+3. Run `npm run cf:setup` to create .env.production from the sample
+4. Ask me for my contact form addresses (EMAIL_*), then fill in .env.production
+5. Run `npm run db:migrate` to apply the D1 migrations
+6. Run `npm run cf:deploy` to build and create the Worker
+7. Run `npm run cf:secrets` to upload the secrets
+8. Tell me the live URL when it's done
 
 Never commit .env.production — it holds real secrets.
 ```
@@ -393,7 +388,7 @@ Deploy my latest changes to Cloudflare
 ```
 
 ```
-I changed my Mailgun API key in .env.production — push the updated secrets to Cloudflare
+I changed the contact form address in .env.production — push the updated secrets to Cloudflare
 ```
 
 ```
@@ -418,10 +413,11 @@ Winx ships Cloudflare-ready. **If you forked or generated this repo, every confi
 
 | File | What it does for Cloudflare |
 |---|---|
-| `wrangler.jsonc` | The Worker manifest. Names the Worker, points at the build output, declares bindings and the `nodejs_compat` flag. Wrangler reads this on every command. |
-| `open-next.config.ts` | Tells the OpenNext adapter how to convert the Next.js build into a Worker. Ships minimal — the R2 incremental cache is commented out and off. |
-| `next.config.mjs` | Its last line calls `initOpenNextCloudflareForDev()`, which makes Cloudflare bindings available during `npm run dev`. It is a no-op in production builds, so **this does not break Vercel**. It also traces `pg-cloudflare/dist` so the Postgres driver bundles for Workers. |
-| `package.json` | Holds the `cf:*` scripts plus `@opennextjs/cloudflare`, `wrangler`, and `pg-cloudflare`. |
+| `wrangler.jsonc` | The Worker manifest. Names the Worker, points at the build output, declares bindings (the D1 database and the `POST_CACHE` KV namespace) and the `nodejs_compat` flag. Wrangler reads this on every command. |
+| `open-next.config.ts` | Tells the OpenNext adapter how to convert the Next.js build into a Worker. Prerendered pages are served read-only from static assets, with a no-op revalidation queue. |
+| `next.config.mjs` | Its last line calls `initOpenNextCloudflareForDev()`, which makes Cloudflare bindings (including the D1 database) available during `npm run dev`. It is a no-op in production builds. `serverExternalPackages` keeps Prisma out of the Next.js bundle so its Workers build is used. |
+| `prisma/migrations/` | Plain SQL migrations for D1, applied by wrangler. |
+| `package.json` | Holds the `cf:*` and `db:*` scripts plus `@opennextjs/cloudflare`, `wrangler`, and `@prisma/adapter-d1`. |
 | `.env.production.sample` | Placeholder copy of the secrets you'll need. Safe to commit — it contains no real values. |
 
 **2. Files you create — never committed**
@@ -448,8 +444,15 @@ All three are already gitignored. `.open-next/` does not exist until you build, 
 This is what the AI runs on your behalf, in this order:
 
 ```bash
+# once per site: this site's own D1 database, KV namespace and queue, with
+# their ids, names and SITE_HOST set in wrangler.jsonc (the ones in this
+# repository are the Winx demo's, in another account)
+npx wrangler d1 create <name>
+npx wrangler kv namespace create <name>-post-cache
+npx wrangler queues create <name>-email-events
 npm run cf:setup     # scaffolds .env.production
 # fill in .env.production with your values
+npm run db:migrate   # creates the tables in the D1 database
 npm run cf:deploy    # build + deploy — creates the Worker on first run
 npm run cf:secrets   # push .env.production to the Worker's secret store (after the Worker exists)
 ```
@@ -462,17 +465,166 @@ Order matters: `cf:secrets` cannot create a Worker, so deploy once first. After 
 
 - **Authenticate first.** Either set `CLOUDFLARE_API_TOKEN` in your environment (what the Gallop AI Editor does for you when you connect Cloudflare) or run `npx wrangler login` for OAuth, cached in `~/.wrangler`. If your account can't be inferred from the token, also set `CLOUDFLARE_ACCOUNT_ID`. Wrangler ships as a dev dependency, so `npx` runs the local copy — no global install needed. Without auth, `cf:secrets` and `cf:deploy` can't reach Cloudflare.
 - **Names must match.** The `name` in `wrangler.jsonc` must equal the Worker's actual name in your dashboard. If a Git-connected deploy created it under a different name, update `wrangler.jsonc` to match — otherwise `cf:secrets` pushes to a nonexistent Worker.
-- **`NEXT_PUBLIC_WORDPRESS_URL` must be set at build time.** Posts are fetched from WordPress by `npm run blog` during `cf:build`, so if it's missing the Worker deploys with an empty blog.
+- **`NEXT_PUBLIC_WORDPRESS_URL` must be set at build time.** It is inlined into the Worker, which reads posts from WordPress at that address, so if it's missing the Worker cannot log anyone in, sync, or show a post. The `cf:build` script sets it, and `NEXT_PUBLIC_PRODUCTION_URL`, inline. Change both there when the site moves to its final domain.
+
+##### The D1 Database
+
+Likes and share counts live in the D1 database `winx`, bound to the Worker as `DB` in `wrangler.jsonc`. `src/utils/prisma.ts` builds a Prisma client from that binding on each request. The same database holds [the content index](#the-content-index), which is read and written with D1 statements through `src/utils/d1.ts` and is not in `prisma/schema.prisma`.
+
+To change the Prisma schema:
+
+```bash
+# 1. edit prisma/schema.prisma
+# 2. write the SQL for the change into the next numbered migration, by
+#    comparing the last committed schema with the edited one
+git show HEAD:prisma/schema.prisma > /tmp/old.prisma
+npx prisma migrate diff --from-schema /tmp/old.prisma --to-schema prisma/schema.prisma --script -o prisma/migrations/0002_describe_change.sql
+npm run db:migrate:local   # apply to the local D1 used by npm run dev and cf:preview
+npm run db:migrate         # apply to the live D1 database
+```
+
+Do not run `prisma migrate dev` or `prisma migrate deploy`. Prisma cannot connect to D1; wrangler applies the migrations.
+
+To change the content index, write the SQL for the next numbered migration by hand. `prisma migrate diff` compares one schema file with another and never sees these tables, so it leaves them alone.
+
+`wrangler d1 export` does not work on a database with a full-text table. D1 Time Travel is unaffected. If you need an export, drop `posts_fts`, export, create it again from `prisma/migrations/0002_content_index.sql`, and press **Rebuild**.
+
+##### The Content Index
+
+The content index is the site's copy of what WordPress has published: posts, categories, tags, authors, and the text of every post for search. It lives in D1, so everything that lists or finds posts shows a new post **without a deploy**.
+
+| What | Reads the content index through |
+|---|---|
+| Home page, `/essays`, category, tag and author pages | `src/utils/content-index.ts`, `src/utils/filter-posts.ts`, `src/utils/taxonomies.ts` |
+| Infinite scroll and the `/search` page | `/api/posts` |
+| The search dialog | `/api/search` |
+| Categories in the navigation and the dropdown | `/api/categories` |
+| Sitemaps for posts, categories, tags and authors | `src/utils/content-index.ts` |
+| Category chips and share counts on a post | `src/utils/content-index.ts` |
+
+**To publish:** publish the post in WordPress, log in on the site, and press **Sync**. The buttons are in the bottom right corner of every page once you are logged in.
+
+| Button | What it does | When to use it |
+|---|---|---|
+| **Sync** | Fetches the posts published or edited since the last sync, reads the pages again, and counts the comments written lately again | After publishing or editing a post or page, or approving comments |
+| **Rebuild** | Reads every post, page, category, tag and author again, counts every comment, then removes what WordPress no longer has | The first time, after deleting posts or renaming a category or tag, or when something looks wrong |
+| **Revalidate** (on a post or page) | Fetches that one post or page again, or removes it if WordPress no longer has it | After editing a post or page, to see the change at once |
+
+Things to know:
+
+- **Sync does not remove anything.** A post deleted in WordPress stays listed until Rebuild, or until Revalidate is pressed on that post. Sync tells you when the index has more posts than WordPress.
+- **Rebuild is safe to stop.** It reads WordPress a page at a time and shows its progress. Nothing is removed until its last step, and it asks first if it would remove more than 25 posts or 5% of them.
+- **WordPress is asked one request at a time.** The host refuses bursts of requests with HTTP 429, so a request that is refused is tried again after a wait. A rebuild takes a few minutes.
+- **The host caches WordPress's answers for ten minutes.** Every request from `src/utils/wp-fetch.ts` carries a changing parameter to get the current answer.
+- **Only a logged-in user can sync.** `/api/sync` checks the WordPress session the same way `/api/revalidate` does.
+- **Comment counts are kept in the index too.** Rebuild counts every approved comment once, a hundred a request. Sync then counts again only the posts with comments written in the last month, one request each. A comment approved long after it was written is caught by the next Rebuild, or when its post's comments are next read.
+- **Pages come from WordPress too.** Any WordPress page is served at its WordPress path, unless the site builds that path itself (About, Contact, Essays). Sync and Rebuild read all of them (there are few), a changed page's body is fetched again at once, and a page removed in WordPress goes with it. A page behind a password is left out. The page tree on `/essays/` and the page sitemap are drawn from the index.
+- **A new database starts empty.** After `npm run db:migrate:local` or `npm run db:migrate` on a new database, press Rebuild once. Pages render with no posts until then.
+
+Search runs in the database (SQLite FTS5) over each post's title, excerpt and full text. Every word typed must be in the post, the last word may be the start of a word, and accents are ignored, so `cafe` finds *café*. Titles and descriptions of the pages built into the site come from `_data/_pages.json`, and those of the WordPress pages from the index; both are searched alongside.
+
+##### Comments
+
+Each post shows its WordPress comments, and visitors can add their own or reply to one, without the page loading again. Comments are saved in WordPress's own comment tables through the [Gallop WP](#headless-wordpress-with-gallop-wp) plugin (1.1.0 or later), so your Discussion settings, moderation, anti-spam plugins, and notification emails all work as they do on any WordPress site.
+
+**To set it up:**
+
+1. In WordPress, open Gallop → Settings → Front-end connection. Tick **Submit comments**, save, and press **Generate key**.
+2. Put the key in `.env.production` as `GALLOP_WP_API_KEY=…`.
+3. Run `npm run db:migrate`, `npm run cf:deploy`, then `npm run cf:secrets`.
+
+Without the key, comments are still shown and the comment form is not. With an older plugin, the comments section does not appear at all.
+
+| | How it works |
+|---|---|
+| Loading | In the browser, when the visitor scrolls near. Nothing is loaded for a visitor who never gets there |
+| The key | Read on the server only. The browser talks to `/api/comments`; only the site's server talks to WordPress |
+| Moderation | WordPress decides. A comment held for approval is shown to its author only, marked "Awaiting moderation." |
+| Replies | As deep as your Discussion settings allow |
+| New comments from others | Appear by themselves, without the page loading again, once the site's copy has them |
+| Comment count | Shown between like and share in the post's toolbar and on every list card. Pressing it goes to the comments. The count comes from the content index: press Rebuild once to fill it, then Sync keeps it current |
+| Revalidate | Also refreshes the comments, and the comment count, of the post it is pressed on |
+
+Spam protection, all checked on the server:
+
+| Check | What it does |
+|---|---|
+| Hidden field | The same one the contact form has. Filled in means refused |
+| Minimum time | A comment sent less than 3 seconds after the form was loaded is refused |
+| Signed token | Issued with the comments, tied to the post, good for 2 hours, and usable once |
+| Same site | A request from a page of another site is refused |
+| Limits | 5 comments in 10 minutes and 30 a day from one address; 60 an hour across the site |
+| WordPress | Its own moderation, duplicate and flood checks, and any anti-spam plugin you run |
+
+The limits are counted in the D1 table `comment_attempts`, which holds a keyed hash of each address, never the address, and is cleared of anything older than a day. Change them in `src/utils/comment-guard.ts`.
+
+How fresh the comments and the comment count are. They follow the same rule as the post itself:
+
+| What happened | When it shows |
+|---|---|
+| A comment is posted through the site and accepted | At once |
+| A comment is approved, edited, or removed in WordPress | When you press Sync (posts with comments written in the last month) or Revalidate on the post, or within 24 hours |
+| Clear cache is pressed | On the next visit to each post |
+
+Visitors never decide when WordPress is asked for comments, so its load does not grow with the number of readers.
+
+A comment's text is never sent to the browser as HTML. The server turns it into a short list of allowed elements (paragraphs, links, emphasis, quotations, lists, code), and the browser shows those. Images in comments are not shown.
+
+Comments are loaded through `/api/`, which `robots.ts` asks search engines not to fetch, so they are not indexed.
+
+##### Members
+
+Readers can have an account: log in, sign up, reset a password, edit a profile, and comment as themselves. An account is not a subscription to the emails: that is the [mailing list](#marketing-email), which anyone can join without an account. Every account is an ordinary WordPress user with the Subscriber role, created and changed through the [Gallop WP](#headless-wordpress-with-gallop-wp) plugin (1.4.0 or later). The site keeps no member table.
+
+**To set it up:** the same key as comments, with **Manage members** ticked under Gallop → Settings → Front-end connection, and the **Next.js Production URL** set there, since the emails link to it. Then `npm run db:migrate`, `npm run cf:deploy`, `npm run cf:secrets`. Without the key or the permission, the login button does not appear.
+
+| | How it works |
+|---|---|
+| Log in | The **Log in** button at the top of the sidebar. Email address or username and password; WordPress checks the password. "Remember me" keeps the session for 30 days, otherwise it ends with the browser |
+| Sign up | **Create an account** in the login dialog. The site emails the confirmation link itself, from the address its other email comes from; WordPress sends nothing and keeps nothing waiting. Nothing is created until the reader opens the link and chooses a password on the page it leads to; then WordPress is asked to create the account, already confirmed, and they are logged in and offered the emails with one click. The link is good for 48 hours and is signed by the site, with nothing stored for it |
+| Existing address | Signing up with an address that already has an account sends the same email. Whoever opens the link is told the address has an account and to log in: the link never logs into an existing account or changes its password. A sign-up link opened a second time meets the same answer |
+| Changed address | A member who changes their address on the profile page is emailed by WordPress, as before, with a link to the same confirmation page and a button |
+| Forgot password | From the login dialog. WordPress's own reset keys, emailed as a link to `/account/reset/`. The answer is the same whether or not the address is known |
+| Profile | `/account/`: display name, names, email address, password, and two switches: new essays by email (their row on the mailing list, which follows them if they change address), and an email when someone replies to their comment. Changing the email or password needs the current password and logs out every other browser |
+| Comments | A member comments as themselves: WordPress records the comment as theirs, with their name and avatar, and a site set to "users must be registered and logged in to comment" accepts it |
+| Admin buttons | Only an administrator sees them, and every press is checked with WordPress |
+| Log out | Ends the session in this browser only |
+
+The session is a signed, httpOnly cookie (`gallop_member`) the site checks by itself, so a page view by a member never asks WordPress. It carries the member's id, name, avatar, whether they are an administrator and subscribed, and a session version WordPress raises when the password or address changes, which is what ends the other browsers. Never the email address. The key that signs it is derived from `GALLOP_WP_API_KEY`, so regenerating the key logs everyone out.
+
+Protection, all on the server: the same-origin check and hidden field as comments; limits per address and per account in the D1 table `member_attempts` (hashed, cleared after a day); identical answers for known and unknown addresses; and WordPress's own limits behind them. The confirmation and reset pages act only when their button is pressed, so a mail scanner that opens a link changes nothing.
+
+The account pages are left out of the sitemap and of search (`_scripts/generate-page-metadata.mjs`) and ask search engines not to index them.
+
+##### The Post Cache
+
+Post data from WordPress is kept in the KV namespace `POST_CACHE`, bound to the Worker in `wrangler.jsonc` and read through `src/utils/post-cache.ts`. A post's comments are kept there too, apart from the post and for the same length of time: see [Comments](#comments). A post is fetched from WordPress the first time it is viewed and served from KV after that, so page views and link prefetches rarely reach WordPress.
+
+| When | What happens |
+|---|---|
+| A cached post is under 24 hours old | Served from KV |
+| A cached post is over 24 hours old | Served from KV, then refreshed from WordPress in the background |
+| **Revalidate** is pressed on a post | That post is fetched from WordPress again |
+| **Clear all cache** is pressed | Every post is fetched again on its next view |
+| A deploy | Nothing. The cache persists across deploys |
+
+Both buttons are in the bottom right corner once an administrator logs in, Revalidate on post pages only. `/api/revalidate`, `/api/clear-cache` and `/api/sync` check the member's session and then ask WordPress whether they are still an administrator before doing anything. KV can take up to 60 seconds to carry a change to every Cloudflare location.
+
+`npm run dev` uses a local KV store under `.wrangler/`, separate from the live one.
 
 ##### ISR and On-Demand Revalidation
 
-`open-next.config.ts` ships without an incremental cache, so on Workers the `revalidate` values throughout the app and the `/api/revalidate` endpoint are **no-ops** — pages are served exactly as built, and new WordPress posts appear on the next deploy rather than on a timer. On Vercel, ISR works normally.
+**Post pages are rendered on each visit** from the post cache, so a new post is reachable at its URL as soon as it is published. They are deliberately not prerendered: building all of them at once sends WordPress more simultaneous requests than the host allows.
 
-To turn ISR on for Workers, create an R2 bucket, bind it in `wrangler.jsonc` as `NEXT_INC_CACHE_R2_BUCKET`, and uncomment the two `r2IncrementalCache` lines in `open-next.config.ts`. See [OpenNext's caching docs](https://opennext.js.org/cloudflare/caching).
+**Pages that list posts are rendered on each visit too**, from [the content index](#the-content-index): the home page, `/essays`, category, tag and author pages, and the sitemaps. A new post appears in them after the next Sync.
+
+The pages with no posts on them, such as `/about` and `/contact`, are prerendered. `open-next.config.ts` serves those read-only from static assets, so on Workers the `revalidate` values throughout the app are **no-ops**, and they change on the next `npm run cf:deploy`.
+
+For real ISR, switch to the R2 incremental cache with a queue and a tag cache. See [OpenNext's caching docs](https://opennext.js.org/cloudflare/caching).
 
 ##### Renaming the Worker
 
-`wrangler.jsonc` ships with the Worker named `winx`. If you rename it, **two values must change together**:
+The Worker is named `winx` in `wrangler.jsonc`. If you rename it, **two values must change together**:
 
 ```jsonc
 {
@@ -488,16 +640,132 @@ To turn ISR on for Workers, create an R2 bucket, bind it in `wrangler.jsonc` as 
 
 `WORKER_SELF_REFERENCE` is how the Worker calls itself, which OpenNext relies on. If the two strings drift apart, the deploy succeeds and the site fails at runtime — a confusing failure worth avoiding.
 
+##### Marketing email
+
+An administrator can send a post to the mailing list as an email, and see how it did. The mailing list is the site's own, in D1, and has nothing to do with WordPress accounts: someone can be on it without an account, and have an account without being on it.
+
+The admin bar has a **Marketing email** button (the envelope) on every page. On a post it opens with the tabs for sending that post (Email, Audience, Send, Reports) and **Subscribers**; anywhere else it opens with **Subscribers** alone. Nobody but an administrator sees it, and every route behind it asks WordPress whether the person is still an administrator.
+
+**To set it up**, once:
+
+1. Set `EMAIL_POSTAL_ADDRESS` in `.env.production` (see `.env.production.sample`), then `npm run cf:secrets`. Replies to a mailing go to `EMAIL_TO`; set `EMAIL_REPLY_TO` only to send them elsewhere.
+2. `npm run db:migrate`.
+3. Create the queue Cloudflare reports deliveries to: `npx wrangler queues create winx-email-events`. The deploy fails without it.
+4. Subscribe the queue to the sending domain's events, or no delivery, bounce or spam report is ever recorded. It needs a recent wrangler, and the zone id of your domain (on its Overview page in the Cloudflare dashboard):
+
+   ```bash
+   npx wrangler@latest queues subscription create winx-email-events \
+     --source email.sending --zone-id <zone id> --domain cf.yourdomain.com \
+     --events message.delivered,message.deferred,message.bounced,message.failed,message.rejected,message.complained
+   ```
+
+   `npx wrangler@latest queues subscription list winx-email-events` shows it once it is there. The same can be done in the dashboard: open the queue and add an **event subscription** with the source **Email Sending**.
+5. `npm run cf:deploy`.
+
+**Joining and leaving the list**
+
+| | How it works |
+|---|---|
+| Sidebar form | Name and email, no account. The address is sent a confirmation link (`/newsletter/confirm/`) and goes on the list only when its button is pressed. The answer is the same whether or not the address is already on the list |
+| Members | The **Subscribe** button on their card, or the switch on their profile. WordPress has already confirmed their address, so it takes one click. If they change their account's email, their subscription moves with it |
+| Unsubscribing | The link at the foot of every campaign opens `/account/unsubscribe/`, where a button confirms it; a mail program's own Unsubscribe button works too. A member can also unsubscribe from their card |
+| Bounces and spam reports | Reported by Cloudflare through the `winx-email-events` queue (`worker.ts`). A hard bounce marks the address **Bounced**; a spam report marks it **Reported spam**. Neither is sent to again |
+
+**The Subscribers tab**
+
+| | How it works |
+|---|---|
+| List | Search by email or name, filter by status (subscribed, waiting to confirm, unsubscribed, bounced, reported spam), sort, 50 a page. Click a row for that person's campaigns and what they did with each, and to correct their name |
+| Add one | Email and name, then either **send a confirmation email** or **add as subscribed**, which needs a tick that they asked for the emails |
+| Add a list | Paste addresses or choose a CSV file: one per line, `Name <email>`, or columns of email, first name and last name. A preview shows what is new, already on the list, left alone (unsubscribed, bounced or reported spam: a list never puts them back), not an address, or pasted twice, before anything is saved |
+| Change many | Tick rows, or select everyone matching the filter, then **Unsubscribe**, **Resubscribe** (with a tick that they asked; spam reports only when ticked separately), **Resend confirmation**, or **Delete**. Delete removes the row for good and loses the record that someone unsubscribed, so Unsubscribe is usually the better choice |
+| Export | A CSV of everyone matching the filter |
+
+**Sending**
+
+| | How it works |
+|---|---|
+| The email | The post as the page shows it, between a header and a footer that are the same in every mailing (`src/utils/email-template.ts`). Videos, audio and embeds become a button to the post on the site. The subject and the inbox preview line can be changed, and **Send a test to me** sends it to the administrator alone |
+| Audience | Everyone subscribed, or only the subscribers ticked, for a small group or a trial. The list is copied when the campaign is made, and anyone no longer subscribed by their turn is skipped |
+| Sending | One email at a time with a short pause between them, each with its own unsubscribe link. The page stays open while it runs. Closing it, pausing, or reaching Cloudflare's daily limit pauses the campaign; **Resume** under Reports sends only to those not yet sent to. A new Cloudflare account starts with a low daily limit that grows with use |
+| Reports | For each campaign: sent, delivered, opened, clicked, bounced, unsubscribed and spam reports, and every recipient with what they did. Opens and clicks are recorded by the site (a picture, and links that pass through `/api/email/click/`). Opens are approximate: some mail programs load pictures before the reader looks, and some never load them |
+
+Subscribers, campaigns, recipients and what became of each email are kept in D1 (`prisma/migrations/0007_email_campaigns.sql` and `0008_subscribers.sql`).
+
+##### Analytics
+
+The site counts its own page views, in D1, and shows them to an administrator. Nothing is sent to an outside service, and no cookie is set.
+
+The admin bar has an **Analytics** button (the bar chart) on every page. It opens with **Site** (a chart of views and visitors, a bar for each day or month; under it the views and visitors for the period with how far they rose or fell, today's, the all-time total and the best day; then the most-viewed posts and pages, referrers, locations, campaigns, and browsers and devices) and **Visits** (every page view the site has recorded, newest first, with where it came from and its IP address). On a post there is a third tab, **This post**, with the same for that post alone. Pointing at a bar reads it out, with the posts published that day; pressing it narrows the lists to that day or month. Pressing an IP address shows every view from it.
+
+**To set it up**, once: `npm run db:migrate` (migrations `0010` and `0011`). There is nothing else to configure.
+
+How it counts:
+
+- Every page tells `/api/view` it was viewed (`src/hooks/page-view.tsx`). The route answers at once and counts behind the visitor.
+- A **view** is a page being looked at. A **visitor** is an IP address seen for the first time that day, on the site or on one page; over several days the days are added up, so someone who comes on two days counts twice. A **visit** is a view that arrived from another site, or from nowhere (typed in, a bookmark, an email): the first page of a stay. Referrers and Campaigns count visits.
+- Referrers are shown by the name people know them by (Gmail, Reddit, Facebook), with the search engines folded into one line that opens. The names are in `src/components/analytics/referrers.ts`.
+- Not counted: bots and link previewers, an administrator who is logged in, a page that does not exist, and a browser with JavaScript off.
+- A link tagged with `utm_source`, `utm_medium` or `utm_campaign` is counted under **Campaigns**.
+- Country, region and city are what Cloudflare makes of the visitor's address. A day runs midnight to midnight in Chicago.
+
+What is kept, in two tables (`prisma/migrations/0010_page_views.sql`):
+
+- `page_views`: a count for each day of the whole site, each page, each referring site, each campaign and each country, with the day's visitors for the site and for each page. Kept forever, so the totals go back to the day it was switched on.
+- `page_view_log`: one row for each view, with the time, page, referrer, campaign, place, browser and **IP address**. Kept forever as well; nothing prunes it. Regions, cities, and browsers and devices are read from here, so they go back to the first view the site logged and no further. Whether a view is a new visitor is asked of this table too.
+
+An IP address is personal data under GDPR and several US state laws. A site that keeps the log should say so in its privacy notice: that visits are logged with their IP address, and kept for as long as the site runs.
+
+Each view costs about 14 row writes in D1. The free plan allows 100,000 a day, which is about 7,000 views; the log grows by roughly 100 MB a year for every 1,000 views a day.
+
+##### FlowTrace
+
+FlowTrace reports every visit that *converts*: the contact form sent, a newsletter sign-up, an account created (the password chosen from the emailed link), or a click on an email or phone link. Each report shows where the visitor came from (site, campaign, place, device), every page they read and how long it was in front of them, and what they did. The visit is kept in the visitor's browser while they read and sent only when they convert, so visits that never convert are never sent anywhere. Counting views and visits stays **Analytics'** alone; FlowTrace stores nothing but converted visits, and measures them against Analytics' own visit counts.
+
+The admin bar has a **FlowTrace** button (the funnel). It opens a box that looks and reads like Analytics:
+
+- **Overview**: for a period, the converted visits against the site's visits as Analytics counts them ("3 converted visits · 120 visits · 2.5%"), each kind of conversion against the period before, the latest converted visits, and where they came from, where they were, what they read and on what device.
+- **Converted visits**: every one, newest first, findable by IP address or page, with how its report email went.
+- **A visit's report** (what every FlowTrace email links to, as `/?flowtrace=visit-<id>`): the facts, every step in order, the visitor's other converted visits, and the **Report email**: sent, waiting to send (it failed and is tried again), not sent (given up after 24 hours), over the hourly limit, or nobody to email, with each attempt, when and to whom.
+- **Email settings**: what you get, a test report, and who gets what.
+
+How it fits together:
+
+1. **Browser**: `src/hooks/flow-trace.tsx`, mounted in the root layout, keeps the visitor id and the visit (its pages, their time, the referrer and campaign) in `localStorage`. A conversion sends the whole visit by beacon. Email and phone links, `.ft-tracking` / `[data-ft]` elements, and the Form component's contact, newsletter and account-confirmation forms are tracked with no extra code. See `src/hooks/flow-trace.md`.
+2. **Endpoint**: `/api/flow-trace` accepts only same-origin requests of at most 64 KB whose every path is a path on this site, drops bots and administrators, stores at most 30 visits an hour from one address, adds place and device from Cloudflare's request data (no outside service), stores the visit and **emails the report at once** (`reportConversion` in `src/utils/flow-trace-jobs.ts`). Report emails are capped at 30 an hour in all and 5 an hour from one IP address; visits past that are still stored and shown. A report's subject holds only the kind of conversion and the place, never text from the visitor; everything in its body is escaped.
+3. **D1**: `ft_visits`, `ft_events`, `ft_report_sends`, `ft_email_settings` and `ft_digests` (`prisma/migrations/0013_flow_trace.sql`), written and read in `src/utils/flow-trace-store.ts`.
+4. **Scheduled job**: `worker.ts` runs `src/utils/flow-trace-jobs.ts` every 10 minutes (`triggers.crons` in `wrangler.jsonc`): sending again any report that failed within the last 24 hours, giving up on older ones, and the daily and weekly summaries at 8am Central.
+
+**Emails.** Everyone on `FLOWTRACE_EMAILS` (comma-separated; `EMAIL_TO` when it is empty) is a recipient, each with their own choice: every visit that converts (the default), a daily summary, a weekly summary, or none. An administrator whose WordPress address is on the list chooses in Email settings; one who is not sees the box but is not emailed. Mail goes out from `EMAIL_FROM` under the name "FlowTrace · " followed by the site's name.
+
+**To set it up**, once: `npm run db:migrate` (migration `0013`), set `FLOWTRACE_EMAILS` in `.env.production` if anyone but `EMAIL_TO` should get reports, `npm run cf:secrets`, then `npm run cf:deploy`. The deploy creates the cron trigger.
+
+**Settings** are in `src/utils/flow-trace-config.ts`: time zone, visit idle time, the most steps kept, summary hour and weekday, the report limits, the retry time, the default email choice, ignored paths, conversion names.
+
+**Privacy.** The browser keeps the visit, a visitor id and a visit count in `localStorage` (no cookie). A converted visit is stored with its IP address and approximate place, which is worth a line in the privacy notice.
+
+**The demo.** With `NEXT_PUBLIC_ADMIN_DEMO=true`, the demo toolbar's FlowTrace shows made-up converted visits drawn from the demo's own made-up visits, so the two agree. It saves no setting. **Send me a test report** asks for an address and emails a report on a made-up visit, once per inbox (see [The admin toolbar demo](#the-admin-toolbar-demo)).
+
+##### The admin toolbar demo
+
+`NEXT_PUBLIC_ADMIN_DEMO=true` lets anyone who is not an administrator try the admin toolbar: a **Try the admin toolbar** button floats in the top right corner and opens it with a **Demo** label. It is for the template's own showcase; keep it `false` (the samples' default) on your site, where it shows readers nothing.
+
+- **Everything is made up**, in the visitor's browser (`src/utils/demo-api.ts`), from the site's real published posts: subscribers, campaigns and their reports, page views and the visit log, FlowTrace. The demo never calls the real admin routes, which refuse anyone but a logged-in administrator anyway.
+- **Nothing changes.** Sync, Rebuild, Clear cache and Revalidate say what they would do; the mailing list cannot be changed; sending a campaign only moves its made-up numbers.
+- **Two real emails**, through `/api/demo/email`: the post as a newsletter, to the visitor's own address, once a day per visitor and per inbox; and the FlowTrace test report, once per inbox ever and five a day per visitor. Neither carries anything the visitor types, and the two share 40 a day for the whole site.
+- An administrator always gets the real toolbar, never the demo.
+- `NEXT_PUBLIC_*` is built into the site, so turning it on or off takes a deploy.
+
 ##### Git-Connected Builds
 
 If you connect the repo in the Cloudflare dashboard instead of deploying from your machine:
 
 - **Build command:** `npm run cf:build`
 - **Deploy command:** `npx opennextjs-cloudflare deploy` (the same command `npm run cf:deploy` uses)
-- **Build variables:** set `NEXT_PUBLIC_PRODUCTION_URL` and `NEXT_PUBLIC_WORDPRESS_URL` here. Anything prefixed `NEXT_PUBLIC_` is inlined into the JavaScript at build time, so it must exist as a *build* variable — a runtime secret is too late. The WordPress URL is also what the build fetches posts from.
-- **Secrets:** `DATABASE_URL`, `KV_*`, and `MAILGUN_*` values are read at runtime, so `npm run cf:secrets` (or the dashboard's secret UI) covers them. They do not belong in build variables.
+- **Build variables:** set `NEXT_PUBLIC_PRODUCTION_URL` and `NEXT_PUBLIC_WORDPRESS_URL` here. Anything prefixed `NEXT_PUBLIC_` is inlined into the JavaScript at build time, so it must exist as a *build* variable — a runtime secret is too late.
+- **Secrets:** `EMAIL_*` values are read at runtime, so `npm run cf:secrets` (or the dashboard's secret UI) covers them. They do not belong in build variables.
 
-Custom domains live under the Worker's **Settings → Domains & Routes**.
+The custom domain is attached to the Worker at the account level (Workers → Domains), not declared in `wrangler.jsonc`; see [Deploy to Cloudflare Workers](#deploy-to-cloudflare-workers).
 
 ##### Workers Runtime Constraints
 
@@ -505,19 +773,21 @@ Workers is not Node.js, and three limits shape how you write code for it:
 
 - **There is no filesystem.** `fs.readFileSync(process.cwd() + '/_data/...')` and `fs.readdirSync` either throw `ENOENT` or silently return empty, so a page vanishes or a route 500s with no obvious cause. Always import generated JSON through the `@/../_data/*` path so it is bundled at build time, and add a `_scripts/` generator if the data doesn't exist yet. This is an enforced Canon rule; see `CLAUDE.md`.
 - **`nodejs_compat` is required.** The flag in `wrangler.jsonc` provides the Node APIs Next.js expects. Removing it breaks the build.
-- **Postgres goes over `pg-cloudflare`.** Under the `workerd` build condition, `pg` (used by `@prisma/adapter-pg`) swaps its TCP socket for Cloudflare's. `next.config.mjs` traces that package's `dist` so the bundler can resolve it — removing either the dependency or the `outputFileTracingIncludes` entry breaks `npm run cf:build`.
+- **The database binding only exists inside a request.** Call `getPrisma()` from `src/utils/prisma.ts` or `getDb()` from `src/utils/d1.ts` inside a route handler or server function, never at module load. A page that reads the database needs `export const dynamic = 'force-dynamic'`, or the build tries to render it with no database there.
 
 ##### Quick Reference
 
 | Command | What it does |
 |---|---|
 | `npm run cf:setup` | Scaffold `.env.production` from the sample |
-| `npm run cf:build` | Regenerate blog and page data, then build the Worker into `.open-next/` |
+| `npm run cf:build` | Regenerate page data, then build the Worker into `.open-next/` |
 | `npm run cf:preview` | Build and run the real Workers runtime locally |
 | `npm run cf:deploy` | Build and deploy to Cloudflare |
 | `npm run cf:upload` | Build and upload a new Worker version without making it live (staged rollouts) |
 | `npm run cf:secrets` | Push `.env.production` to the Worker's secret store |
 | `npm run cf:typegen` | Regenerate `cloudflare-env.d.ts` from your bindings |
+| `npm run db:migrate` | Apply new migrations to the live D1 database |
+| `npm run db:migrate:local` | Apply new migrations to the local D1 database |
 
 ### Winx Pro
 
@@ -587,7 +857,7 @@ AI citations are becoming more important than traditional SEO. When someone asks
 - **Pixel-perfect article design** - TailwindCSS integration for rapid styling without leaving component files
 - **Automate workflows** - AI-powered scripts for sitewide SEO improvements, search indexing, and content updates
 - **Get found online** - Battle-tested foundation with article structured data for search engines and AI assistants
-- **Deploy instantly** - Next.js architecture on Vercel or Cloudflare Workers for cheap, fast hosting
+- **Deploy instantly** - Next.js architecture on Cloudflare Workers for cheap, fast hosting
 
 ### Built by Industry Veterans
 
@@ -604,7 +874,7 @@ winx/
 │   │   ├── (default)/         # Default layout route group
 │   │   │   ├── layout.tsx
 │   │   │   ├── page.tsx       # Blog home / latest posts
-│   │   │   ├── not-found.tsx
+│   │   │   ├── not-found.tsx  # 404 inside the group's layout
 │   │   │   ├── _blocks/       # Home page blocks
 │   │   │   ├── [year]/        # Yearly archive
 │   │   │   │   └── [month]/
@@ -623,12 +893,12 @@ winx/
 │   │   │   ├── blog-likes/    # Post likes
 │   │   │   ├── share-count/   # Share counts
 │   │   │   ├── posts/         # Filtered post listing
-│   │   │   ├── subscribe/     # Newsletter signup
-│   │   │   ├── unsubscribe/
+│   │   │   ├── account/       # Members: login, sign-up, profile
+│   │   │   ├── comments/      # Comments on a post
 │   │   │   ├── submit-form/   # Contact form handler
 │   │   │   └── revalidate/    # On-demand revalidation
-│   │   ├── global-error.tsx   # Error boundary
-│   │   ├── global-not-found.tsx # 404 page
+│   │   ├── error.tsx          # Error boundary
+│   │   ├── not-found.tsx      # 404 page
 │   │   ├── layout.tsx         # Root layout
 │   │   ├── metadata.tsx       # Site metadata
 │   │   ├── robots.ts          # Robots.txt config
@@ -663,20 +933,14 @@ winx/
 │   ├── favicon.png           # Favicon
 │   ├── images/               # Processed images
 │   ├── screenshot.jpg        # Featured image
-│   ├── search-index.json    # FlexSearch index (generated)
 │   └── _headers             # Cloudflare header rules
 ├── _fonts/                   # Font source files (managed by Studio)
 ├── _data/                    # Generated metadata — never edit by hand
-│   ├── _blog.json           # Post metadata (npm run blog)
-│   ├── _taxonomies.json     # Categories, tags, authors (npm run blog)
-│   ├── _pages.json          # Page routes for the sitemap (npm run pages)
+│   ├── _pages.json          # Page routes, titles and descriptions (npm run pages)
 │   └── _studio.json         # Studio media metadata
 ├── _scripts/                 # Build scripts (Node-only, not imported at runtime)
-│   ├── generate-blog-metadata.mjs
 │   ├── generate-page-metadata.mjs
 │   ├── generate-block-index.mjs
-│   ├── generate-search.mjs
-│   ├── bust-kv-cache.mjs
 │   └── *.md                 # Docs for each script
 ├── next.config.mjs          # Next.js configuration
 ├── open-next.config.ts      # Cloudflare Workers adapter config
@@ -719,11 +983,8 @@ winx/
 
 ### Content & Assets
 
-- **`npm run blog`** - Fetch WordPress posts and taxonomies into `_data/` → [docs](./_scripts/generate-blog-metadata.md)
-- **`npm run pages`** - Scan page routes into `_data/_pages.json` for the page sitemap → [docs](./_scripts/generate-page-metadata.md)
-- **`npm run search`** - Build FlexSearch index for site search → [docs](./_scripts/generate-search.md)
+- **`npm run pages`** - Scan page routes into `_data/_pages.json` for the page sitemap and search → [docs](./_scripts/generate-page-metadata.md)
 - **`npm run blocks`** - Regenerate the demo block index (`_block-index.ts`) → [docs](./_scripts/generate-block-index.md)
-- **`npm run bust:kv`** - Bust the KV cache for likes and share counts → [docs](./_scripts/bust-kv-cache.md)
 
 ### Cloudflare Deployment
 
@@ -740,7 +1001,8 @@ Your AI assistant runs these for you — see [Deploy to Cloudflare Workers](#dep
 ### Database
 
 - **`npm run db:generate`** - Regenerate the Prisma client
-- **`npm run db:migrate`** - Run Prisma migrations in development
+- **`npm run db:migrate`** - Apply new migrations to the live D1 database
+- **`npm run db:migrate:local`** - Apply new migrations to the local D1 database
 
 ### Package Management
 
@@ -769,12 +1031,10 @@ Every dependency is battle-tested in production and chosen for stability, perfor
 - **React DOM** `19.2.5` - React rendering
 - **Tailwind CSS** `4.2.2` - Utility-first CSS framework
 - **Headless UI** `2.2.10` - Unstyled accessible components
-- **Prisma** `7.2.0` - Database ORM for likes and share counts
-- **Vercel KV** `3.0.0` - Cache for likes and share counts
+- **Prisma** `7.10.0` - Database ORM for likes and share counts, on Cloudflare D1
 - **Valtio** `2.3.1` - State management
 - **Swiper** `12.1.4` - Modern slider/carousel for post galleries
 - **Yet Another React Lightbox** `3.31.0` - Image gallery for post media
-- **FlexSearch** `0.8.212` - Full-text post search
 - **Algolia Autocomplete** `1.19.8` - Search autocomplete
 - **Framer Motion** `12.38.0` - Animation library
 - **Luxon** `3.7.2` - DateTime library for post dates
@@ -783,10 +1043,9 @@ Every dependency is battle-tested in production and chosen for stability, perfor
 - **html-react-parser** `6.0.1` - HTML-to-React parsing for WordPress content
 - **Iconify Icons** - Icon sets (Heroicons, Lucide, Material Design, Simple Icons)
 - **clsx** `2.1.1` - Conditional className utility
-- **Vercel Analytics** `1.6.1` - Analytics integration
 - **Next Third Parties** `16.2.4` - Third-party script optimization
 - **OpenNext Cloudflare** `1.20.2` - Adapter for deploying to Cloudflare Workers
-- **pg-cloudflare** `1.4.0` - Cloudflare TCP socket for Postgres on Workers
+- **Prisma D1 adapter** `7.10.0` - Connects Prisma to the Worker's D1 binding
 
 ### Development
 
@@ -808,8 +1067,6 @@ Tools for building and developing the blog:
 
 Build-time tools for content and asset generation:
 
-- **jsdom** `27.4.0` - DOM parsing for search index generation
-- **@sindresorhus/slugify** `3.0.0` - URL-friendly slugs for posts, tags, and authors
 - **dotenv** `17.4.2` - Environment loading for the KV cache script
 
 ---

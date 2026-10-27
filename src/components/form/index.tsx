@@ -3,6 +3,8 @@
 import React, { Children, isValidElement, useState } from 'react'
 import { DateTime } from 'luxon'
 import clsx from 'clsx'
+import { trackConversion } from '@/hooks/flow-trace'
+import type { FtConversion } from '@/utils/flow-trace-types'
 
 // Sub-components
 import { FormInput } from './form-input'
@@ -26,6 +28,30 @@ type FormProps = {
   flexDirection?: string
   action?: string
   honeypot?: boolean
+  // Called with the server's answer when it accepted the form.
+  onSuccess?: (data: Record<string, unknown>) => void
+  // Called with the server's answer when it refused the form. Its message is
+  // shown either way; this is for a page that does something more about it.
+  onFailure?: (data: Record<string, unknown>) => void
+  // Whether the fields are emptied after success. Default true.
+  resetOnSuccess?: boolean
+}
+
+// The forms whose success is a conversion FlowTrace reports
+// (src/hooks/flow-trace.tsx), by the route they send to: the contact form,
+// the newsletter forms, and the step that creates an account (choosing a
+// password from the emailed link).
+function conversionOf(
+  api: string
+): { type: FtConversion; label: string } | null {
+  const path = api.split('?')[0]?.replace(/\/+$/, '') ?? ''
+  if (path === '/api/submit-form')
+    return { type: 'form', label: 'Contact form' }
+  if (path === '/api/newsletter/subscribe')
+    return { type: 'newsletter', label: 'Newsletter form' }
+  if (path === '/api/account/confirm')
+    return { type: 'signup', label: 'Account confirmed' }
+  return null
 }
 
 function Form({
@@ -35,6 +61,9 @@ function Form({
   flexDirection = 'flex-col',
   action,
   honeypot = false,
+  onSuccess,
+  onFailure,
+  resetOnSuccess = true,
 }: FormProps) {
   const [status, setStatus] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -98,7 +127,14 @@ function Form({
       if (key === 'files') {
         if (!obj[key]) obj[key] = []
         if (val instanceof File && val.name) {
-          const base64 = await fileToBase64(val)
+          let base64: string
+          try {
+            base64 = await fileToBase64(val)
+          } catch {
+            setIsLoading(false)
+            setStatus(`The file ${val.name} could not be read.`)
+            return
+          }
           obj[key].push({
             name: val.name,
             type: val.type,
@@ -139,26 +175,51 @@ function Form({
     }
 
     const api = action || '/api/submit-form/'
-    const response = await fetch(api, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(obj),
-    })
+    let response: Response
+    try {
+      response = await fetch(api, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj),
+      })
+    } catch {
+      // Offline, or the connection dropped: the button comes back.
+      setIsLoading(false)
+      setStatus(
+        'The message could not be sent. Check your connection and try again.'
+      )
+      return
+    }
+
+    // A server that says something says it better than the button does.
+    const answer: Record<string, unknown> | null = await response
+      .json()
+      .catch(() => null)
+    const serverMessage =
+      answer && typeof answer.message === 'string' ? answer.message : ''
 
     if (response.ok) {
-      form.reset()
-      form
-        .querySelectorAll<HTMLInputElement>('input[type="file"]')
-        .forEach((input) => {
-          input.value = ''
-        })
-      form.dispatchEvent(new Event('form-cleared', { bubbles: true }))
-    } else {
-      submitMessage = 'An error occurred.'
+      if (resetOnSuccess) {
+        form.reset()
+        form
+          .querySelectorAll<HTMLInputElement>('input[type="file"]')
+          .forEach((input) => {
+            input.value = ''
+          })
+        form.dispatchEvent(new Event('form-cleared', { bubbles: true }))
+      }
+      if (serverMessage) submitMessage = serverMessage
+      setIsLoading(false)
+      setStatus(submitMessage)
+      const conversion = conversionOf(api)
+      if (conversion) trackConversion(conversion.type, conversion.label)
+      onSuccess?.(answer ?? {})
+      return
     }
 
     setIsLoading(false)
-    setStatus(submitMessage)
+    setStatus(serverMessage || 'An error occurred.')
+    onFailure?.(answer ?? {})
   }
 
   return (

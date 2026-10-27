@@ -1,18 +1,22 @@
 import { baseURL } from '@/app/metadata'
-import { getPostSlugs } from '@/tools/get-post-slugs'
-import { buildSitemapXml, xmlResponse } from '@/utils/sitemap-xml'
+import { getSitemapPosts } from '@/utils/content-index'
+import { buildSitemapXml, sitemapDate, xmlResponse } from '@/utils/sitemap-xml'
 
-export const dynamic = 'force-static'
-export const revalidate = 86400
+// Built on each request from the content index, so a post is listed as soon
+// as it has been synced.
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const { postSlugs } = await getPostSlugs()
+  const posts = await getSitemapPosts()
 
   const xml = buildSitemapXml(
-    postSlugs.map((item) => ({
-      url: `${baseURL}${item.uri}`,
-      lastmod: item.modified,
-    }))
+    posts.map((post) => {
+      const lastmod = sitemapDate(post.modified)
+      return {
+        url: `${baseURL}${post.url}`,
+        ...(lastmod ? { lastmod } : {}),
+      }
+    })
   )
 
   return xmlResponse(xml)

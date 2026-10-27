@@ -1,17 +1,22 @@
 import { baseURL } from '@/app/metadata'
-import { getTagSlugs } from '@/tools/get-tag-slugs'
-import { buildSitemapXml, xmlResponse } from '@/utils/sitemap-xml'
+import { getSitemapTerms } from '@/utils/content-index'
+import { buildSitemapXml, sitemapDate, xmlResponse } from '@/utils/sitemap-xml'
 
-export const dynamic = 'force-static'
-export const revalidate = 86400
+// Built on each request from the content index, so a new term is listed as
+// soon as enough posts that use it have been synced.
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const { tagSlugs } = await getTagSlugs()
+  const terms = await getSitemapTerms('post_tag')
 
   const xml = buildSitemapXml(
-    tagSlugs.map((item) => ({
-      url: `${baseURL}${item.uri}`,
-    }))
+    terms.map((term) => {
+      const lastmod = sitemapDate(term.modified)
+      return {
+        url: `${baseURL}/tag/${term.slug}`,
+        ...(lastmod ? { lastmod } : {}),
+      }
+    })
   )
 
   return xmlResponse(xml)

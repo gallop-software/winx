@@ -72,7 +72,7 @@ export function coreTable(
         isFirstTd = false
         return (
           <td
-            className={`py-4 text-xs whitespace-nowrap text-contrast-light ${first ? 'pr-3 pl-4 font-medium sm:pl-0' : 'px-3'}`}
+            className={`py-4 align-top text-xs text-contrast-light ${first ? 'pr-3 pl-4 font-medium sm:pl-0' : 'px-3'}`}
           >
             {domToReact(node.children as DOMNode[], options)}
           </td>

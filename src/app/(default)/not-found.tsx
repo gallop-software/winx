@@ -1,33 +1,16 @@
-import { Section } from '@/components/section'
-import { Heading } from '@/components/heading'
-import { Paragraph } from '@/components/paragraph'
-import { Label } from '@/components/label'
-import { Button } from '@/components/button'
+import { NotFoundContent } from '@/components/not-found-content'
+import { defaultOGImage } from '@/app/metadata'
+import type { Metadata } from 'next'
 
+export const metadata: Metadata = {
+  title: 'Page Not Found',
+  description: 'The page you are looking for does not exist.',
+  robots: { index: false, follow: false },
+  openGraph: { images: [defaultOGImage] },
+}
+
+// The layout already draws the shell; the root not-found.tsx draws its own
+// for addresses that match no route at all.
 export default function NotFound() {
-  return (
-    <Section className="bg-body pt-7">
-      <div className="max-w-3xl">
-        <Label margin="mb-2">404</Label>
-        <Heading
-          as="h1"
-          margin="mb-2"
-        >
-          Page Not Found
-        </Heading>
-        <Paragraph margin="mb-10">
-          The page you were looking for has moved, been retired, or never
-          existed in the first place. From here, the archive of essays is the
-          best place to start.
-        </Paragraph>
-        <Button
-          variant="outline"
-          href="/"
-          native
-        >
-          Return Home
-        </Button>
-      </div>
-    </Section>
-  )
+  return <NotFoundContent className="bg-body pt-7" />
 }

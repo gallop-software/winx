@@ -5,17 +5,19 @@ import { Paragraph } from '@/components/paragraph'
 import { Label } from '@/components/label'
 import { Button } from '@/components/button'
 import arrowRightIcon from '@iconify/icons-heroicons/arrow-right'
-import blogData from '@/../_data/_blog.json'
 import type { BlogPost } from '@/utils/filter-posts'
 
-export default function LogoCard() {
-  const posts = blogData as BlogPost[]
-  const latest = [...posts].sort((a, b) =>
-    (b.metadata.date || '').localeCompare(a.metadata.date || '')
-  )[0]
+interface LogoCardProps {
+  // The newest post, from the content index. Without one the card shows the
+  // site's name and points down the page.
+  latest?: BlogPost | undefined
+}
+
+// The first page's featured essay: the newest post, over its picture.
+export default function LogoCard({ latest }: LogoCardProps = {}) {
   const title = latest?.metadata.title || 'Founder Notes'
   const description = latest?.metadata.description || ''
-  const href = latest?.url || '#favorite-articles'
+  const href = latest ? `${latest.url}/` : '#favorite-articles'
   const image = latest?.metadata.featuredImage || '/banner.jpg'
   const imageWidth = latest?.metadata.featuredImageWidth
   const imageHeight = latest?.metadata.featuredImageHeight
