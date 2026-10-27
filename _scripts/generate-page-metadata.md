@@ -50,8 +50,8 @@ Runs automatically as part of `npm run build` and `npm run cf:build`.
 `page-sitemap.xml` needs each page's URI and last-modified date. Scanning the
 filesystem from a route handler works on Node but throws `ENOENT` on Cloudflare
 Workers, which has no filesystem at runtime. Generating the list at build time
-lets `src/tools/get-page-slugs.tsx` import it, so the sitemap renders
-identically on Vercel and Workers.
+lets `src/tools/get-page-slugs.tsx` import it, so the sitemap renders on
+Workers.
 
 Search needs each page's title and description for the same reason. Posts are
 searched in the content index in D1; pages only change on deploy, so

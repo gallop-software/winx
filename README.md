@@ -4,8 +4,7 @@
 
 A modern, AI-built blog and publishing template for writers, journalists, and content creators. Keep WordPress as your editor and authoring backend, then ship a blazing-fast headless Next.js front end that publishes at the speed of thought, outshines the competition, and ranks #1 on Google.
 
-**🌐 Demo:** [winx.gallop.software](https://winx.gallop.software)  
-**☁️ Cloudflare Demo:** [winx-cloudflare.gallop.software](https://winx-cloudflare.gallop.software/)  
+**🌐 Demo:** [winx-cloudflare.gallop.software](https://winx-cloudflare.gallop.software/) (press **Try the admin toolbar** to explore the admin side with made-up data)  
 **🎨 Template:** [gallop.software/templates](https://gallop.software/templates)  
 **📦 Repository:** [github.com/gallop-software/winx](https://github.com/gallop-software/winx)  
 **🏷️ Category:** Headless WordPress Blog Template
@@ -32,10 +31,14 @@ Keep the WordPress editor you already know — but escape the slow themes, plugi
 - 🔍 **Built-in search** over the full text of every post, with Algolia Autocomplete
 - 🔦 **Lightbox galleries** for post images and media
 - 🎞️ **Swiper carousels** for image galleries and sliders
-- 💬 **Share counts** powered by Prisma and Cloudflare D1
-- ❤️ **Post likes & reactions** with persistent storage
-- 👤 **Member accounts** backed by WordPress: log in, sign up with email confirmation, password reset, profiles, subscribe to new posts
-- 📝 **Form submission** API for contact and lead capture
+- 💬 **Threaded comments** saved in WordPress, with replies by email
+- ❤️ **Post likes & share counts** stored in Cloudflare D1
+- 👤 **Member accounts** backed by WordPress: log in, sign up with email confirmation, password reset, profiles
+- 📨 **Newsletter & marketing email** - double opt-in sign-up, subscriber management, send a post to your list with open, click and bounce reports
+- 📊 **Built-in analytics** - page views, visitors, referrers, places and a visit log, with no third-party script
+- 🧭 **FlowTrace** - an emailed report of every visit that converts (contact form, sign-up, email link), with the pages read before it
+- 🛠️ **Admin toolbar** for WordPress administrators: Sync, Rebuild, cache, email, analytics, FlowTrace; plus an optional demo of it for visitors
+- 📝 **Contact form** sent through Cloudflare Email Sending
 - 📱 **Fully responsive** and mobile-optimized for readers
 - ⚡ **Lightning-fast** page loads for long-form content
 - 🎭 **Framer Motion** animations
@@ -44,6 +47,22 @@ Keep the WordPress editor you already know — but escape the slow themes, plugi
 - 🛡️ **Gallop Canon** - AI guardrails for consistent, reliable code
 - 🎨 **Iconify icons** (Heroicons, Lucide, Material Design, Simple Icons)
 - ☁️ **Deploys to Cloudflare Workers**
+
+---
+
+## Quick Start
+
+Already comfortable with a terminal? This is the short version; every step is explained in the [Setup Guide](#setup-guide).
+
+```bash
+git clone https://github.com/gallop-software/winx.git my-blog && cd my-blog
+npm install
+cp .env.local.sample .env.local     # set NEXT_PUBLIC_WORDPRESS_URL and GALLOP_WP_API_KEY
+npm run db:migrate:local            # creates the local database
+npm run dev                         # http://localhost:3000
+```
+
+Then log in on the site as a WordPress administrator and press **Rebuild** in the admin toolbar to pull in your posts. To go live, follow [Setup Guide → Part 2](#part-2-put-it-on-cloudflare).
 
 ---
 
@@ -311,6 +330,225 @@ Connect with other Gallop users on Discord or Slack. Share your progress, swap A
 
 ---
 
+## Setup Guide
+
+Everything needed to take a fresh copy of Winx to a live site, in order. Part 1 runs on your computer; Part 2 puts it on Cloudflare. Each step says what it is for, so you can tell which ones your site needs.
+
+**How the pieces fit together**
+
+| Piece | What it does | Where it lives |
+|---|---|---|
+| **WordPress** + the [Gallop WP](#headless-wordpress-with-gallop-wp) plugin | Where you write posts and pages. Also holds member accounts and comments | Your WordPress host |
+| **This site** (Next.js) | What readers see | Cloudflare Workers |
+| **D1 database** | A copy of your posts for fast pages and search (the *content index*), plus likes, shares, subscribers, campaigns, analytics and FlowTrace | Cloudflare |
+| **KV store** | Saved copies of pages and comments, so pages load instantly | Cloudflare |
+| **Email Sending** | Contact form, sign-up confirmations, newsletters, FlowTrace reports | Cloudflare |
+| **Queue** | Cloudflare tells the site which emails were delivered, bounced or marked as spam | Cloudflare |
+
+Winx runs on Cloudflare only: the database, cache, email and queue are Cloudflare services that the site uses from inside its Worker, so it does not run on other hosts such as Vercel.
+
+### What you need
+
+- **Node.js 20 or later** and Git.
+- **A WordPress site** where you are an administrator. It can be on any host.
+- **A Cloudflare account**, and a domain whose DNS is on Cloudflare (for the site's address and for sending email). Check [Cloudflare's plans](https://www.cloudflare.com/plans/developer-platform/) for what D1, Queues and Email Sending need on your account.
+
+### Part 1: Run it on your computer
+
+#### 1. Install
+
+```bash
+git clone https://github.com/gallop-software/winx.git my-blog
+cd my-blog
+npm install
+```
+
+`npm install` also generates the database client (`prisma generate`).
+
+#### 2. Connect WordPress
+
+On your WordPress site:
+
+1. Install and activate the **Gallop WP** plugin.
+2. Go to **Gallop → Settings → Front-end connection** and create a key.
+3. Tick **Manage members** (log in, sign up, profiles) and **Submit comments** (the comment form).
+4. Set **Next.js Production URL** to your site's address (later, once you have it), so links in WordPress emails, such as password resets, point at the site.
+
+Readers who sign up on the site become WordPress **subscribers**: they can comment and edit their own profile, nothing more. Only WordPress **administrators** get the admin toolbar.
+
+#### 3. Create `.env.local`
+
+```bash
+cp .env.local.sample .env.local
+```
+
+For a first run you only need two values:
+
+| Variable | Set it to |
+|---|---|
+| `NEXT_PUBLIC_WORDPRESS_URL` | Your WordPress address, e.g. `https://wp.example.com` |
+| `GALLOP_WP_API_KEY` | The key from step 2. Without it there is no **Log in** button and no admin toolbar |
+
+The rest can wait for Part 2; see [Environment variables](#environment-variables) for the full list. `.env.local` is never committed.
+
+#### 4. Create the local database
+
+```bash
+npm run db:migrate:local
+```
+
+This creates a database on your computer (under `.wrangler/state/`, ignored by Git) with every table the site needs, from the SQL files in `prisma/migrations/`. It is separate from the live one, so nothing you do locally touches your real data. Run it again whenever a new migration file appears (for example after pulling updates). To start over, delete `.wrangler/state/` and run it again.
+
+#### 5. Start the site and pull in your posts
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000. The site runs, but without posts: they are not built in, they are read from WordPress into the database.
+
+1. Click **Log in** and use your WordPress **administrator** username and password.
+2. The admin toolbar appears across the top. Press **Rebuild**. It reads every post, page, category and tag from WordPress (a few minutes for a large site).
+
+From then on, after you publish or edit in WordPress, press **Sync** to bring in just the changes. See [The Content Index](#the-content-index).
+
+> **Email on your computer is never sent.** The local server writes each email to a file instead (`.wrangler/tmp/email/…`) and prints its path in the terminal, so you can open it in a browser and see exactly what would go out.
+
+### Part 2: Put it on Cloudflare
+
+Run these from the project folder. Wrangler (Cloudflare's command line tool, already installed) needs to know who you are: either run `npx wrangler login`, or set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in your terminal (the Gallop AI Editor's Publish view does this for you).
+
+#### 6. Create your Cloudflare resources (once)
+
+The ids in `wrangler.jsonc` belong to the Winx demo's own account, so create your own:
+
+```bash
+npx wrangler d1 create my-blog                       # the database
+npx wrangler kv namespace create my-blog-post-cache  # the page cache
+npx wrangler queues create my-blog-email-events      # email delivery reports
+```
+
+Each command prints an id. Put them in `wrangler.jsonc`:
+
+| In `wrangler.jsonc` | Set to |
+|---|---|
+| `name`, and `service` under `services` | Your Worker's name, e.g. `my-blog` (both the same) |
+| `d1_databases[0].database_name` / `database_id` | The name and id from `d1 create` |
+| `kv_namespaces[0].id` | The id from `kv namespace create` |
+| `queues.consumers[0].queue` | `my-blog-email-events` |
+| `vars.SITE_HOST` | Your site's address without `https://`, e.g. `blog.example.com`. Any other address the Worker answers on redirects here |
+| `workers_dev` | `true` if you want a free `*.workers.dev` address to test with before your domain is attached |
+
+Then, in `package.json`, change the database name in `db:migrate` and `db:migrate:local` from `winx` to yours.
+
+#### 7. Create the live database's tables
+
+```bash
+npm run db:migrate
+```
+
+Same as step 4, on the live database. It only ever adds what is missing, so it is safe to run again after every update.
+
+#### 8. Set up email sending
+
+Email goes out from a **subdomain** of your domain, such as `cf.example.com`, so Cloudflare's anti-spoofing rules don't affect your normal mailboxes on `example.com`.
+
+```bash
+npx wrangler email sending enable cf.example.com
+```
+
+This adds the DNS records that prove the mail is yours. It needs permission for Email Sending on that domain: if your API token doesn't have it, run it with your own login instead (`npx wrangler login`, then the command with `CLOUDFLARE_API_TOKEN` unset).
+
+Then let Cloudflare report deliveries, bounces and spam complaints to the site (find the zone id on your domain's **Overview** page in the Cloudflare dashboard):
+
+```bash
+npx wrangler@latest queues subscription create my-blog-email-events \
+  --source email.sending --zone-id <zone id> --domain cf.example.com \
+  --events message.delivered,message.deferred,message.bounced,message.failed,message.rejected,message.complained
+```
+
+#### 9. Fill in `.env.production`
+
+```bash
+npm run cf:setup     # copies .env.production.sample to .env.production
+```
+
+| Variable | Example |
+|---|---|
+| `NEXT_PUBLIC_PRODUCTION_URL` | `https://blog.example.com` |
+| `NEXT_PUBLIC_WORDPRESS_URL` | `https://wp.example.com` |
+| `GALLOP_WP_API_KEY` | The key from step 2 |
+| `EMAIL_FROM` | `contact@cf.example.com` (on the domain from step 8) |
+| `EMAIL_FROM_NAME` | Your site's name |
+| `EMAIL_TO` | The inbox that receives contact form messages |
+| `NEXT_PUBLIC_ADMIN_DEMO` | `false` (see [The admin toolbar demo](#the-admin-toolbar-demo)) |
+
+Optional ones are in [Environment variables](#environment-variables). `.env.production` is never committed.
+
+#### 10. Deploy
+
+```bash
+npm run cf:deploy    # build, upload, and clear the page cache
+npm run cf:secrets   # send .env.production's values to the Worker
+```
+
+The first deploy creates the Worker; `cf:secrets` needs it to exist, so it comes second. Later deploys reuse the values; run `cf:secrets` again only when one changes. `NEXT_PUBLIC_*` values are built into the site, so changing one of those needs a deploy, not `cf:secrets`.
+
+#### 11. Attach your domain and fill the live database
+
+1. In the Cloudflare dashboard, **Workers & Pages → your Worker → Settings → Domains & Routes → Add → Custom domain**, and enter the address you put in `SITE_HOST`.
+2. Open the live site, log in as a WordPress administrator, and press **Rebuild**.
+3. Send yourself the contact form to check that email arrives.
+
+Your blog is live. 🎉
+
+### Day to day
+
+| You want to… | Do this |
+|---|---|
+| Publish or edit a post or page | Do it in WordPress, then press **Sync** in the admin toolbar |
+| Ship a change to the code | `npm run cf:deploy` |
+| Change an email address or the key | Edit `.env.production`, then `npm run cf:secrets` |
+| Pull in an update that adds a migration | `npm run db:migrate:local` and `npm run db:migrate` |
+| Change the database's tables | Add the next numbered `.sql` file to `prisma/migrations/` (see [The D1 Database](#the-d1-database)), then run both migrate commands |
+| Look at the live database | `npx wrangler d1 execute <database name> --remote --command "SELECT COUNT(*) FROM posts"` |
+| Watch the live site's logs | `npx wrangler tail` |
+
+### Environment variables
+
+| Variable | Needed | What it does |
+|---|---|---|
+| `NEXT_PUBLIC_PRODUCTION_URL` | Yes | The site's own address, for links, sitemaps and emails. `http://localhost:3000` in `.env.local` |
+| `NEXT_PUBLIC_WORDPRESS_URL` | Yes | Your WordPress address |
+| `GALLOP_WP_API_KEY` | Yes, for logins, comments and the toolbar | The Gallop WP key. Server only: never give it a `NEXT_PUBLIC_` name |
+| `EMAIL_FROM` | Yes, for any email | The sender, on your Email Sending subdomain |
+| `EMAIL_FROM_NAME` | Recommended | The sender's name |
+| `EMAIL_TO` | Yes, for the contact form | The inbox for contact messages, and for replies to newsletters |
+| `EMAIL_BCC` | Optional | Gets a copy of every contact message |
+| `EMAIL_REPLY_TO` | Optional | Where newsletter replies go, if not `EMAIL_TO` |
+| `EMAIL_POSTAL_ADDRESS` | Before sending newsletters to real subscribers | Your postal address, printed in every newsletter's footer, as anti-spam law (CAN-SPAM) requires |
+| `FLOWTRACE_EMAILS` | Optional | Who gets FlowTrace reports, comma-separated. Empty: `EMAIL_TO` |
+| `NEXT_PUBLIC_ADMIN_DEMO` | Optional | `true` shows visitors a demo of the admin toolbar with made-up data. Keep it `false` on your own site |
+| `NEXT_PUBLIC_GOOGLE_ANALYTICS`, `NEXT_PUBLIC_GOOGLE_ADS_ID` | Optional | Google Analytics and Ads ids. The site counts its own page views either way |
+| `CLOUDFLARE_R2_*` | Optional | For the Gallop AI Editor's Studio, to sync images to your CDN |
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| No **Log in** button | `GALLOP_WP_API_KEY` is missing, or **Manage members** isn't ticked in Gallop WP. Restart `npm run dev` after editing `.env.local` |
+| Logged in, but no admin toolbar | Your WordPress account isn't an administrator |
+| The site shows no posts | Press **Rebuild** in the admin toolbar (each database, local and live, is filled on its own) |
+| A new WordPress post doesn't show | Press **Sync** |
+| `no such table` errors | Run `npm run db:migrate:local` (locally) or `npm run db:migrate` (live) |
+| Emails don't arrive while working locally | That's by design: local emails are saved to files, never sent. See step 5 |
+| Live emails don't arrive | Check `EMAIL_FROM` is on the subdomain enabled in step 8 (`npx wrangler email sending list`), then `npx wrangler tail` while sending for Cloudflare's error code |
+| The live site redirects to another address | `SITE_HOST` in `wrangler.jsonc` is still someone else's address |
+| Deploy fails about a queue | Create it (step 6) and check its name in `wrangler.jsonc` |
+| The live site uses `localhost` addresses | The build reads `.env.local` as well as `.env.production`, and `.env.local` wins. Keep `NEXT_PUBLIC_*` values the same in both, or rename `.env.local` while deploying |
+
+---
+
 ## Put Your Blog Online
 
 Your code is already on GitHub — you're signed in inside the editor, and your repository was created when you started the project. All that's left is a [Cloudflare](https://www.cloudflare.com/plans/developer-platform/) account. Check the current plans — pricing and what each tier allows change over time.
@@ -323,8 +561,7 @@ Press `Cmd+6` (the rocket icon) to open the **Publish** view. It has a tab for e
 
 | Tab | What it's for |
 |---|---|
-| **Cloudflare** | Deploy to Cloudflare Workers |
-| **Mailgun** | Sends the email from your contact form |
+| **Cloudflare** | Deploy to Cloudflare Workers. Email goes through Cloudflare Email Sending too, so there is no separate mail service to connect |
 
 Each tab links straight to the page where you generate the token, with the right permissions preselected — you paste it in, click **Connect** to verify it, then **Save**.
 

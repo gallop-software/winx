@@ -22,6 +22,22 @@ Winx is a Next.js template for writers, journalists, and content creators built 
 | `npm run ts` | TypeScript check |
 | `npm run check` | lint + ts combined |
 | `npm run prettier` | Format code |
+| `npm run db:migrate:local` / `npm run db:migrate` | Apply `prisma/migrations/*.sql` to the local / live D1 database |
+| `npm run cf:deploy` | Build, upload to Cloudflare, clear the page cache |
+| `npm run cf:secrets` | Send `.env.production` to the Worker's secrets |
+
+## Setup & Operations
+
+The full walkthrough for people is the README's **Setup Guide**. What an AI working here needs to know:
+
+- **Cloudflare only.** Posts (the content index), likes, shares, subscribers, campaigns, analytics and FlowTrace live in D1 (`DB`); pages and comments are cached in KV (`POST_CACHE`); email goes through Cloudflare Email Sending (`EMAIL`); delivery events arrive on a queue; FlowTrace's jobs run on a cron. All are bindings in `wrangler.jsonc`, used from inside the Worker (`worker.ts`). The site does not run on Vercel or a plain Node host.
+- **First run on a machine:** `npm install`, `cp .env.local.sample .env.local` (set `NEXT_PUBLIC_WORDPRESS_URL`, `GALLOP_WP_API_KEY`), `npm run db:migrate:local`, start the dev server, log in as a WordPress administrator, press **Rebuild**. Without `GALLOP_WP_API_KEY` there is no login and no admin toolbar; without a Rebuild there are no posts.
+- **A new site's Cloudflare resources:** `wrangler d1 create`, `wrangler kv namespace create`, `wrangler queues create`; their ids and names go in `wrangler.jsonc` (`name`, `services[0].service`, `d1_databases`, `kv_namespaces`, `queues.consumers`, `vars.SITE_HOST`) and the database name in the `db:migrate` scripts. The ids committed here are the Winx demo's.
+- **Email:** sent from a subdomain enabled with `wrangler email sending enable cf.<domain>` (needs Email Sending permission on the zone), with the queue subscribed to that subdomain's events. Under `next dev` nothing is delivered: each email is written to `.wrangler/tmp/email/` and its path logged.
+- **Order of a first deploy:** `npm run db:migrate`, `npm run cf:deploy` (creates the Worker), then `npm run cf:secrets`. Later: `cf:deploy` for code, `cf:secrets` for a changed value. `NEXT_PUBLIC_*` values are built in, so changing one needs a deploy.
+- **The build reads `.env.local` too, and it wins over `.env.production`.** Keep their `NEXT_PUBLIC_*` values the same, or a deploy can ship `localhost` addresses.
+- **Env files are never committed** (`.env.local`, `.env.production`); the samples are, with placeholders only. Never put a real address, key or account id in committed files.
+- **Ask before** deploying, applying migrations to the live database (`db:migrate`), pushing secrets, or changing anything in WordPress: they act on the live site.
 
 ## File & Folder Authority
 
