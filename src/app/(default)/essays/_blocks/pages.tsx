@@ -43,7 +43,7 @@ export default async function Pages() {
 
   return (
     <Section className="bg-body pt-5">
-      <div className="rounded-2xl border border-accent5 bg-body2 p-7 sm:p-10">
+      <div className="rounded-2xl border border-accent/15 bg-accent/5 p-7 sm:p-10">
         <Heading
           as="h2"
           margin="mb-4"
