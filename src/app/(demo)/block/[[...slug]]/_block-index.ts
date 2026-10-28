@@ -16,7 +16,6 @@ export const blockImports: Record<string, () => Promise<{ default: ComponentType
   'contact/testimonial': () => import('@/app/(default)/contact/_blocks/testimonial'),
   'essays/archive': () => import('@/app/(default)/essays/_blocks/archive'),
   'essays/hero': () => import('@/app/(default)/essays/_blocks/hero'),
-  'essays/pages': () => import('@/app/(default)/essays/_blocks/pages'),
   'logo-card': () => import('@/app/(default)/_blocks/logo-card'),
   'newsletter/confirm/confirm': () => import('@/app/(default)/newsletter/confirm/_blocks/confirm'),
 }

@@ -12,11 +12,11 @@ export default function Hero() {
           as="h1"
           margin="mb-2"
         >
-          All Essays
+          All Essays &amp; Notes
         </Heading>
         <Paragraph margin="mb-5">
-          Every essay on product, fundraising, hiring, and building a startup,
-          by month and by category.
+          On building companies, product strategy, fundraising, hiring, and the
+          work of being a founder.
         </Paragraph>
       </div>
     </Section>

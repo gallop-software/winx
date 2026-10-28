@@ -1,29 +1,29 @@
 [
   {
     "slug": "",
-    "modified": "2026-05-20T15:52:03.000Z",
+    "modified": "2026-10-27T20:35:23.000Z",
     "uri": "/",
     "title": "Founder Notes"
   },
   {
     "slug": "about",
-    "modified": "2026-05-20T15:52:03.000Z",
+    "modified": "2026-10-27T20:35:23.000Z",
     "uri": "/about",
     "title": "About",
     "description": "Founder Notes is an independent publication for people building companies — essays on product strategy, fundraising, hiring, and the day-to-day work of running an early-stage startup."
   },
   {
     "slug": "contact",
-    "modified": "2026-05-20T15:52:03.000Z",
+    "modified": "2026-10-27T20:35:23.000Z",
     "uri": "/contact",
     "title": "Contact",
     "description": "Get in touch with Founder Notes. Questions, comments, or corrections: send a message."
   },
   {
     "slug": "essays",
-    "modified": "2026-05-20T15:52:03.000Z",
+    "modified": "2026-10-27T20:35:23.000Z",
     "uri": "/essays",
     "title": "All Essays",
-    "description": "Browse the full archive of Founder Notes — essays on product strategy, fundraising, hiring, and the work of building an early-stage company, by month and by category."
+    "description": "Browse the full archive of Founder Notes — essays on product strategy, fundraising, hiring, and the work of building an early-stage company."
   }
 ]

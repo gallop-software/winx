@@ -4,12 +4,11 @@ import { schemaIds } from '@/app/metadata'
 import { buildPageSchema } from '@/utils/structured-data'
 
 import Hero from './_blocks/hero'
-import Pages from './_blocks/pages'
 import Archive from './_blocks/archive'
 
 const title = 'All Essays'
 const description =
-  'Browse the full archive of Founder Notes — essays on product strategy, fundraising, hiring, and the work of building an early-stage company, by month and by category.'
+  'Browse the full archive of Founder Notes — essays on product strategy, fundraising, hiring, and the work of building an early-stage company.'
 
 const metadata: PageMetadata = {
   title,
@@ -37,7 +36,6 @@ export default function Page() {
   return (
     <PageWrapper metadata={metadata}>
       <Hero />
-      <Pages />
       <Archive />
     </PageWrapper>
   )
