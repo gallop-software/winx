@@ -5,16 +5,19 @@ import { Paragraph } from '@/components/paragraph'
 import { Label } from '@/components/label'
 import { Button } from '@/components/button'
 import arrowRightIcon from '@iconify/icons-heroicons/arrow-right'
+import { getLatestPost } from '@/utils/content-index'
 import type { BlogPost } from '@/utils/filter-posts'
 
 interface LogoCardProps {
-  // The newest post, from the content index. Without one the card shows the
-  // site's name and points down the page.
+  // The newest post, when the page has it already. Otherwise (the block's
+  // own preview) it is read from the content index; with no posts at all the
+  // card shows the site's name and points down the page.
   latest?: BlogPost | undefined
 }
 
 // The first page's featured essay: the newest post, over its picture.
-export default function LogoCard({ latest }: LogoCardProps = {}) {
+export default async function LogoCard({ latest: given }: LogoCardProps = {}) {
+  const latest = given ?? (await getLatestPost()) ?? undefined
   const title = latest?.metadata.title || 'Founder Notes'
   const description = latest?.metadata.description || ''
   const href = latest ? `${latest.url}/` : '#favorite-articles'
